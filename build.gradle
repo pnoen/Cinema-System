@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'application'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+    test.finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        csv.enabled = true
+    }
+}
+
+mainClassName = 'Cinema'
+
+run {
+    standardInput = System.in
+}
