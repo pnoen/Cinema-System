@@ -53,4 +53,7 @@ public class Movie {
         return screenSize;
     }
 
+    public String getMovieInformation(){
+        return this.name;
+    }
 }
