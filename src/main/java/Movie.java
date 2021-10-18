@@ -54,8 +54,17 @@ public class Movie {
     }
 
     public String getMovieInformation(){
-        String info = String.format("%s, %s, %s, %s, %s, %s, %s, %s", this.name, this.classification, this.synopsis,
-                this.releaseDate, this.director, this.cast, this.upcomingTimes, this.screenSize);
+        String upcomingTimes = String.join(", ", this.upcomingTimes);
+
+        String info = String.format("%s\n" +
+                        "Classification: %s\n" +
+                        "Synopsis: %s\n" +
+                        "Release date: %s\n" +
+                        "Director: %s\n" +
+                        "Case: %s\n" +
+                        "Upcoming times: %s\n" +
+                        "Screen size: %s\n", this.name, this.classification, this.synopsis,
+                this.releaseDate, this.director, this.cast, upcomingTimes, this.screenSize);
         return info;
     }
 

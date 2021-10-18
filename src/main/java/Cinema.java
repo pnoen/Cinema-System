@@ -1,13 +1,11 @@
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.String;
 
 public class Cinema {
     private List<Movie> movies;
-    private List<Movie> displayMovies;
     private List<String> screenSizes;
     private List<Account> accounts;
     private boolean loggedIn = false;
@@ -15,7 +13,6 @@ public class Cinema {
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
-        this.displayMovies = new ArrayList<Movie>();
         this.screenSizes = Arrays.asList("Bronze", "Silver", "Gold");
         this.accounts = new ArrayList<Account>();
     }
@@ -68,10 +65,6 @@ public class Cinema {
         return movies;
     }
 
-    public List<Movie> getDisplayMovies() {
-        return displayMovies;
-    }
-
     public List<String> getScreenSizes() {
         return screenSizes;
     }
@@ -86,16 +79,76 @@ public class Cinema {
      * their information properly
      */
     public void displayMovies() {
-        List<Movie> movies = getMovies();
+//        List<Movie> movies = getMovies();
         for (Movie movie: movies){
             System.out.println(movie.getMovieInformation());
-            System.out.println(" ");
+//            System.out.println();
         }
 
     }
 
     public void filterMovies() {
+        Scanner userInput = new Scanner(System.in);
+        boolean filterComplete = false;
+        while (!filterComplete) {
+            System.out.println("Select the options that you would like to filter.\n" +
+                    "(To select multiple options, split by comma. E.g. 1,2)\n" +
+                    "Movie Screen Size:\n" +
+                    "  1. Bronze\n" +
+                    "  2. Silver\n" +
+                    "  3. Gold\n"
+            );
+            String selections = userInput.nextLine();
 
+            // Split the selection input and convert to int
+            List<Integer> filters = new ArrayList<Integer>();
+            boolean filterInvalid = false;
+            for (String s : selections.split(",")) {
+                try {
+                    filters.add(Integer.parseInt(s.trim()));
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Invalid option entered.\n");
+                    filterInvalid = true;
+                    break;
+                }
+            }
+            if (filterInvalid) {
+                continue;
+            }
+
+            List<String> screenSizeFilters = new ArrayList<String>();
+
+            // Check if all the selected options are valid
+            for (int filter : filters) {
+                if (filter >= 1 && filter <= 3) {
+                    screenSizeFilters.add(this.screenSizes.get(filter - 1));
+                }
+                else {
+                    System.out.println("Error: Invalid option selected.\n");
+                    filterInvalid = true;
+                    break;
+                }
+            }
+            if (filterInvalid) {
+                continue;
+            }
+
+            if (screenSizeFilters.size() == 0) {
+                screenSizeFilters = this.screenSizes;
+            }
+
+            List<Movie> displayMovies = new ArrayList<Movie>();
+            for (Movie movie : this.movies) {
+                if (screenSizeFilters.contains(movie.getScreenSize()) && !displayMovies.contains(movie)) {
+                    displayMovies.add(movie);
+                }
+            }
+
+            for (Movie movie : displayMovies) {
+                System.out.println(movie.getMovieInformation());
+            }
+            filterComplete = true;
+        }
     }
 
     /**
@@ -149,21 +202,38 @@ public class Cinema {
     // movies.csv IS SEMICOLON DELIMITED.
     public void run() {
         boolean running = true;
+        getMovies();
 
         Scanner userInput = new Scanner(System.in);
         while (running) {
 
             //this is to test the view movie functionality
-            System.out.println("Enter 1 to see movie details");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. All movies\n" +
+                    "  2. Filter movies\n" +
+                    "  3. Exit\n");
             int entered = 0;
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                userInput.nextLine();
+                continue;
             }
+
             if (entered == 1){
                 displayMovies();
             }
-
-            running = false;
+            else if (entered == 2) {
+                filterMovies();
+            }
+            else if (entered == 3) { // CHANGE THE NUMBER OF THIS WHEN MORE OPTIONS ARE ADDED
+                running = false;
+            }
+            else {
+                System.out.println("Error: Not a valid option.\n");
+                continue;
+            }
         }
 
         userInput.close();
