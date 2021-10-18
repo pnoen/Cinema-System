@@ -54,6 +54,9 @@ public class Movie {
     }
 
     public String getMovieInformation(){
-        return this.name;
+        String info = String.format("%s, %s, %s, %s, %s, %s, %s, %s", this.name, this.classification, this.synopsis,
+                this.releaseDate, this.director, this.cast, this.upcomingTimes, this.screenSize);
+        return info;
     }
+
 }

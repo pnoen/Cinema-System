@@ -57,7 +57,8 @@ public class Cinema {
             System.out.println("Error: Could not load the database.");
             System.exit(0);
         }
-
+        //skipping formatting line
+        sc.nextLine();
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
             String[] details = line.split(";");
@@ -89,6 +90,7 @@ public class Cinema {
         List<Movie> movies = getMovies();
         for (Movie movie: movies){
             System.out.println(movie.getMovieInformation());
+            System.out.println(" ");
         }
 
     }

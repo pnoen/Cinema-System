@@ -4,7 +4,7 @@ Account.java
  Account
 GiftCard.java
  GiftCard
-Movie.java
- Movie
 Cinema.java
  Cinema
+Movie.java
+ Movie
