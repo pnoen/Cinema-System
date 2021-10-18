@@ -108,7 +108,7 @@ public class Cinema {
     }
 
     // MAIN LOOP WILL BE HERE RATHER THAN IN MAIN.
-    // DATABASE FILES WILL BE LOCATED IN 'src/main/resources'
+    // DATABASE FILES WILL BE LOCATED IN 'src/main/resources'.
     // movies.csv IS SEMICOLON DELIMITED.
     public void run() {
         boolean running = true;
