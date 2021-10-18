@@ -2,13 +2,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import java.lang.String;
 
 public class Cinema {
     private List<Movie> movies;
     private List<String> screenSizes;
     private List<Account> accounts;
     private boolean loggedIn = false;
+    private File customers = new File("src/main/resources/customers.csv");
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
@@ -150,8 +151,46 @@ public class Cinema {
         }
     }
 
-    public void registerUser() {
+    /**
+     * Displays a customer registration prompt
+     * Allows the user to register as a customer
+     * Stores the user's customer details into a local database
+     */
+    public void registerCustomer() {
+        String username = "";
+        String password = "";
+        while (true) { // The while loop ensures continual prompt in the case passwords do not match
+            System.out.println("Please enter a username and password to register as a new Fancy Cinemas customer.");
+            System.out.print("Username: ");
+            Scanner name = new Scanner(System.in);
+            username = name.nextLine();
+            System.out.print("Password: ");
+            Scanner pass = new Scanner(System.in);
+            password = pass.nextLine();
+            System.out.print("Confirm password: ");
+            Scanner reEnterPassword = new Scanner(System.in);
+            String confirm_password = reEnterPassword.nextLine();
 
+            if (!password.equals(confirm_password)) {
+                System.out.println("Passwords do not match. Please try again.\n");
+                continue;
+            } else {
+                break;
+            }
+        }
+
+        // Opens the local customer database to store customer's details
+        try {
+            FileWriter csvWriter = new FileWriter(this.customers, true);
+            BufferedWriter bw = new BufferedWriter(csvWriter);
+            bw.write(String.format("%s,%s\n", username, password));
+            bw.close();
+            System.out.println("\nYou have successfully registered as a new customer. Welcome to Fancy Cinemas!");
+            System.out.println("Return to the login screen to log in as a customer.");
+        }
+        catch (IOException e) {
+            System.out.println("Error: couldn't update customers.csv");
+        }
     }
 
     public void loginUser() {
@@ -173,7 +212,6 @@ public class Cinema {
                     "  1. All movies\n" +
                     "  2. Filter movies\n" +
                     "  3. Exit\n");
-
             int entered = 0;
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
