@@ -200,6 +200,52 @@ public class Cinema {
 
     }
 
+    /**
+     * In the login method, pass the username and password into the checkRole.
+     * @param username
+     * @param password
+     * @return
+     */
+    public String checkRole(String username, String password) {
+        String staffFileName = "src/main/resources/staff.csv";
+        File staffFile = new File(staffFileName);
+        try{
+            Scanner csvStaffInput = new Scanner(staffFile);
+            while(csvStaffInput.hasNext()){
+                String staffInfo = csvStaffInput.next();
+                String[] staffUserInfo = staffInfo.split(",");
+                if(username == staffUserInfo[0]){
+                    if(password == staffUserInfo[1]){
+                        return "S";
+                    }
+                }
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("Error: could not find staff.csv");
+        }
+
+        String managerFileName = "src/main/resources/managers.csv";
+        File managerFile = new File(managerFileName);
+        try{
+            Scanner csvManagerInput = new Scanner(managerFile);
+            while(csvManagerInput.hasNext()){
+                String managerInfo = csvManagerInput.next();
+                String[] managerUserInfo = managerInfo.split(",");
+                if(username == managerUserInfo[0]){
+                    if(password == managerUserInfo[1]){
+                        return "M";
+                    }
+                }
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("Error: could not find managers.csv");
+        }
+
+        return "Guest";
+
+
+    }
+
     // MAIN LOOP WILL BE HERE RATHER THAN IN MAIN.
     // DATABASE FILES WILL BE LOCATED IN 'src/main/resources'.
     // movies.csv IS SEMICOLON DELIMITED.
