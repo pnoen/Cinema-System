@@ -3,12 +3,12 @@ public class Account {
     private String password;
     private String cardNumber = null;
     private int cardPin = -1;
-    private String perms;
+    private int perm;
 
-    public Account(String username, String password) {
+    public Account(String username, String password, int perm) {
         this.username = username;
         this.password = password;
-        this.perms = perms;
+        this.perm = perm;
     }
 
     public String getUsername() {
@@ -19,11 +19,14 @@ public class Account {
         return password;
     }
 
-    public void setPerms(String whichRole) {
-        this.perms = whichRole;
+    public void setPerms() {
+
+//        switch(this.perms){
+//            case:
+//        }
     }
 
-    public String getPerms(){
-        return perms;
+    public int getPerm(){
+        return perm;
     }
 }
