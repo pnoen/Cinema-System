@@ -1,18 +1,20 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.String;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 public class Cinema {
     private List<Movie> movies;
     private List<String> screenSizes;
     private List<Account> accounts;
     private boolean loggedIn = false;
-    private File customers = new File("src/main/resources/customers.csv");
+    private final File customersFile = new File("src/main/resources/customers.csv");
+    private Account currAcc;
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
@@ -40,6 +42,32 @@ public class Cinema {
 
         Movie movie = new Movie(details[0], details[1], details[2], release_date, details[4], details[5], upcoming_times, details[7]);
         return movie;
+    }
+
+    public Account createNewAccount(String username, String password, int perms){
+
+        return new Account(username, password, perms);
+    }
+
+    public void createAccounts(){
+
+        Scanner sc = null;
+        try {
+            sc = new Scanner(this.customersFile);
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("Error: Could not load the database.");
+            System.exit(0);
+        }
+        //skipping formatting line
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            String[] details = line.split(",");
+
+            Account account = createNewAccount(details[0], details[1], Integer.parseInt(details[2]));
+            this.accounts.add(account);
+        }
+
     }
 
     /**
@@ -94,12 +122,14 @@ public class Cinema {
         Scanner userInput = new Scanner(System.in);
         boolean filterComplete = false;
         while (!filterComplete) {
-            System.out.println("Select the options that you would like to filter.\n" +
-                    "(To select multiple options, split by comma. E.g. 1,2)\n" +
-                    "Movie Screen Size:\n" +
-                    "  1. Bronze\n" +
-                    "  2. Silver\n" +
-                    "  3. Gold\n"
+            System.out.println("""
+                    Select the options that you would like to filter.
+                    (To select multiple options, split by comma. E.g. 1,2)
+                    Movie Screen Size:
+                      1. Bronze
+                      2. Silver
+                      3. Gold
+                    """
             );
             String selections = userInput.nextLine();
 
@@ -160,44 +190,212 @@ public class Cinema {
      * Stores the user's customer details into a local database
      */
     public void registerCustomer() {
-        String username = "";
-        String password = "";
+        String username;
+        String password;
         while (true) { // The while loop ensures continual prompt in the case passwords do not match
             System.out.println("Please enter a username and password to register as a new Fancy Cinemas customer.");
             System.out.print("Username: ");
             Scanner name = new Scanner(System.in);
             username = name.nextLine();
-            System.out.print("Password: ");
-            Scanner pass = new Scanner(System.in);
-            password = pass.nextLine();
-            System.out.print("Confirm password: ");
-            Scanner reEnterPassword = new Scanner(System.in);
-            String confirm_password = reEnterPassword.nextLine();
+            password = PasswordMasker.readPassword("Password: ");
+            String againPassword = PasswordMasker.readPassword("Confirm password: ");
 
-            if (!password.equals(confirm_password)) {
-                System.out.println("Passwords do not match. Please try again.\n");
+            try {
+                BufferedReader customersReader = new BufferedReader(new FileReader(this.customersFile));
+                String line;
+                boolean unique = true;
+                while ((line = customersReader.readLine()) != null) {
+                    String[] ls = line.split(",");
+                    if (ls[0].equals(username)) {
+                        System.out.println("\nThis username is already taken. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                    else if (username.matches(".*\\s.*")) {
+                        System.out.println("\nUsername cannot contain spaces. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                }
+                if (!unique) {
+                    continue;
+                }
+            } catch (IOException e) {
+                System.out.println("Error: couldn't update customers.csv");
+                break;
+            }
+
+            if (!password.equals(againPassword)) {
+                System.out.println("\nPasswords do not match. Please try again.\n");
                 continue;
-            } else {
+            } else if (password.matches(".*\\s.*")) {
+                System.out.println("\nPassword cannot contain spaces. Please try again.\n");
+                continue;
+            }
+            else {
                 break;
             }
         }
 
         // Opens the local customer database to store customer's details
         try {
-            FileWriter csvWriter = new FileWriter(this.customers, true);
+            FileWriter csvWriter = new FileWriter(this.customersFile, true);
             BufferedWriter bw = new BufferedWriter(csvWriter);
-            bw.write(String.format("%s,%s\n", username, password));
+            bw.write(String.format("%s,%s,%s\n", username, password, "0"));
             bw.close();
             System.out.println("\nYou have successfully registered as a new customer. Welcome to Fancy Cinemas!");
-            System.out.println("Return to the login screen to log in as a customer.");
+            System.out.println("You will return to the main menu and you may log in as a customer.\n");
         }
         catch (IOException e) {
             System.out.println("Error: couldn't update customers.csv");
         }
+
+        Account acc = createNewAccount(username, password,0);
+        this.accounts.add(acc);
+        currAcc = acc;
+        this.loggedIn = true;
     }
 
     public void loginUser() {
+        Scanner userInput = new Scanner(System.in);
+        while(!this.loggedIn){
+            System.out.println("Please enter your valid username and password.");
+            System.out.print("Username: ");
+            String username = userInput.nextLine();
+            for(Account a : this.accounts){
+                if (username.equals(a.getUsername())){
+                    String password = PasswordMasker.readPassword("Password: ");
+                    if (password.equals(a.getPassword())){
+                        System.out.println("Success");
+                        currAcc = a;
+                        this.loggedIn = true;
+                    }
+                    else{
+                        System.out.println("Password entered is incorrect");
+                    }
+                }
 
+            }
+        }
+
+
+
+    }
+
+    /**
+     * In the login method, pass the username and password into the checkRole.
+     * @param username
+     * @param password
+     * @return
+     */
+    public String checkRole(String username, String password) {
+        String staffFileName = "src/main/resources/staff.csv";
+        File staffFile = new File(staffFileName);
+        try{
+            Scanner csvStaffInput = new Scanner(staffFile);
+            while(csvStaffInput.hasNext()){
+                String staffInfo = csvStaffInput.next();
+                String[] staffUserInfo = staffInfo.split(",");
+                if(Objects.equals(username, staffUserInfo[0])){
+                    if(Objects.equals(password, staffUserInfo[1])){
+                        return "S";
+                    }
+                }
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("Error: could not find staff.csv");
+        }
+
+        String managerFileName = "src/main/resources/managers.csv";
+        File managerFile = new File(managerFileName);
+        try{
+            Scanner csvManagerInput = new Scanner(managerFile);
+            while(csvManagerInput.hasNext()){
+                String managerInfo = csvManagerInput.next();
+                String[] managerUserInfo = managerInfo.split(",");
+                if(Objects.equals(username, managerUserInfo[0])){
+                    if(Objects.equals(password, managerUserInfo[1])){
+                        return "M";
+                    }
+                }
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("Error: could not find managers.csv");
+        }
+
+        return "Guest";
+
+
+    }
+
+    public void customerLoginLogic(){
+        Scanner userInput = new Scanner(System.in);
+        while(loggedIn){
+            System.out.println("""
+                    Select the page you would like to visit:
+                      1. All movies
+                      2. Filter movies
+                      3. Book
+                      4. Cancel Booking
+                      5. Logout""");
+
+            int logged = 0;
+            if (userInput.hasNextInt()) {
+                logged = userInput.nextInt();
+            }
+
+            if (logged == 5) {
+                this.loggedIn = false;
+            }
+        }
+    }
+
+    public void staffLoginLogic(){
+        Scanner userInput = new Scanner(System.in);
+        while(loggedIn){
+            System.out.println("""
+                    Select the page you would like to visit:
+                      1. Movie report
+                      2. Summary of Bookings
+                      3. Movie Management
+                      4. Add New Shows for Next Week
+                      5. Giftcard Management
+                      6. Logout""");
+
+            int logged = 0;
+            if (userInput.hasNextInt()) {
+                logged = userInput.nextInt();
+            }
+
+            if (logged == 5) {
+                this.loggedIn = false;
+            }
+        }
+    }
+
+    public void managerLoginLogic(){
+        Scanner userInput = new Scanner(System.in);
+        while(loggedIn){
+            System.out.println("""
+                    Select the page you would like to visit:
+                      1. Movie report
+                      2. Summary of Bookings
+                      3. Movie Management
+                      4. Add New Shows for Next Week
+                      5. Giftcard Management
+                      6. Staff management
+                      7. Transaction management
+                      8. Logout""");
+
+            int logged = 0;
+            if (userInput.hasNextInt()) {
+                logged = userInput.nextInt();
+            }
+
+            if (logged == 8) {
+                this.loggedIn = false;
+            }
+        }
     }
 
     // MAIN LOOP WILL BE HERE RATHER THAN IN MAIN.
@@ -206,15 +404,19 @@ public class Cinema {
     public void run() {
         boolean running = true;
         getMovies();
+        createAccounts();
 
         Scanner userInput = new Scanner(System.in);
         while (running) {
 
             //this is to test the view movie functionality
-            System.out.println("Select the page you would like to visit:\n" +
-                    "  1. All movies\n" +
-                    "  2. Filter movies\n" +
-                    "  3. Exit\n");
+            System.out.println("""
+                    Select the page you would like to visit:
+                      1. All movies
+                      2. Filter movies
+                      3. Register as Fancy Cinemas Customer
+                      4. Login
+                      5. Exit""");
             int entered = 0;
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
@@ -230,12 +432,37 @@ public class Cinema {
             else if (entered == 2) {
                 filterMovies();
             }
-            else if (entered == 3) { // CHANGE THE NUMBER OF THIS WHEN MORE OPTIONS ARE ADDED
+            else if (entered == 3) {
+                registerCustomer();
+            }
+            else if (entered == 4) {
+                loginUser();
+            }
+            else if (entered == 5) { // CHANGE THE NUMBER OF THIS WHEN MORE OPTIONS ARE ADDED
                 running = false;
             }
             else {
                 System.out.println("Error: Not a valid option.\n");
                 continue;
+            }
+
+            //logged in customer screen
+            if (this.loggedIn) {
+                if(currAcc.getPerm() == 0){
+                    customerLoginLogic();
+
+                }
+
+                else if(currAcc.getPerm() == 1){
+                    staffLoginLogic();
+                }
+
+                else if(currAcc.getPerm() == 2){
+                    managerLoginLogic();
+                }
+
+
+
             }
         }
 
