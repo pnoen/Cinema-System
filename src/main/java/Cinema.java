@@ -1,11 +1,11 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.String;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
-import java.io.IOException;
 
 public class Cinema {
     private List<Movie> movies;
@@ -167,15 +167,36 @@ public class Cinema {
             System.out.print("Username: ");
             Scanner name = new Scanner(System.in);
             username = name.nextLine();
-            System.out.print("Password: ");
-            Scanner pass = new Scanner(System.in);
-            password = pass.nextLine();
-            System.out.print("Confirm password: ");
-            Scanner reEnterPassword = new Scanner(System.in);
-            String confirm_password = reEnterPassword.nextLine();
+            password = PasswordMasker.readPassword("Password: ");
+            String againPassword = PasswordMasker.readPassword("Confirm password: ");
 
-            if (!password.equals(confirm_password)) {
-                System.out.println("Passwords do not match. Please try again.\n");
+            try {
+                BufferedReader customersReader = new BufferedReader(new FileReader(this.customers));
+                String line;
+                Boolean unique = true;
+                while ((line = customersReader.readLine()) != null) {
+                    String[] ls = line.split(",");
+                    if (ls[0].equals(username)) {
+                        System.out.println("\nThis username is already taken. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                }
+                if (!unique) {
+                    continue;
+                }
+            }
+            catch (FileNotFoundException e) {
+                System.out.println("Error: couldn't update customers.csv");
+                break;
+            }
+            catch (IOException e) {
+                System.out.println("Error: couldn't update customers.csv");
+                break;
+            }
+
+            if (!password.equals(againPassword)) {
+                System.out.println("\nPasswords do not match. Please try again.\n");
                 continue;
             } else {
                 break;
@@ -189,7 +210,7 @@ public class Cinema {
             bw.write(String.format("%s,%s\n", username, password));
             bw.close();
             System.out.println("\nYou have successfully registered as a new customer. Welcome to Fancy Cinemas!");
-            System.out.println("Return to the login screen to log in as a customer.");
+            System.out.println("You will return to the main menu and you may log in as a customer.\n");
         }
         catch (IOException e) {
             System.out.println("Error: couldn't update customers.csv");
@@ -214,7 +235,8 @@ public class Cinema {
             System.out.println("Select the page you would like to visit:\n" +
                     "  1. All movies\n" +
                     "  2. Filter movies\n" +
-                    "  3. Exit\n");
+                    "  3. Register as Fancy Cinemas Customer\n" +
+                    "  4. Exit\n");
             int entered = 0;
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
@@ -230,7 +252,10 @@ public class Cinema {
             else if (entered == 2) {
                 filterMovies();
             }
-            else if (entered == 3) { // CHANGE THE NUMBER OF THIS WHEN MORE OPTIONS ARE ADDED
+            else if (entered == 3) {
+                registerCustomer();
+            }
+            else if (entered == 4) { // CHANGE THE NUMBER OF THIS WHEN MORE OPTIONS ARE ADDED
                 running = false;
             }
             else {
