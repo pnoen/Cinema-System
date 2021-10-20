@@ -362,6 +362,14 @@ public class Cinema {
 
     }
 
+    public boolean getLogged(){
+        return this.loggedIn;
+    }
+
+    public void setLogged(boolean state){
+        this.loggedIn = state;
+    }
+
     public void customerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
@@ -380,6 +388,7 @@ public class Cinema {
 
             if (logged == 5) {
                 this.loggedIn = false;
+                System.out.println("You have logged out");
             }
         }
     }
@@ -401,8 +410,9 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
 
-            if (logged == 5) {
+            if (logged == 6) {
                 this.loggedIn = false;
+                System.out.println("You have logged out");
             }
         }
     }
@@ -428,6 +438,7 @@ public class Cinema {
 
             if (logged == 8) {
                 this.loggedIn = false;
+                System.out.println("You have logged out");
             }
         }
     }
