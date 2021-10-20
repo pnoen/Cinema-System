@@ -127,18 +127,16 @@ public class Cinema {
         Scanner userInput = new Scanner(System.in);
         boolean filterComplete = false;
         while (!filterComplete) {
-            System.out.println("""
-                    Select the options that you would like to filter.
-                    (To select multiple options, split by comma. E.g. 1,2)
-                    Movie Screen Sizes:
-                      1. Bronze
-                      2. Silver
-                      3. Gold
-                    Cinema Rooms:
-                      4. Room 1
-                      5. Room 2
-                      6. Room 3
-                    """
+            System.out.println("Select the options that you would like to filter.\n" +
+                    "(To select multiple options, split by comma. E.g. 1,2)\n" +
+                    "Movie Screen Sizes:\n" +
+                    "  1. Bronze\n" +
+                    "  2. Silver\n" +
+                    "  3. Gold\n" +
+                    "Cinema Rooms:\n" +
+                    "  4. Room 1\n" +
+                    "  5. Room 2\n" +
+                    "  6. Room 3\n"
             );
             String selections = userInput.nextLine();
 
@@ -236,7 +234,7 @@ public class Cinema {
                         unique = false;
                         break;
                     }
-                    else if (username.matches(".*\\s.*")) {
+                    else if (username.matches(".*\\\\s.*")) {
                         System.out.println("\nUsername cannot contain spaces. Please try again.\n");
                         unique = false;
                         break;
