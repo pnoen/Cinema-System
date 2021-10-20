@@ -13,6 +13,7 @@ public class Cinema {
     private List<Account> accounts;
     private boolean loggedIn = false;
     private File accountsFile = new File("src/main/resources/accounts.csv");
+    private File moviesFile = new File("src/main/resources/movies.csv");
     private Account currAcc;
     private List<String> allCinemaRooms;
 
@@ -53,6 +54,10 @@ public class Cinema {
         return new Account(username, password, perms);
     }
 
+    public void setMovies(File movie_file){
+        this.moviesFile = movie_file;
+    }
+
     public void createAccounts(){
 
         Scanner sc = null;
@@ -82,7 +87,7 @@ public class Cinema {
 
         Scanner sc = null;
         try {
-            sc = new Scanner(new File("src/main/resources/movies.csv"));
+            sc = new Scanner(moviesFile);
         }
         catch (FileNotFoundException e) {
             System.out.println("Error: Could not load the database.");
