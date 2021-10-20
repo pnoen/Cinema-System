@@ -61,7 +61,7 @@ public class TestCinema {
         Cinema cinema = new Cinema();
         cinema.setLogged(true);
 
-        String userInput = "6";
+        String userInput = "2 6";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -83,7 +83,7 @@ public class TestCinema {
         Cinema cinema = new Cinema();
         cinema.setLogged(true);
 
-        String userInput = "8";
+        String userInput = "2 8";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
