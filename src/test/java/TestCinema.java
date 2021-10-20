@@ -35,6 +35,12 @@ public class TestCinema {
     }
 
     @Test
+    void testCustomerRegistration(){
+        Cinema cinema = new Cinema();
+
+    }
+
+    @Test
     void badLogicInput(){
         Cinema cinema = new Cinema();
         cinema.setLogged(true);

@@ -127,18 +127,16 @@ public class Cinema {
         Scanner userInput = new Scanner(System.in);
         boolean filterComplete = false;
         while (!filterComplete) {
-            System.out.println("""
-                    Select the options that you would like to filter.
-                    (To select multiple options, split by comma. E.g. 1,2)
-                    Movie Screen Sizes:
-                      1. Bronze
-                      2. Silver
-                      3. Gold
-                    Cinema Rooms:
-                      4. Room 1
-                      5. Room 2
-                      6. Room 3
-                    """
+            System.out.println("Select the options that you would like to filter.\n" +
+                    "(To select multiple options, split by comma. E.g. 1,2)\n" +
+                    "Movie Screen Sizes:\n" +
+                    "  1. Bronze\n" +
+                    "  2. Silver\n" +
+                    "  3. Gold\n" +
+                    "Cinema Rooms:\n" +
+                    "  4. Room 1\n" +
+                    "  5. Room 2\n" +
+                    "  6. Room 3\n"
             );
             String selections = userInput.nextLine();
 
@@ -241,12 +239,17 @@ public class Cinema {
                         unique = false;
                         break;
                     }
+                    else if (username.length() == 0) {
+                        System.out.println("\nUsername cannot be empty. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
                 }
                 if (!unique) {
                     continue;
                 }
             } catch (IOException e) {
-                System.out.println("Error: couldn't update customers.csv");
+                System.out.println("Error: couldn't update accounts.csv");
                 break;
             }
 
@@ -255,6 +258,10 @@ public class Cinema {
                 continue;
             } else if (password.matches(".*\\s.*")) {
                 System.out.println("\nPassword cannot contain spaces. Please try again.\n");
+                continue;
+            }
+            else if (password.length() == 0) {
+                System.out.println("\nPassword cannot be empty. Please try again.\n");
                 continue;
             }
             else {
@@ -269,10 +276,10 @@ public class Cinema {
             bw.write(String.format("%s,%s,%s\n", username, password, "0"));
             bw.close();
             System.out.println("\nYou have successfully registered as a new customer. Welcome to Fancy Cinemas!");
-            System.out.println("You will return to the main menu and you may log in as a customer.\n");
+            System.out.println("You will return to the main menu logged into your new account.\n");
         }
         catch (IOException e) {
-            System.out.println("Error: couldn't update customers.csv");
+            System.out.println("Error: couldn't update accounts.csv");
         }
 
         Account acc = createNewAccount(username, password,0);
@@ -364,13 +371,12 @@ public class Cinema {
     public void customerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. All movies
-                      2. Filter movies
-                      3. Book
-                      4. Cancel Booking
-                      5. Logout""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. All movies\n" +
+                    "  2. Filter movies\n" +
+                    "  3. Book\n" +
+                    "  4. Cancel Booking\n" +
+                    "  5. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -387,14 +393,13 @@ public class Cinema {
     public void staffLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. Movie report
-                      2. Summary of Bookings
-                      3. Movie Management
-                      4. Add New Shows for Next Week
-                      5. Giftcard Management
-                      6. Logout""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. Movie report\n" +
+                    "  2. Summary of Bookings\n" +
+                    "  3. Movie Management\n" +
+                    "  4. Add New Shows for Next Week\n" +
+                    "  5. Giftcard Management\n" +
+                    "  6. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -411,16 +416,15 @@ public class Cinema {
     public void managerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. Movie report
-                      2. Summary of Bookings
-                      3. Movie Management
-                      4. Add New Shows for Next Week
-                      5. Giftcard Management
-                      6. Staff management
-                      7. Transaction management
-                      8. Logout""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. Movie report\n" +
+                    "  2. Summary of Bookings\n" +
+                    "  3. Movie Management\n" +
+                    "  4. Add New Shows for Next Week\n" +
+                    "  5. Giftcard Management\n" +
+                    "  6. Staff management\n" +
+                    "  7. Transaction management\n" +
+                    "  8. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -446,13 +450,12 @@ public class Cinema {
         while (running) {
 
             //this is to test the view movie functionality
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. All movies
-                      2. Filter movies
-                      3. Register as Fancy Cinemas Customer
-                      4. Login
-                      5. Exit""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. All movies\n" +
+                    "  2. Filter movies\n" +
+                    "  3. Register as Fancy Cinemas Customer\n" +
+                    "  4. Login\n" +
+                    "  5. Exit");
             int entered = 0;
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
