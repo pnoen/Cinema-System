@@ -211,11 +211,7 @@ public class Cinema {
                         unique = false;
                         break;
                     }
-<<<<<<< HEAD
-                    else if (username.matches(".*\\s.*")) {
-=======
                     else if (username.matches(".*\\\\s.*")) {
->>>>>>> dc0b3fe (A2-5 Attempted new design for masking password when registering customer but reverted to original design)
                         System.out.println("\nUsername cannot contain spaces. Please try again.\n");
                         unique = false;
                         break;
