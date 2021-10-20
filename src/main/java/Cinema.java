@@ -236,7 +236,7 @@ public class Cinema {
                         unique = false;
                         break;
                     }
-                    else if (username.matches(".*\\s.*")) {
+                    else if (username.matches(".*\\\\s.*")) {
                         System.out.println("\nUsername cannot contain spaces. Please try again.\n");
                         unique = false;
                         break;
