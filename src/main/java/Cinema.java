@@ -236,8 +236,13 @@ public class Cinema {
                         unique = false;
                         break;
                     }
-                    else if (username.matches(".*\\\\s.*")) {
+                    else if (username.matches(".*\\s.*")) {
                         System.out.println("\nUsername cannot contain spaces. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                    else if (username.length() == 0) {
+                        System.out.println("\nUsername cannot be empty. Please try again.\n");
                         unique = false;
                         break;
                     }
@@ -255,6 +260,10 @@ public class Cinema {
                 continue;
             } else if (password.matches(".*\\s.*")) {
                 System.out.println("\nPassword cannot contain spaces. Please try again.\n");
+                continue;
+            }
+            else if (password.length() == 0) {
+                System.out.println("\nPassword cannot be empty. Please try again.\n");
                 continue;
             }
             else {
