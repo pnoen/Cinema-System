@@ -269,7 +269,7 @@ public class Cinema {
             bw.write(String.format("%s,%s,%s\n", username, password, "0"));
             bw.close();
             System.out.println("\nYou have successfully registered as a new customer. Welcome to Fancy Cinemas!");
-            System.out.println("You will return to the main menu and you may log in as a customer.\n");
+            System.out.println("You will return to the main menu logged into your new account.\n");
         }
         catch (IOException e) {
             System.out.println("Error: couldn't update accounts.csv");
