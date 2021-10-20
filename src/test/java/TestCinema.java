@@ -188,12 +188,16 @@ public class TestCinema {
 
         scanner = new Scanner("\n6  ");
         assertTrue(cinema.filterMovies(scanner));
+
+        scanner.close();
     }
 
     @Test
     public void testEmptyFilterMovies() {
         Scanner scanner = new Scanner("\n\n");
         assertFalse(cinema.filterMovies(scanner));
+
+        scanner.close();
     }
 
     @Test
@@ -215,6 +219,8 @@ public class TestCinema {
 
         scanner = new Scanner("\n1,2,3,4,5,6");
         assertTrue(cinema.filterMovies(scanner));
+
+        scanner.close();
     }
 
     @Test
@@ -224,6 +230,8 @@ public class TestCinema {
 
         scanner = new Scanner("\n1,a");
         assertFalse(cinema.filterMovies(scanner));
+
+        scanner.close();
     }
 
     @Test
@@ -236,6 +244,8 @@ public class TestCinema {
 
         scanner = new Scanner("\n3,800000");
         assertFalse(cinema.filterMovies(scanner));
+
+        scanner.close();
     }
 
 
