@@ -15,11 +15,13 @@ public class Cinema {
     private boolean loggedIn = false;
     private final File customersFile = new File("src/main/resources/customers.csv");
     private Account currAcc;
+    private List<String> allCinemaRooms;
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
         this.screenSizes = Arrays.asList("Bronze", "Silver", "Gold");
         this.accounts = new ArrayList<Account>();
+        this.allCinemaRooms = Arrays.asList("1", "2", "3");
     }
 
     /**
@@ -29,18 +31,21 @@ public class Cinema {
     public Movie createMovie(String[] details){
         Date release_date = null;
         List<String> upcoming_times = null;
+        List<String> cinema_rooms = null;
 
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
             release_date = sdf.parse(details[3]);
 
             upcoming_times = Arrays.asList(details[6].split(","));
+
+            cinema_rooms = Arrays.asList(details[8].split(","));
         }
         catch(Exception e){
-
+            System.out.println("Error: Failed to load database");
         }
 
-        Movie movie = new Movie(details[0], details[1], details[2], release_date, details[4], details[5], upcoming_times, details[7]);
+        Movie movie = new Movie(details[0], details[1], details[2], release_date, details[4], details[5], upcoming_times, details[7], cinema_rooms);
         return movie;
     }
 
@@ -122,14 +127,16 @@ public class Cinema {
         Scanner userInput = new Scanner(System.in);
         boolean filterComplete = false;
         while (!filterComplete) {
-            System.out.println("""
-                    Select the options that you would like to filter.
-                    (To select multiple options, split by comma. E.g. 1,2)
-                    Movie Screen Size:
-                      1. Bronze
-                      2. Silver
-                      3. Gold
-                    """
+            System.out.println("Select the options that you would like to filter.\n" +
+                    "(To select multiple options, split by comma. E.g. 1,2)\n" +
+                    "Movie Screen Sizes:\n" +
+                    "  1. Bronze\n" +
+                    "  2. Silver\n" +
+                    "  3. Gold\n" +
+                    "Cinema Rooms:\n" +
+                    "  4. Room 1\n" +
+                    "  5. Room 2\n" +
+                    "  6. Room 3\n"
             );
             String selections = userInput.nextLine();
 
@@ -150,11 +157,15 @@ public class Cinema {
             }
 
             List<String> screenSizeFilters = new ArrayList<String>();
+            List<String> cinemaRoomFilters = new ArrayList<String>();
 
             // Check if all the selected options are valid
             for (int filter : filters) {
                 if (filter >= 1 && filter <= 3) {
                     screenSizeFilters.add(this.screenSizes.get(filter - 1));
+                }
+                else if (filter >= 4 && filter <= 6) {
+                    cinemaRoomFilters.add(this.allCinemaRooms.get(filter - 4));
                 }
                 else {
                     System.out.println("Error: Invalid option selected.\n");
@@ -169,11 +180,23 @@ public class Cinema {
             if (screenSizeFilters.size() == 0) {
                 screenSizeFilters = this.screenSizes;
             }
+            if (cinemaRoomFilters.size() == 0) {
+                cinemaRoomFilters = this.allCinemaRooms;
+            }
 
             List<Movie> displayMovies = new ArrayList<Movie>();
             for (Movie movie : this.movies) {
-                if (screenSizeFilters.contains(movie.getScreenSize()) && !displayMovies.contains(movie)) {
-                    displayMovies.add(movie);
+                if (screenSizeFilters.contains(movie.getScreenSize())) {
+                    boolean contains = false;
+                    for (String room : movie.getCinemaRooms()) {
+                        if (cinemaRoomFilters.contains(room)) {
+                            contains = true;
+                            break;
+                        }
+                    }
+                    if (contains && !displayMovies.contains(movie)) {
+                        displayMovies.add(movie);
+                    }
                 }
             }
 
