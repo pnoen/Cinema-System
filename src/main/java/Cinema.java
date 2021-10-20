@@ -2,10 +2,11 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.String;
-import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 public class Cinema {
     private List<Movie> movies;
@@ -230,7 +231,7 @@ public class Cinema {
             try {
                 BufferedReader customersReader = new BufferedReader(new FileReader(this.accountsFile));
                 String line;
-                Boolean unique = true;
+                boolean unique = true;
                 while ((line = customersReader.readLine()) != null) {
                     String[] ls = line.split(",");
                     if (ls[0].equals(username)) {
@@ -238,16 +239,21 @@ public class Cinema {
                         unique = false;
                         break;
                     }
+                    else if (username.matches(".*\\s.*")) {
+                        System.out.println("\nUsername cannot contain spaces. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                    else if (username.length() == 0) {
+                        System.out.println("\nUsername cannot be empty. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
                 }
                 if (!unique) {
                     continue;
                 }
-            }
-            catch (FileNotFoundException e) {
-                System.out.println("Error: couldn't update accounts.csv");
-                break;
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("Error: couldn't update accounts.csv");
                 break;
             }
@@ -255,7 +261,15 @@ public class Cinema {
             if (!password.equals(againPassword)) {
                 System.out.println("\nPasswords do not match. Please try again.\n");
                 continue;
-            } else {
+            } else if (password.matches(".*\\s.*")) {
+                System.out.println("\nPassword cannot contain spaces. Please try again.\n");
+                continue;
+            }
+            else if (password.length() == 0) {
+                System.out.println("\nPassword cannot be empty. Please try again.\n");
+                continue;
+            }
+            else {
                 break;
             }
         }
@@ -267,10 +281,10 @@ public class Cinema {
             bw.write(String.format("%s,%s,%s\n", username, password, "0"));
             bw.close();
             System.out.println("\nYou have successfully registered as a new customer. Welcome to Fancy Cinemas!");
-            System.out.println("You will return to the main menu and you may log in as a customer.\n");
+            System.out.println("You will return to the main menu logged into your new account.\n");
         }
         catch (IOException e) {
-            System.out.println("Error: couldn't update customers.csv");
+            System.out.println("Error: couldn't update accounts.csv");
         }
 
         Account acc = createNewAccount(username, password,0);
@@ -319,8 +333,8 @@ public class Cinema {
             while(csvStaffInput.hasNext()){
                 String staffInfo = csvStaffInput.next();
                 String[] staffUserInfo = staffInfo.split(",");
-                if(username == staffUserInfo[0]){
-                    if(password == staffUserInfo[1]){
+                if(Objects.equals(username, staffUserInfo[0])){
+                    if(Objects.equals(password, staffUserInfo[1])){
                         return "S";
                     }
                 }
@@ -336,8 +350,8 @@ public class Cinema {
             while(csvManagerInput.hasNext()){
                 String managerInfo = csvManagerInput.next();
                 String[] managerUserInfo = managerInfo.split(",");
-                if(username == managerUserInfo[0]){
-                    if(password == managerUserInfo[1]){
+                if(Objects.equals(username, managerUserInfo[0])){
+                    if(Objects.equals(password, managerUserInfo[1])){
                         return "M";
                     }
                 }
