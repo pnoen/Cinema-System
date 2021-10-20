@@ -371,13 +371,12 @@ public class Cinema {
     public void customerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. All movies
-                      2. Filter movies
-                      3. Book
-                      4. Cancel Booking
-                      5. Logout""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. All movies\n" +
+                    "  2. Filter movies\n" +
+                    "  3. Book\n" +
+                    "  4. Cancel Booking\n" +
+                    "  5. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -394,14 +393,13 @@ public class Cinema {
     public void staffLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. Movie report
-                      2. Summary of Bookings
-                      3. Movie Management
-                      4. Add New Shows for Next Week
-                      5. Giftcard Management
-                      6. Logout""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. Movie report\n" +
+                    "  2. Summary of Bookings\n" +
+                    "  3. Movie Management\n" +
+                    "  4. Add New Shows for Next Week\n" +
+                    "  5. Giftcard Management\n" +
+                    "  6. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -418,16 +416,15 @@ public class Cinema {
     public void managerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. Movie report
-                      2. Summary of Bookings
-                      3. Movie Management
-                      4. Add New Shows for Next Week
-                      5. Giftcard Management
-                      6. Staff management
-                      7. Transaction management
-                      8. Logout""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. Movie report\n" +
+                    "  2. Summary of Bookings\n" +
+                    "  3. Movie Management\n" +
+                    "  4. Add New Shows for Next Week\n" +
+                    "  5. Giftcard Management\n" +
+                    "  6. Staff management\n" +
+                    "  7. Transaction management\n" +
+                    "  8. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -453,13 +450,12 @@ public class Cinema {
         while (running) {
 
             //this is to test the view movie functionality
-            System.out.println("""
-                    Select the page you would like to visit:
-                      1. All movies
-                      2. Filter movies
-                      3. Register as Fancy Cinemas Customer
-                      4. Login
-                      5. Exit""");
+            System.out.println("Select the page you would like to visit:\n" +
+                    "  1. All movies\n" +
+                    "  2. Filter movies\n" +
+                    "  3. Register as Fancy Cinemas Customer\n" +
+                    "  4. Login\n" +
+                    "  5. Exit");
             int entered = 0;
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
