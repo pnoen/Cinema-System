@@ -246,7 +246,7 @@ public class Cinema {
                     continue;
                 }
             } catch (IOException e) {
-                System.out.println("Error: couldn't update customers.csv");
+                System.out.println("Error: couldn't update accounts.csv");
                 break;
             }
 
@@ -272,7 +272,7 @@ public class Cinema {
             System.out.println("You will return to the main menu and you may log in as a customer.\n");
         }
         catch (IOException e) {
-            System.out.println("Error: couldn't update customers.csv");
+            System.out.println("Error: couldn't update accounts.csv");
         }
 
         Account acc = createNewAccount(username, password,0);
