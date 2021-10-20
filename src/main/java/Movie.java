@@ -9,8 +9,10 @@ public class Movie {
     private String cast;
     private List<String> upcomingTimes;
     private String screenSize;
+    private List<String> cinemaRooms;
 
-    public Movie(String name, String synopsis, String classification, Date releaseDate, String director, String cast, List<String> upcomingTimes, String screenSize) {
+    public Movie(String name, String synopsis, String classification, Date releaseDate, String director,
+                 String cast, List<String> upcomingTimes, String screenSize, List<String> cinemaRooms) {
         this.name = name;
         this.synopsis = synopsis;
         this.classification = classification;
@@ -19,6 +21,7 @@ public class Movie {
         this.cast = cast;
         this.upcomingTimes = upcomingTimes;
         this.screenSize = screenSize;
+        this.cinemaRooms = cinemaRooms;
     }
 
     public String getName() {
@@ -53,8 +56,13 @@ public class Movie {
         return screenSize;
     }
 
+    public List<String> getCinemaRooms() {
+        return cinemaRooms;
+    }
+
     public String getMovieInformation(){
         String upcomingTimes = String.join(", ", this.upcomingTimes);
+        String cinemaRooms = String.join(", ", this.cinemaRooms);
 
         String info = String.format("%s\n" +
                         "Classification: %s\n" +
@@ -62,9 +70,10 @@ public class Movie {
                         "Release date: %s\n" +
                         "Director: %s\n" +
                         "Case: %s\n" +
+                        "Screen size: %s\n" +
                         "Upcoming times: %s\n" +
-                        "Screen size: %s\n", this.name, this.classification, this.synopsis,
-                this.releaseDate, this.director, this.cast, upcomingTimes, this.screenSize);
+                        "Cinema rooms: %s\n", this.name, this.classification, this.synopsis,
+                this.releaseDate, this.director, this.cast, this.screenSize, upcomingTimes, cinemaRooms);
         return info;
     }
 
