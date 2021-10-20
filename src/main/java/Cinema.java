@@ -272,6 +272,7 @@ public class Cinema {
                 continue;
             }
             else {
+                name.close();
                 break;
             }
         }
@@ -293,6 +294,7 @@ public class Cinema {
         this.accounts.add(acc);
         currAcc = acc;
         this.loggedIn = true;
+
     }
 
     public void loginUser() {
@@ -316,6 +318,7 @@ public class Cinema {
 
             }
         }
+        userInput.close();
 
 
 
@@ -395,6 +398,7 @@ public class Cinema {
                 System.out.println("You have logged out");
             }
         }
+        userInput.close();
     }
 
     public void staffLoginLogic(){
@@ -418,6 +422,7 @@ public class Cinema {
                 System.out.println("You have logged out");
             }
         }
+        userInput.close();
     }
 
     public void managerLoginLogic(){
@@ -443,6 +448,7 @@ public class Cinema {
                 System.out.println("You have logged out");
             }
         }
+        userInput.close();
     }
 
     // MAIN LOOP WILL BE HERE RATHER THAN IN MAIN.
