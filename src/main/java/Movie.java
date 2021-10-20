@@ -24,33 +24,33 @@ public class Movie {
         this.cinemaRooms = cinemaRooms;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
-    public String getClassification() {
-        return classification;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public String getCast() {
-        return cast;
-    }
-
-    public List<String> getUpcomingTimes() {
-        return upcomingTimes;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public String getSynopsis() {
+//        return synopsis;
+//    }
+//
+//    public String getClassification() {
+//        return classification;
+//    }
+//
+//    public Date getReleaseDate() {
+//        return releaseDate;
+//    }
+//
+//    public String getDirector() {
+//        return director;
+//    }
+//
+//    public String getCast() {
+//        return cast;
+//    }
+//
+//    public List<String> getUpcomingTimes() {
+//        return upcomingTimes;
+//    }
 
     public String getScreenSize() {
         return screenSize;

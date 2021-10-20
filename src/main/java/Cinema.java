@@ -106,14 +106,14 @@ public class Cinema {
         return movies;
     }
 
-    public List<String> getScreenSizes() {
-        return screenSizes;
-    }
+//    public List<String> getScreenSizes() {
+//        return screenSizes;
+//    }
 
     // FEEL FREE TO CHANGE THE RETURN TYPE IF NECESSARY OR REMOVE THE METHOD
-    public void readCSV() {
-
-    }
+//    public void readCSV() {
+//
+//    }
 
     /**
      * In charge of taking a list of movies and displaying
@@ -128,88 +128,90 @@ public class Cinema {
 
     }
 
-    public void filterMovies() {
-        Scanner userInput = new Scanner(System.in);
-        boolean filterComplete = false;
-        while (!filterComplete) {
-            System.out.println("Select the options that you would like to filter.\n" +
-                    "(To select multiple options, split by comma. E.g. 1,2)\n" +
-                    "Movie Screen Sizes:\n" +
-                    "  1. Bronze\n" +
-                    "  2. Silver\n" +
-                    "  3. Gold\n" +
-                    "Cinema Rooms:\n" +
-                    "  4. Room 1\n" +
-                    "  5. Room 2\n" +
-                    "  6. Room 3\n"
-            );
-            String selections = userInput.nextLine();
+    public boolean filterMovies(Scanner userInput) {
+//        Scanner userInput = new Scanner(System.in);
+//        boolean filterComplete = false;
+//        while (!filterComplete) {
+        String selections = userInput.nextLine();
+        System.out.println("Select the options that you would like to filter.\n" +
+                "(To select multiple options, split by comma. E.g. 1,2)\n" +
+                "Movie Screen Sizes:\n" +
+                "  1. Bronze\n" +
+                "  2. Silver\n" +
+                "  3. Gold\n" +
+                "Cinema Rooms:\n" +
+                "  4. Room 1\n" +
+                "  5. Room 2\n" +
+                "  6. Room 3\n"
+        );
+        selections = userInput.nextLine();
 
-            // Split the selection input and convert to int
-            List<Integer> filters = new ArrayList<Integer>();
-            boolean filterInvalid = false;
-            for (String s : selections.split(",")) {
-                try {
-                    filters.add(Integer.parseInt(s.trim()));
-                } catch (NumberFormatException e) {
-                    System.out.println("Error: Invalid option entered.\n");
-                    filterInvalid = true;
-                    break;
-                }
+        // Split the selection input and convert to int
+        List<Integer> filters = new ArrayList<Integer>();
+//            boolean filterInvalid = false;
+        for (String s : selections.split(",")) {
+            try {
+                filters.add(Integer.parseInt(s.trim()));
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Invalid option entered.\n");
+//                    filterInvalid = true;
+                return false;
             }
-            if (filterInvalid) {
-                continue;
-            }
-
-            List<String> screenSizeFilters = new ArrayList<String>();
-            List<String> cinemaRoomFilters = new ArrayList<String>();
-
-            // Check if all the selected options are valid
-            for (int filter : filters) {
-                if (filter >= 1 && filter <= 3) {
-                    screenSizeFilters.add(this.screenSizes.get(filter - 1));
-                }
-                else if (filter >= 4 && filter <= 6) {
-                    cinemaRoomFilters.add(this.allCinemaRooms.get(filter - 4));
-                }
-                else {
-                    System.out.println("Error: Invalid option selected.\n");
-                    filterInvalid = true;
-                    break;
-                }
-            }
-            if (filterInvalid) {
-                continue;
-            }
-
-            if (screenSizeFilters.size() == 0) {
-                screenSizeFilters = this.screenSizes;
-            }
-            if (cinemaRoomFilters.size() == 0) {
-                cinemaRoomFilters = this.allCinemaRooms;
-            }
-
-            List<Movie> displayMovies = new ArrayList<Movie>();
-            for (Movie movie : this.movies) {
-                if (screenSizeFilters.contains(movie.getScreenSize())) {
-                    boolean contains = false;
-                    for (String room : movie.getCinemaRooms()) {
-                        if (cinemaRoomFilters.contains(room)) {
-                            contains = true;
-                            break;
-                        }
-                    }
-                    if (contains && !displayMovies.contains(movie)) {
-                        displayMovies.add(movie);
-                    }
-                }
-            }
-
-            for (Movie movie : displayMovies) {
-                System.out.println(movie.getMovieInformation());
-            }
-            filterComplete = true;
         }
+//            if (filterInvalid) {
+//                continue;
+//            }
+
+        List<String> screenSizeFilters = new ArrayList<String>();
+        List<String> cinemaRoomFilters = new ArrayList<String>();
+
+        // Check if all the selected options are valid
+        for (int filter : filters) {
+            if (filter >= 1 && filter <= 3) {
+                screenSizeFilters.add(this.screenSizes.get(filter - 1));
+            }
+            else if (filter >= 4 && filter <= 6) {
+                cinemaRoomFilters.add(this.allCinemaRooms.get(filter - 4));
+            }
+            else {
+                System.out.println("Error: Invalid option selected.\n");
+//                    filterInvalid = true;
+                return false;
+            }
+        }
+//            if (filterInvalid) {
+//                continue;
+//            }
+
+        if (screenSizeFilters.size() == 0) {
+            screenSizeFilters = this.screenSizes;
+        }
+        if (cinemaRoomFilters.size() == 0) {
+            cinemaRoomFilters = this.allCinemaRooms;
+        }
+
+        List<Movie> displayMovies = new ArrayList<Movie>();
+        for (Movie movie : this.movies) {
+            if (screenSizeFilters.contains(movie.getScreenSize())) {
+                boolean contains = false;
+                for (String room : movie.getCinemaRooms()) {
+                    if (cinemaRoomFilters.contains(room)) {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (contains && !displayMovies.contains(movie)) {
+                    displayMovies.add(movie);
+                }
+            }
+        }
+
+        for (Movie movie : displayMovies) {
+            System.out.println(movie.getMovieInformation());
+        }
+//            filterComplete = true;
+//        }
+        return true;
     }
 
     /**
@@ -319,51 +321,51 @@ public class Cinema {
 
     }
 
-    /**
-     * In the login method, pass the username and password into the checkRole.
-     * @param username
-     * @param password
-     * @return
-     */
-    public String checkRole(String username, String password) {
-        String staffFileName = "src/main/resources/staff.csv";
-        File staffFile = new File(staffFileName);
-        try{
-            Scanner csvStaffInput = new Scanner(staffFile);
-            while(csvStaffInput.hasNext()){
-                String staffInfo = csvStaffInput.next();
-                String[] staffUserInfo = staffInfo.split(",");
-                if(Objects.equals(username, staffUserInfo[0])){
-                    if(Objects.equals(password, staffUserInfo[1])){
-                        return "S";
-                    }
-                }
-            }
-        } catch (FileNotFoundException e){
-            System.out.println("Error: could not find staff.csv");
-        }
-
-        String managerFileName = "src/main/resources/managers.csv";
-        File managerFile = new File(managerFileName);
-        try{
-            Scanner csvManagerInput = new Scanner(managerFile);
-            while(csvManagerInput.hasNext()){
-                String managerInfo = csvManagerInput.next();
-                String[] managerUserInfo = managerInfo.split(",");
-                if(Objects.equals(username, managerUserInfo[0])){
-                    if(Objects.equals(password, managerUserInfo[1])){
-                        return "M";
-                    }
-                }
-            }
-        } catch (FileNotFoundException e){
-            System.out.println("Error: could not find managers.csv");
-        }
-
-        return "Guest";
-
-
-    }
+//    /**
+//     * In the login method, pass the username and password into the checkRole.
+//     * @param username
+//     * @param password
+//     * @return
+//     */
+//    public String checkRole(String username, String password) {
+//        String staffFileName = "src/main/resources/staff.csv";
+//        File staffFile = new File(staffFileName);
+//        try{
+//            Scanner csvStaffInput = new Scanner(staffFile);
+//            while(csvStaffInput.hasNext()){
+//                String staffInfo = csvStaffInput.next();
+//                String[] staffUserInfo = staffInfo.split(",");
+//                if(Objects.equals(username, staffUserInfo[0])){
+//                    if(Objects.equals(password, staffUserInfo[1])){
+//                        return "S";
+//                    }
+//                }
+//            }
+//        } catch (FileNotFoundException e){
+//            System.out.println("Error: could not find staff.csv");
+//        }
+//
+//        String managerFileName = "src/main/resources/managers.csv";
+//        File managerFile = new File(managerFileName);
+//        try{
+//            Scanner csvManagerInput = new Scanner(managerFile);
+//            while(csvManagerInput.hasNext()){
+//                String managerInfo = csvManagerInput.next();
+//                String[] managerUserInfo = managerInfo.split(",");
+//                if(Objects.equals(username, managerUserInfo[0])){
+//                    if(Objects.equals(password, managerUserInfo[1])){
+//                        return "M";
+//                    }
+//                }
+//            }
+//        } catch (FileNotFoundException e){
+//            System.out.println("Error: could not find managers.csv");
+//        }
+//
+//        return "Guest";
+//
+//
+//    }
 
     public boolean getLogged(){
         return this.loggedIn;
@@ -474,7 +476,7 @@ public class Cinema {
                 displayMovies();
             }
             else if (entered == 2) {
-                filterMovies();
+                filterMovies(userInput);
             }
             else if (entered == 3) {
                 registerCustomer();
