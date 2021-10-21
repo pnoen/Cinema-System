@@ -240,6 +240,40 @@ public class TestCinema {
     }
 
     @Test
+    public void testCreateAccounts_Valid() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+        List<Account> accounts = cinema_1_movie.getAccounts();
+
+        Account customer = accounts.get(0);
+        assertEquals("john", customer.getUsername());
+        assertEquals("smith", customer.getPassword());
+        assertEquals(0, customer.getPerm());
+
+        Account staff = accounts.get(1);
+        assertEquals("tony", staff.getUsername());
+        assertEquals("pit", staff.getPassword());
+        assertEquals(1, staff.getPerm());
+
+        Account manager = accounts.get(2);
+        assertEquals("bob", manager.getUsername());
+        assertEquals("jones", manager.getPassword());
+        assertEquals(2, manager.getPerm());
+    }
+
+    @Test
+    public void testCreateAccounts_ThrowFileNotFound() {
+        Cinema cinema_not_found = new Cinema();
+        File accounts_file = new File("src/test/resources/not_found.csv");
+        cinema_not_found.setAccountsFile(accounts_file);
+        boolean caught = false;
+        try {
+            cinema_not_found.createAccounts();
+        } catch (FileNotFoundException e) {
+            caught = true;
+        }
+        assertTrue(caught);
+    }
+
     public void testRun_Exit() throws FileNotFoundException {
         InputStream sysInBackup = System.in;
 
