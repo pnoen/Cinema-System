@@ -1,8 +1,8 @@
 public class Account {
     private String username;
     private String password;
-    private String cardNumber = null;
-    private int cardPin = -1;
+//    private String cardNumber = null;
+//    private int cardPin = -1;
     private int perm;
 
     public Account(String username, String password, int perm) {
@@ -17,13 +17,6 @@ public class Account {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setPerms() {
-
-//        switch(this.perms){
-//            case:
-//        }
     }
 
     public int getPerm(){
