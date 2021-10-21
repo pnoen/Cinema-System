@@ -15,6 +15,7 @@ class PasswordMasker {
 
         try {
             pass = inp.readLine();
+            System.out.print("\b");
         }
         catch (IOException e) {
             System.out.println("Error: input not read");
@@ -35,7 +36,7 @@ class Masker implements Runnable {
     public void run () {
         this.isMasking = true;
         while (isMasking) {
-            System.out.print("\010*");
+            System.out.print("\b ");
             try {
                 Thread.currentThread().sleep(1);
             }
