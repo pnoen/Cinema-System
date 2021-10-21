@@ -25,6 +25,7 @@ public class TestCinema {
         cinema_1_movie.setAccountsFile(accounts_file);
     }
 
+<<<<<<< HEAD
     @Test
     void testDisplayMovies(){
         cinema_1_movie.getMovies();
@@ -45,6 +46,28 @@ public class TestCinema {
 
         assertEquals(expected, outputStream.toString().trim());
     }
+=======
+//    @Test
+//    void testDisplayMovies(){
+//        cinema_1_movie.getMovies();
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        System.setOut(new PrintStream(outputStream));
+//
+//        cinema_1_movie.displayMovies();
+//
+//        String expected = "The Shawshank Redemption\n" +
+//                "Classification: MA15+\n" +
+//                "Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
+//                "Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
+//                "Director: Frank Darabont\n" +
+//                "Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
+//                "Screen size: Gold\n" +
+//                "Upcoming times: 10:45, 14:00\n" +
+//                "Cinema rooms: 1, 2\n\n";
+//
+//        assertEquals(expected, outputStream.toString());
+//    }
+>>>>>>> 5157388 (A2-5 Finished writing test case structure for customerRegistration)
 
 
 
@@ -74,9 +97,35 @@ public class TestCinema {
     }
 
 //    @Test
+<<<<<<< HEAD
 //    void testCustomerRegistration(){
 //        Cinema cinema = new Cinema();
 //
+=======
+//    void testCorrectCustomerRegistrationLogic(){
+//        File accountsFile = new File("src/test/resources/accounts_test.csv");
+//        cinema.setAccounts(accountsFile);
+//
+//        //catching input
+//        String userInput = String.format("bradpitt%sfightclub%sfightclub",
+//                System.lineSeparator(), System.lineSeparator());
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
+//
+//        //catching output
+//        String expected = String.format("%sYou have successfully registered as a new customer. Welcome to Fancy Cinemas!%s" +
+//                "You will return to the main menu logged into your new account.%s",
+//                System.lineSeparator(), System.lineSeparator(), System.lineSeparator());
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        PrintStream printStream = new PrintStream(outputStream);
+//        System.setOut(printStream);
+//
+//        //running method
+//        cinema.registerCustomer();
+//        String[] output = outputStream.toString().split(System.lineSeparator());
+//        String actual = output[output.length - 1];
+//        assertEquals(expected, actual.trim());
+>>>>>>> 5157388 (A2-5 Finished writing test case structure for customerRegistration)
 //    }
 
     @Test
