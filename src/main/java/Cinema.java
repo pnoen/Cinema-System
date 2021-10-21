@@ -63,15 +63,16 @@ public class Cinema {
         this.accountsFile = accountsFile;
     }
 
-    public void createAccounts(){
+    public void createAccounts() throws FileNotFoundException {
 
         Scanner sc = null;
         try {
             sc = new Scanner(this.accountsFile);
         }
         catch (FileNotFoundException e) {
-            System.out.println("Error: Could not load the database.");
-            System.exit(0);
+//            System.out.println("Error: Could not load the database.");
+//            System.exit(0);
+            throw new FileNotFoundException("Error: Could not load the database.");
         }
         //skipping formatting line
         while (sc.hasNextLine()) {
@@ -82,6 +83,10 @@ public class Cinema {
             this.accounts.add(account);
         }
 
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
     /**
@@ -276,7 +281,7 @@ public class Cinema {
                 continue;
             }
             else {
-                name.close();
+//                name.close();
                 break;
             }
         }
@@ -458,7 +463,7 @@ public class Cinema {
     // MAIN LOOP WILL BE HERE RATHER THAN IN MAIN.
     // DATABASE FILES WILL BE LOCATED IN 'src/main/resources'.
     // movies.csv IS SEMICOLON DELIMITED.
-    public void run() {
+    public void run() throws FileNotFoundException {
         boolean running = true;
         getMovies();
         createAccounts();
@@ -529,7 +534,7 @@ public class Cinema {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         Cinema cinema = new Cinema();
         cinema.run();
     }
