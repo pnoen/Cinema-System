@@ -25,7 +25,6 @@ public class TestCinema {
         cinema_1_movie.setAccountsFile(accounts_file);
     }
 
-<<<<<<< HEAD
     @Test
     void testDisplayMovies(){
         cinema_1_movie.getMovies();
