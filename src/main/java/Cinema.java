@@ -59,6 +59,10 @@ public class Cinema {
         this.moviesFile = movie_file;
     }
 
+    public void setAccountsFile(File accountsFile) {
+        this.accountsFile = accountsFile;
+    }
+
     public void createAccounts(){
 
         Scanner sc = null;
@@ -318,7 +322,7 @@ public class Cinema {
 
             }
         }
-        userInput.close();
+//        userInput.close();
 
 
 
@@ -398,7 +402,7 @@ public class Cinema {
                 System.out.println("You have logged out");
             }
         }
-        userInput.close();
+//        userInput.close();
     }
 
     public void staffLoginLogic(){
@@ -422,7 +426,7 @@ public class Cinema {
                 System.out.println("You have logged out");
             }
         }
-        userInput.close();
+//        userInput.close();
     }
 
     public void managerLoginLogic(){
@@ -448,7 +452,7 @@ public class Cinema {
                 System.out.println("You have logged out");
             }
         }
-        userInput.close();
+//        input.close();
     }
 
     // MAIN LOOP WILL BE HERE RATHER THAN IN MAIN.

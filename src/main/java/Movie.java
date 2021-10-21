@@ -69,7 +69,7 @@ public class Movie {
                         "Synopsis: %s\n" +
                         "Release date: %s\n" +
                         "Director: %s\n" +
-                        "Case: %s\n" +
+                        "Cast: %s\n" +
                         "Screen size: %s\n" +
                         "Upcoming times: %s\n" +
                         "Cinema rooms: %s\n", this.name, this.classification, this.synopsis,
