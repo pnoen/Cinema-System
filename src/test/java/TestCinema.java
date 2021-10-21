@@ -52,7 +52,7 @@ public class TestCinema {
         assertEquals(false, cinema.getLogged());
         cinema.setLogged(true);
 
-        String userInput = "2 5";
+        String userInput = "2\n5\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -98,7 +98,7 @@ public class TestCinema {
     void badLogicInput(){
         cinema.setLogged(true);
 
-        String userInput = "1236 5";
+        String userInput = "1236\n5\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -119,7 +119,7 @@ public class TestCinema {
     void testStaffLoginLogic(){
         cinema.setLogged(true);
 
-        String userInput = "2 6";
+        String userInput = "2\n6\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -140,7 +140,7 @@ public class TestCinema {
     void testManagerLoginLogic(){
         cinema.setLogged(true);
 
-        String userInput = "2 8";
+        String userInput = "2\n8\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -274,6 +274,7 @@ public class TestCinema {
         assertTrue(caught);
     }
 
+    @Test
     public void testRun_Exit() throws FileNotFoundException {
         InputStream sysInBackup = System.in;
 
