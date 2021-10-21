@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 group 'org.example'
@@ -25,6 +26,12 @@ jacocoTestReport {
     reports {
         html.enabled = true
         csv.enabled = true
+    }
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'com.example.ApplicationKt'
     }
 }
 
