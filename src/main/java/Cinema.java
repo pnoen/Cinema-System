@@ -402,10 +402,18 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
 
+
             if (logged == 5) {
                 this.loggedIn = false;
                 System.out.println("You have logged out");
             }
+
+            else {
+                System.out.println("Error: Not a valid option.");
+                userInput.nextLine();
+            }
+
+
         }
 //        userInput.close();
     }
@@ -429,6 +437,11 @@ public class Cinema {
             if (logged == 6) {
                 this.loggedIn = false;
                 System.out.println("You have logged out");
+            }
+
+            else {
+                System.out.println("Error: Not a valid option.");
+                userInput.nextLine();
             }
         }
 //        userInput.close();
@@ -455,6 +468,11 @@ public class Cinema {
             if (logged == 8) {
                 this.loggedIn = false;
                 System.out.println("You have logged out");
+            }
+
+            else {
+                System.out.println("Error: Not a valid option.");
+                userInput.nextLine();
             }
         }
 //        input.close();
