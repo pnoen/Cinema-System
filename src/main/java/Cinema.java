@@ -462,6 +462,7 @@ public class Cinema {
             System.out.print("Code: ");
             Scanner code = new Scanner(System.in);
             number = code.nextLine();
+            System.out.print("Amount: ");
             amount = code.nextInt();
             try {
                 BufferedReader giftCardReader = new BufferedReader(new FileReader(this.giftCardFile));
