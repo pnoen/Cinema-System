@@ -12,9 +12,11 @@ public class Cinema {
     private List<Movie> movies;
     private List<String> screenSizes;
     private List<Account> accounts;
+    private List<GiftCard> giftCards;
     private boolean loggedIn = false;
     private File accountsFile = new File("src/main/resources/accounts.csv");
     private File moviesFile = new File("src/main/resources/movies.csv");
+    private File giftCardFile = new File("src/main/resources/giftcards.csv");
     private Account currAcc;
     private List<String> allCinemaRooms;
 
@@ -23,6 +25,7 @@ public class Cinema {
         this.screenSizes = Arrays.asList("Bronze", "Silver", "Gold");
         this.accounts = new ArrayList<Account>();
         this.allCinemaRooms = Arrays.asList("1", "2", "3");
+        this.giftCards = new ArrayList<GiftCard>();
     }
 
     /**
@@ -61,6 +64,10 @@ public class Cinema {
 
     public void setAccountsFile(File accountsFile) {
         this.accountsFile = accountsFile;
+    }
+
+    public void setGiftCardFile(File giftCardFile) {
+        this.giftCardFile = giftCardFile;
     }
 
     public void createAccounts() throws FileNotFoundException {
@@ -447,6 +454,67 @@ public class Cinema {
 //        userInput.close();
     }
 
+    public void giftCardCreate() {
+        String number;
+        int amount;
+        while (true) { // The while loop ensures continual prompt in the case passwords do not match
+            System.out.println("Please create a new gift card by entering the code and amount.");
+            System.out.print("Code: ");
+            Scanner code = new Scanner(System.in);
+            number = code.nextLine();
+            amount = code.nextInt();
+            try {
+                BufferedReader giftCardReader = new BufferedReader(new FileReader(this.giftCardFile));
+                String line;
+                boolean unique = true;
+                while ((line = giftCardReader.readLine()) != null) {
+                    String[] ls = line.split(",");
+                    if (ls[0].equals(number)) {
+                        System.out.println("\nThis username is already taken. Please try again.\n");
+                        unique = false;
+                        break;
+                    } else if (number.matches(".*\\s.*")) {
+                        System.out.println("\nGift card code cannot contain spaces. Please try again.\n");
+                        unique = false;
+                        break;
+                    } else if (number.length() == 0) {
+                        System.out.println("\nGift card code cannot be empty. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                }
+                if (!unique) {
+                    continue;
+                }
+            } catch (IOException e) {
+                System.out.println("Error: couldn't update giftcards.csv");
+                break;
+            }
+            if (amount == 0) {
+                System.out.println("\nGift card amount can not be zero. Please try again.\n");
+                continue;
+            } else {
+                break;
+            }
+        }
+        try {
+            FileWriter csvWriter = new FileWriter(this.giftCardFile, true);
+            BufferedWriter bw = new BufferedWriter(csvWriter);
+            bw.write(String.format("%s,%s,%s\n", number, amount, "0"));
+            bw.close();
+            System.out.println("\nYou have successfully created a new gift card.");
+        } catch (IOException e) {
+            System.out.println("Error: couldn't update giftcards.csv");
+        }
+
+        GiftCard newCard = createNewGiftCard(number, amount, 0);
+        this.giftCards.add(newCard);
+    }
+
+    public GiftCard createNewGiftCard(String number, int amount, int redeemed){
+        return new GiftCard(number, amount, redeemed);
+    }
+
     public void managerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
@@ -455,7 +523,7 @@ public class Cinema {
                     "  2. Summary of Bookings\n" +
                     "  3. Movie Management\n" +
                     "  4. Add New Shows for Next Week\n" +
-                    "  5. Giftcard Management\n" +
+                    "  5. Gift Card Management\n" +
                     "  6. Staff management\n" +
                     "  7. Transaction management\n" +
                     "  8. Logout");
@@ -464,14 +532,17 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
-
+            switch (logged) {
+                case 5: giftCardCreate();
+                        break;
+            }
             if (logged == 8) {
                 this.loggedIn = false;
                 System.out.println("You have logged out");
             }
 
             else {
-                System.out.println("Error: Not a valid option.");
+                //System.out.println("Error: Not a valid option.");
                 userInput.nextLine();
             }
         }
