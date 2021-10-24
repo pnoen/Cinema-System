@@ -440,16 +440,18 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
+            switch (logged) {
+                case 5: giftCardCreate();
+                        break;
+                case 6: this.loggedIn = false;
+                        System.out.println("You have logged out");
 
-            if (logged == 6) {
-                this.loggedIn = false;
-                System.out.println("You have logged out");
+                default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
+
+
             }
 
-            else {
-                System.out.println("Error: Not a valid option.");
-                userInput.nextLine();
-            }
         }
 //        userInput.close();
     }
@@ -457,7 +459,7 @@ public class Cinema {
     public void giftCardCreate() {
         String number;
         int amount;
-        while (true) { // The while loop ensures continual prompt in the case passwords do not match
+        while (true) { // The while loop ensures continual prompt in the case bad input is given
             System.out.println("Please create a new gift card by entering the code and amount.");
             System.out.print("Code: ");
             Scanner code = new Scanner(System.in);
@@ -536,16 +538,17 @@ public class Cinema {
             switch (logged) {
                 case 5: giftCardCreate();
                         break;
-            }
-            if (logged == 8) {
-                this.loggedIn = false;
-                System.out.println("You have logged out");
+                case 8: this.loggedIn = false;
+                        System.out.println("You have logged out");
+
+                default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
             }
 
-            else {
-                //System.out.println("Error: Not a valid option.");
-                userInput.nextLine();
-            }
+
+
+
+
         }
 //        input.close();
     }
