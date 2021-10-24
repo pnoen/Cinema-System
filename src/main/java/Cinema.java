@@ -33,6 +33,7 @@ public class Cinema {
         Date release_date = null;
         List<String> upcoming_times = null;
         List<String> cinema_rooms = null;
+        List<List<Integer>> allSeats = new ArrayList<List<Integer>>();
 
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
@@ -41,12 +42,21 @@ public class Cinema {
             upcoming_times = Arrays.asList(details[6].split(","));
 
             cinema_rooms = Arrays.asList(details[8].split(","));
+
+            List<Integer> seats = new ArrayList<Integer>();
+            seats.add(Integer.valueOf(details[9]));
+            seats.add(Integer.valueOf(details[10]));
+            seats.add(Integer.valueOf(details[11]));
+            for (int i = 0; i < upcoming_times.size(); i++) {
+                allSeats.add(seats);
+            }
         }
         catch(Exception e){
             System.out.println("Error: Failed to load database");
+            System.exit(0);
         }
 
-        Movie movie = new Movie(details[0], details[1], details[2], release_date, details[4], details[5], upcoming_times, details[7], cinema_rooms);
+        Movie movie = new Movie(details[0], details[1], details[2], release_date, details[4], details[5], upcoming_times, details[7], cinema_rooms, allSeats);
         return movie;
     }
 
@@ -402,8 +412,16 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
 
-
-            if (logged == 5) {
+            if (logged == 1){
+                displayMovies();
+            }
+            else if (logged == 2) {
+                filterMovies(userInput);
+            }
+            else if (logged == 3) {
+                bookMovie();
+            }
+            else if (logged == 5) {
                 this.loggedIn = false;
                 System.out.println("You have logged out");
             }
@@ -416,6 +434,136 @@ public class Cinema {
 
         }
 //        userInput.close();
+    }
+
+    public void bookMovie() {
+        // list all movie names
+        // check if the input is in range of 0 to length of movies array
+        // display upcoming time for movie selected
+        // check if it is in range of the length of the movies upcoming time array
+        // check number of seats
+        // generate random transaction id
+        // create the transaction
+        // add to a list of transactions in cinema
+        // add to a list of bookings in account
+
+        List<String> movieNames = new ArrayList<String>();
+        for (Movie movie : movies) {
+            movieNames.add(movie.getName());
+        }
+
+        Scanner userInput = new Scanner(System.in);
+        boolean bookedMovie = false;
+        while (!bookedMovie) {
+            System.out.println("Select a movie you would like to book:");
+            for (int i = 0; i < movieNames.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + movieNames.get(i));
+            }
+            System.out.println("  " + (movieNames.size() + 1) + ". Cancel booking");
+
+            int entered = 0;
+            if (userInput.hasNextInt()) {
+                entered = userInput.nextInt();
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                userInput.nextLine();
+                continue;
+            }
+
+            if (entered > 0 && entered <= movieNames.size() + 1) {
+                if (entered == movieNames.size() + 1) {
+                    System.out.println("Returning back to customer home page.\n");
+                    return;
+                }
+
+                pickBookingTime(entered - 1);
+                bookedMovie = true;
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                continue;
+            }
+        }
+    }
+
+    public void pickBookingTime(int movieIdx) {
+        Movie movie = movies.get(movieIdx);
+        List<String> times = movie.getUpcomingTimes();
+
+        Scanner userInput = new Scanner(System.in);
+        boolean choseTime = false;
+        while (!choseTime) {
+            System.out.println("Select a time to book for the movie:");
+            for (int i = 0; i < times.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + times.get(i));
+            }
+            System.out.println("  " + (times.size() + 1) + ". Cancel booking");
+
+            int entered = 0;
+            if (userInput.hasNextInt()) {
+                entered = userInput.nextInt();
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                userInput.nextLine();
+                continue;
+            }
+
+            if (entered > 0 && entered <= times.size() + 1) {
+                if (entered == times.size() + 1) {
+                    System.out.println("Returning back to customer home page.\n");
+                    return;
+                }
+
+                // need to add payment
+                pickBookingSeat(movie, entered - 1);
+                choseTime = true;
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                continue;
+            }
+        }
+    }
+
+    public void pickBookingSeat(Movie movie, int timeIdx) {
+        List<String> times = movie.getUpcomingTimes();
+        List<Integer> seats = movie.getSeats(timeIdx);
+
+        Scanner userInput = new Scanner(System.in);
+        boolean choseSeat = false;
+        while (!choseSeat) {
+            System.out.println("Select the seat you would like:\n" +
+                    "  1. Front\n" +
+                    "  2. Middle\n" +
+                    "  3. Rear\n" +
+                    "  4. Cancel booking");
+
+            int entered = 0;
+            if (userInput.hasNextInt()) {
+                entered = userInput.nextInt();
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                userInput.nextLine();
+                continue;
+            }
+
+            if (entered > 0 && entered <= 4) {
+                if (entered == 4) {
+                    System.out.println("Returning back to customer home page.\n");
+                    return;
+                }
+
+                boolean validSeat = movie.setSeats(timeIdx, entered - 1);
+                if (!validSeat) {
+                    System.out.println("There are no available seats in this row.");
+                    continue;
+                }
+                // generate transaction id
+                System.out.println("Thank you for booking at Fancy Cinemas.\n");
+                choseSeat = true;
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                continue;
+            }
+        }
     }
 
     public void staffLoginLogic(){
