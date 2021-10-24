@@ -457,6 +457,7 @@ public class Cinema {
     }
 
     public void giftCardCreate() {
+        boolean correct = false;
         String number;
         int amount;
         while (true) { // The while loop ensures continual prompt in the case bad input is given
@@ -473,19 +474,53 @@ public class Cinema {
                 while ((line = giftCardReader.readLine()) != null) {
                     String[] ls = line.split(",");
                     if (ls[0].equals(number)) {
-                        System.out.println("\nThis username is already taken. Please try again.\n");
+                        System.out.println("\nThis gift card has already been created. Please try again.\n");
                         unique = false;
                         break;
                     } else if (number.matches(".*\\s.*")) {
                         System.out.println("\nGift card code cannot contain spaces. Please try again.\n");
                         unique = false;
                         break;
+                    } else if (number.length() != 18){
+                        System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                        unique = false;
+                        break;
                     } else if (number.length() == 0) {
                         System.out.println("\nGift card code cannot be empty. Please try again.\n");
                         unique = false;
                         break;
+                    } else if (number.length() == 18){
+                        for(int count = 0; count < 15; count++){
+                            if(Character.isDigit(number.charAt(count)) == true){
+                                correct = true;
+                            } else {
+                                correct = false;
+                                unique = false;
+                                break;
+                            }
+
+                        }
+                        if(correct == true){
+                            if(number.charAt(16) == 'G'){
+                                if(number.charAt(17) == 'C'){
+                                    correct = true;
+                                } else{
+                                    System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                                    correct = false;
+                                    unique = false;
+                                    break;
+                                }
+                            } else{
+                                System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                                correct = false;
+                                unique = false;
+                                break;
+                            }
+                        }
                     }
                 }
+
+
                 if (!unique) {
                     continue;
                 }
