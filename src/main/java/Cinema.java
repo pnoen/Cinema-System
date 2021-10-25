@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.util.stream.Collectors;
 
 public class Cinema {
     private List<Movie> movies;
@@ -456,6 +457,45 @@ public class Cinema {
 //        userInput.close();
     }
 
+    public void giftCardDelete(int rowNum) {
+        String[] data = new String[99];
+        int count = 0;
+        int rowCount = 0;
+        try {
+            BufferedReader csvReader = new BufferedReader(new FileReader(this.giftCardFile));
+            String row;
+
+            while ((row = csvReader.readLine()) != null) {
+
+                if(count == rowNum-1){
+                    count++;
+                    continue;
+                }
+
+                data[rowCount] = row;
+                rowCount++;
+                count++;
+
+
+            }
+        }catch(IOException e){
+
+        }
+        try {
+            FileWriter csvWriter = new FileWriter(this.giftCardFile, false);
+            BufferedWriter bw = new BufferedWriter(csvWriter);
+            for (int j = 0; j < rowCount; j++) {
+                bw.append(String.valueOf(data[j]));
+                bw.append("\n");
+            }
+            bw.close();
+            System.out.println("\nYou have successfully updated the gift card database.");
+
+        }catch(IOException e){
+
+        }
+    }
+
     public void giftCardCreate() {
         boolean correct = false;
         String number;
@@ -568,6 +608,8 @@ public class Cinema {
                         break;
                 case 8: this.loggedIn = false;
                         System.out.println("You have logged out");
+                case 9: giftCardDelete(2);
+                        break;
 
                 default: System.out.println("Error: Not a valid option.");
                          userInput.nextLine();
