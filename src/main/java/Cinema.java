@@ -1,12 +1,10 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.lang.String;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.FileReader;
-import java.io.BufferedReader;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Cinema {
     private List<Movie> movies;
@@ -18,6 +16,9 @@ public class Cinema {
     private Account currAcc;
     private List<String> allCinemaRooms;
     private List<Transaction> transactions = new ArrayList<Transaction>();
+    private JSONArray cards;
+    private int checkPaymentVal = 5;
+
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
@@ -559,6 +560,10 @@ public class Cinema {
                 }
                 // generate transaction id
 
+                int payment = checkPayment();
+
+
+
                 String randIdChars = "abcdefghijklmnopqrstuvwyxz";
                 randIdChars += randIdChars.toUpperCase();
                 randIdChars += "1234567890";
@@ -586,9 +591,12 @@ public class Cinema {
                 transactions.add(transaction);
                 currAcc.addTransaction(transaction);
 
-                System.out.println("----------------------\n" +
-                        transaction.getTransactionInformation() +
-                        "----------------------\n");
+                if (payment == 2){
+                    System.out.println("----------------------\n" +
+                            transaction.getTransactionInformation() +
+                            "----------------------\n");
+                }
+
 
                 choseSeat = true;
             } else {
@@ -598,6 +606,71 @@ public class Cinema {
         }
     }
 
+    public int checkPayment(){
+        JSONParser parser = new JSONParser();
+        boolean cardFound = false;
+        Scanner userInput = new Scanner(System.in);
+        try {
+            cards = (JSONArray) parser.parse(new FileReader("src/main/resources/credit_cards.json"));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        while(this.checkPaymentVal == 5) {
+            System.out.println("Select the payment option you would like\n" +
+                    "  1. Credit Card\n" +
+                    "  2. Gift Card\n" +
+                    "  3. Return to seat selection");
+
+
+            int entered = 0;
+            if (userInput.hasNextInt()) {
+                entered = userInput.nextInt();
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                userInput.nextLine();
+                continue;
+            }
+
+            if (entered > 0 && entered <= 4) {
+                if (entered == 1) {
+                    System.out.println("Please enter the card holders name and number");
+                    System.out.print("Card holders name: ");
+                    userInput.nextLine();
+                    String name = userInput.nextLine();
+                    System.out.print("Card number: ");
+                    String number = userInput.nextLine();
+
+                    for (Object n : cards) {
+
+                        if (((JSONObject) n).get("name").equals(name) && ((JSONObject) n).get("number").equals(number)){
+                            System.out.println("Transaction was successful");
+                            cardFound = true;
+                            return 2;
+                        }
+
+                    }
+                    if (cardFound == false){
+                        System.out.println("Card details were incorrect, transaction was unsuccessful");
+                        return 1;
+                    }
+
+
+                }
+                else if (entered == 2){
+                    System.out.println("Gift card");
+                    return 2;
+                }
+                else if (entered == 3) {
+                    System.out.println("Returning back to customer home page.\n");
+                    return 0;
+                }
+            }
+
+
+
+        }
+        return 0;
+    }
     public void staffLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
