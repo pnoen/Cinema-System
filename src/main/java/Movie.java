@@ -99,6 +99,26 @@ public class Movie {
         return info;
     }
 
+    /**
+     * Used to get condensed info
+     * @return movie title, upcoming times
+     */
+    public String getCondensedMovieInformation(){
+        String upcomingTimes = String.join(", ", this.upcomingTimes);
+        String info = String.format("Title: %s\n" + "Upcoming Times: %s\n", this.name, upcomingTimes);
+        return info;
+    }
+
+    // need to do error checking to make sure formatting given in is correct
+    public void addTime(String time){
+        this.upcomingTimes.add(time);
+    }
+
+    public String getTitle() {
+        return this.name;
+    }
+
+
     public List<Integer> getSeats(int upcomingTimeIdx) {
         return seats.get(upcomingTimeIdx);
     }
