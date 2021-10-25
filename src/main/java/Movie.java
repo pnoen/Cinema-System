@@ -117,4 +117,11 @@ public class Movie {
         return true;
     }
 
+    public void addSeats(String upcomingTime, int seat, int numOfSeats) {
+        int ind = upcomingTimes.indexOf(upcomingTime);
+        int currSeats = seats.get(ind).get(seat);
+        currSeats += numOfSeats;
+        seats.get(ind).set(seat, currSeats);
+    }
+
 }
