@@ -71,6 +71,24 @@ public class Cinema {
         this.giftCardFile = giftCardFile;
     }
 
+    public void createGiftCards() throws FileNotFoundException {
+
+        Scanner sc = null;
+        try {
+            sc = new Scanner(this.giftCardFile);
+        }
+        catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Error: Could not load the database.");
+        }
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            String[] details = line.split(",");
+            GiftCard newCard = createNewGiftCard(details[0], 0);
+            this.giftCards.add(newCard);
+        }
+
+    }
+
     public void createAccounts() throws FileNotFoundException {
 
         Scanner sc = null;
@@ -494,16 +512,32 @@ public class Cinema {
 
         }
     }
+
+    public void giftCardView() {
+        try {
+            BufferedReader csvReader = new BufferedReader(new FileReader(this.giftCardFile));
+            String row;
+            System.out.println("Current gift cards:\n");
+            while ((row = csvReader.readLine()) != null) {
+                    System.out.println(row+"\n");
+                }
+            }
+        catch(IOException e){
+
+        }
+
+    }
     public void giftCardManage(){
         Scanner userInput = new Scanner(System.in);
         String code = null;
         boolean cont = true;
 
         while (cont) {
-            System.out.println("Would you like to add or delete a gift card?\n" +
+            System.out.println("Would you like to add/delete or view gift cards?\n" +
                     "  1. Add\n" +
                     "  2. Delete\n" +
-                    "  3. Exit");
+                    "  3. View\n" +
+                    "  4. Exit");
             int logged = 0;
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
@@ -518,7 +552,10 @@ public class Cinema {
                         }
                         giftCardDelete(code);
                         break;
-                case 3: cont = false;
+                case 3: giftCardView();
+                        break;
+
+                case 4: cont = false;
                         break;
 
 
@@ -663,6 +700,7 @@ public class Cinema {
         boolean running = true;
         getMovies();
         createAccounts();
+        createGiftCards();
 
         Scanner userInput = new Scanner(System.in);
         while (running) {
