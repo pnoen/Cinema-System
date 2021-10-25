@@ -1113,6 +1113,7 @@ public class Cinema {
             }
             switch (logged) {
                 case 4: addNewShows();
+                        break;
                 case 5: giftCardManage();
                         break;
                 case 8: this.loggedIn = false;
@@ -1122,10 +1123,6 @@ public class Cinema {
                 default: System.out.println("Error: Not a valid option.");
                          userInput.nextLine();
             }
-
-
-
-
 
         }
 //        input.close();
