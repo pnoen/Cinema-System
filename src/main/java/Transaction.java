@@ -3,12 +3,14 @@ public class Transaction {
     private Movie movie;
     private String movieTime;
     private String seat;
+    private int numOfSeats;
 
-    public Transaction(String id, Movie movie, String movieTime, String seat) {
+    public Transaction(String id, Movie movie, String movieTime, String seat, int numOfSeats) {
         this.id = id;
         this.movie = movie;
         this.movieTime = movieTime;
         this.seat = seat;
+        this.numOfSeats = numOfSeats;
     }
 
     public String getId() {
@@ -19,8 +21,9 @@ public class Transaction {
         String ticket = String.format("Transaction ID: %s\n" +
                         "Movie: %s\n" +
                         "Showing time: %s\n" +
-                        "Seat: %s\n", id, movie.getName(),
-                movieTime, seat);
+                        "Seat: %s\n" +
+                        "Number of seats: %s\n", id, movie.getName(),
+                movieTime, seat, numOfSeats);
         return ticket;
     }
 }

@@ -460,7 +460,7 @@ public class Cinema {
             for (int i = 0; i < movieNames.size(); i++) {
                 System.out.println("  " + (i + 1) + ". " + movieNames.get(i));
             }
-            System.out.println("  " + (movieNames.size() + 1) + ". Cancel booking");
+            System.out.println("  " + (movieNames.size() + 1) + ". Back to home page");
 
             int entered = 0;
             if (userInput.hasNextInt()) {
@@ -497,7 +497,7 @@ public class Cinema {
             for (int i = 0; i < times.size(); i++) {
                 System.out.println("  " + (i + 1) + ". " + times.get(i));
             }
-            System.out.println("  " + (times.size() + 1) + ". Cancel booking");
+            System.out.println("  " + (times.size() + 1) + ". Back to home page");
 
             int entered = 0;
             if (userInput.hasNextInt()) {
@@ -514,8 +514,8 @@ public class Cinema {
                     return;
                 }
 
-                // need to add payment
-                pickBookingSeat(movie, entered - 1);
+//                pickBookingSeat(movie, entered - 1);
+                bookingNumOfSeats(movie, entered - 1);
                 choseTime = true;
             } else {
                 System.out.println("Error: Not a valid option.\n");
@@ -524,9 +524,64 @@ public class Cinema {
         }
     }
 
-    public void pickBookingSeat(Movie movie, int timeIdx) {
+    public void bookingNumOfSeats(Movie movie, int timeIdx) {
+        Scanner userInput = new Scanner(System.in);
+        boolean choseNumSeats = false;
+        while (!choseNumSeats) {
+            System.out.println("Enter the number of seats you would like book.\n" +
+                    "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                    "Child (under 12):\n" +
+                    "Student:\n" +
+                    "Adult:\n" +
+                    "Senior/Pensioner:\n" +
+                    "(Enter 'cancel' to return to the home page)");
+            String selections = userInput.nextLine();
+
+            // Split the selection input and convert to int
+            List<Integer> numOfSeats = new ArrayList<Integer>();
+            boolean invalid = false;
+            int totalSeats = 0;
+            for (String s : selections.split(",")) {
+                try {
+                    int input = Integer.parseInt(s.trim());
+                    if (input < 0) {
+                        invalid = true;
+                        break;
+                    }
+                    numOfSeats.add(input);
+                    totalSeats += input;
+                } catch (NumberFormatException e) {
+                    if (s.equals("cancel")) {
+                        System.out.println("Returning back to customer home page.\n");
+                        return;
+                    }
+                    invalid = true;
+                }
+            }
+            if (invalid) {
+                System.out.println("Error: Invalid option entered.\n");
+                continue;
+            }
+
+            if (numOfSeats.size() != 4) {
+                System.out.println("Error: Invalid option entered.\n");
+                continue;
+            }
+
+            if (totalSeats <= 0) {
+                System.out.println("Error: Invalid option entered.\n");
+                continue;
+            }
+
+            pickBookingSeat(movie, timeIdx, totalSeats);
+            choseNumSeats = true;
+
+        }
+    }
+
+    public void pickBookingSeat(Movie movie, int timeIdx, int numOfBookingSeats) {
         List<String> times = movie.getUpcomingTimes();
-        List<Integer> seats = movie.getSeats(timeIdx);
+//        List<Integer> seats = movie.getSeats(timeIdx);
 
         Scanner userInput = new Scanner(System.in);
         boolean choseSeat = false;
@@ -535,7 +590,7 @@ public class Cinema {
                     "  1. Front\n" +
                     "  2. Middle\n" +
                     "  3. Rear\n" +
-                    "  4. Cancel booking");
+                    "  4. Back to home page");
 
             int entered = 0;
             if (userInput.hasNextInt()) {
@@ -552,9 +607,8 @@ public class Cinema {
                     return;
                 }
 
-                boolean validSeat = movie.setSeats(timeIdx, entered - 1);
+                boolean validSeat = movie.setSeats(timeIdx, entered - 1, numOfBookingSeats);
                 if (!validSeat) {
-                    System.out.println("There are no available seats in this row.");
                     continue;
                 }
                 // generate transaction id
@@ -582,7 +636,7 @@ public class Cinema {
 
                 String[] cinemaSeats = {"Front", "Middle", "Rear"};
 
-                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1]);
+                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats);
                 transactions.add(transaction);
                 currAcc.addTransaction(transaction);
 

@@ -103,12 +103,17 @@ public class Movie {
         return seats.get(upcomingTimeIdx);
     }
 
-    public boolean setSeats(int upcomingTimeIdx, int seat) {
+    public boolean setSeats(int upcomingTimeIdx, int seat, int numOfBookingSeats) {
         int numSeats = seats.get(upcomingTimeIdx).get(seat);
-        if (numSeats <= 0) {
+        if (numSeats < 0) {
+            System.out.println("There are no available seats in this row.\n");
             return false;
         }
-        seats.get(upcomingTimeIdx).set(seat, numSeats - 1);
+        else if (numSeats < numOfBookingSeats) {
+            System.out.println("There aren't enough seats in this row.\n");
+            return false;
+        }
+        seats.get(upcomingTimeIdx).set(seat, numSeats - numOfBookingSeats);
         return true;
     }
 
