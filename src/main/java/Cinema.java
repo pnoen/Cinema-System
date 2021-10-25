@@ -100,7 +100,7 @@ public class Cinema {
         while (sc.hasNextLine()) {
             String line = sc.nextLine();
             String[] details = line.split(",");
-            GiftCard newCard = createNewGiftCard(details[0], 0);
+            GiftCard newCard = createNewGiftCard(details[0], Integer.parseInt(details[1]));
             this.giftCards.add(newCard);
         }
 
