@@ -916,6 +916,7 @@ public class Cinema {
             }
             switch (logged) {
                 case 4: addNewShows();
+                        break;
                 case 5: giftCardManage();
                         break;
                 case 6: this.loggedIn = false;
