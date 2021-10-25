@@ -17,6 +17,7 @@ public class Cinema {
     private File moviesFile = new File("src/main/resources/movies.csv");
     private Account currAcc;
     private List<String> allCinemaRooms;
+    private List<Transaction> transactions = new ArrayList<Transaction>();
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
@@ -404,7 +405,7 @@ public class Cinema {
                     "  1. All movies\n" +
                     "  2. Filter movies\n" +
                     "  3. Book\n" +
-                    "  4. Cancel Booking\n" +
+                    "  4. Cancel a booking\n" +
                     "  5. Logout");
 
             int logged = 0;
@@ -557,7 +558,38 @@ public class Cinema {
                     continue;
                 }
                 // generate transaction id
-                System.out.println("Thank you for booking at Fancy Cinemas.\n");
+
+                String randIdChars = "abcdefghijklmnopqrstuvwyxz";
+                randIdChars += randIdChars.toUpperCase();
+                randIdChars += "1234567890";
+                String transactionId = "";
+                boolean unique = false;
+                while (!unique) {
+                    transactionId = "";
+                    Random rand = new Random();
+                    for (int i = 0; i < 6; i++){
+                        int num = rand.nextInt(randIdChars.length());
+                        transactionId += randIdChars.charAt(num);
+                    }
+
+                    for (Transaction transaction : transactions) {
+                        if (transaction.getId().equals(transactionId)) {
+                            continue;
+                        }
+                    }
+                    unique = true;
+                }
+
+                String[] cinemaSeats = {"Front", "Middle", "Rear"};
+
+                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1]);
+                transactions.add(transaction);
+                currAcc.addTransaction(transaction);
+
+                System.out.println("----------------------\n" +
+                        transaction.getTransactionInformation() +
+                        "----------------------\n");
+
                 choseSeat = true;
             } else {
                 System.out.println("Error: Not a valid option.\n");
