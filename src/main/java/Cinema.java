@@ -442,7 +442,7 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
-                case 5: giftCardCreate();
+                case 5: giftCardManage();
                         break;
                 case 6: this.loggedIn = false;
                         System.out.println("You have logged out");
@@ -457,7 +457,7 @@ public class Cinema {
 //        userInput.close();
     }
 
-    public void giftCardDelete(int rowNum) {
+    public void giftCardDelete(String GCNumber) {
         String[] data = new String[99];
         int count = 0;
         int rowCount = 0;
@@ -466,8 +466,7 @@ public class Cinema {
             String row;
 
             while ((row = csvReader.readLine()) != null) {
-
-                if(count == rowNum-1){
+                if(row.split(",")[0].equals(GCNumber)){
                     count++;
                     continue;
                 }
@@ -494,6 +493,41 @@ public class Cinema {
         }catch(IOException e){
 
         }
+    }
+    public void giftCardManage(){
+        Scanner userInput = new Scanner(System.in);
+        String code = null;
+        boolean cont = true;
+
+        while (cont) {
+            System.out.println("Would you like to add or delete a gift card?\n" +
+                    "  1. Add\n" +
+                    "  2. Delete\n" +
+                    "  3. Exit");
+            int logged = 0;
+            if (userInput.hasNextInt()) {
+                logged = userInput.nextInt();
+            }
+            switch (logged) {
+                case 1: giftCardCreate();
+                        break;
+                case 2: System.out.println("Please input the gift card code to delete.");
+                        Scanner newInput = new Scanner(System.in);
+                        if (newInput.hasNextLine()) {
+                            code = newInput.nextLine();
+                        }
+                        giftCardDelete(code);
+                        break;
+                case 3: cont = false;
+                        break;
+
+
+                default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
+            }
+
+        }
+
     }
 
     public void giftCardCreate() {
@@ -604,12 +638,11 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
-                case 5: giftCardCreate();
+                case 5: giftCardManage();
                         break;
                 case 8: this.loggedIn = false;
                         System.out.println("You have logged out");
-                case 9: giftCardDelete(2);
-                        break;
+
 
                 default: System.out.println("Error: Not a valid option.");
                          userInput.nextLine();
