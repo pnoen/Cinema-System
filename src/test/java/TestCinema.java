@@ -41,9 +41,22 @@ public class TestCinema {
                 "Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
                 "Screen size: Gold\n" +
                 "Upcoming times: 10:45, 14:00\n" +
-                "Cinema rooms: 1, 2";
+                "Cinema rooms: 1, 2\n" +
+                "Available seats: 6, 6\n";
 
-        assertEquals(expected, outputStream.toString().trim());
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -52,7 +65,7 @@ public class TestCinema {
         assertEquals(false, cinema.getLogged());
         cinema.setLogged(true);
 
-        String userInput = "2\n5\n";
+        String userInput = "5\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -414,6 +427,7 @@ public class TestCinema {
                 "Screen size: Gold\n" +
                 "Upcoming times: 10:45, 14:00\n" +
                 "Cinema rooms: 1, 2\n" +
+                "Available seats: 6, 6\n" +
                 "\n" +
                 "Select the page you would like to visit:\n" +
                 "  1. All movies\n" +
@@ -468,15 +482,16 @@ public class TestCinema {
                 "  5. Room 2\n" +
                 "  6. Room 3\n" +
                 "\n" +
-                "  The Shawshank Redemption\n" +
-                "  Classification: MA15+\n" +
-                "  Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
-                "  Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
-                "  Director: Frank Darabont\n" +
-                "  Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
-                "  Screen size: Gold\n" +
-                "  Upcoming times: 10:45, 14:00\n" +
-                "  Cinema rooms: 1, 2\n" +
+                "The Shawshank Redemption\n" +
+                "Classification: MA15+\n" +
+                "Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
+                "Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
+                "Director: Frank Darabont\n" +
+                "Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
+                "Screen size: Gold\n" +
+                "Upcoming times: 10:45, 14:00\n" +
+                "Cinema rooms: 1, 2\n" +
+                "Available seats: 6, 6\n" +
                 "\n" +
                 "Select the page you would like to visit:\n" +
                 "  1. All movies\n" +
