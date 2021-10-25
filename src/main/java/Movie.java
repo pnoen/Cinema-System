@@ -10,9 +10,11 @@ public class Movie {
     private List<String> upcomingTimes;
     private String screenSize;
     private List<String> cinemaRooms;
+    private List<List<Integer>> seats; // [[front, middle, rear], [front, middle, rear]]
 
     public Movie(String name, String synopsis, String classification, Date releaseDate, String director,
-                 String cast, List<String> upcomingTimes, String screenSize, List<String> cinemaRooms) {
+                 String cast, List<String> upcomingTimes, String screenSize, List<String> cinemaRooms,
+                 List<List<Integer>> seats) {
         this.name = name;
         this.synopsis = synopsis;
         this.classification = classification;
@@ -22,11 +24,12 @@ public class Movie {
         this.upcomingTimes = upcomingTimes;
         this.screenSize = screenSize;
         this.cinemaRooms = cinemaRooms;
+        this.seats = seats;
     }
 
-//    public String getName() {
-//        return name;
-//    }
+    public String getName() {
+        return name;
+    }
 //
 //    public String getSynopsis() {
 //        return synopsis;
@@ -48,9 +51,9 @@ public class Movie {
 //        return cast;
 //    }
 //
-//    public List<String> getUpcomingTimes() {
-//        return upcomingTimes;
-//    }
+    public List<String> getUpcomingTimes() {
+        return upcomingTimes;
+    }
 
     public String getScreenSize() {
         return screenSize;
@@ -64,6 +67,23 @@ public class Movie {
         String upcomingTimes = String.join(", ", this.upcomingTimes);
         String cinemaRooms = String.join(", ", this.cinemaRooms);
 
+        List<Integer> sumOfSeats = new ArrayList<Integer>();
+        for (List<Integer> movieSeats : seats) {
+            int sum = 0;
+            sum += movieSeats.get(0);
+            sum += movieSeats.get(1);
+            sum += movieSeats.get(2);
+            sumOfSeats.add(sum);
+        }
+
+        String availableSeats = "";
+        for (int i = 0; i < sumOfSeats.size(); i++) {
+            availableSeats += sumOfSeats.get(i);
+            if (i != sumOfSeats.size() - 1) {
+                availableSeats += ", ";
+            }
+        }
+
         String info = String.format("%s\n" +
                         "Classification: %s\n" +
                         "Synopsis: %s\n" +
@@ -72,9 +92,24 @@ public class Movie {
                         "Cast: %s\n" +
                         "Screen size: %s\n" +
                         "Upcoming times: %s\n" +
-                        "Cinema rooms: %s\n", this.name, this.classification, this.synopsis,
-                this.releaseDate, this.director, this.cast, this.screenSize, upcomingTimes, cinemaRooms);
+                        "Cinema rooms: %s\n" +
+                        "Available seats: %s\n", this.name, this.classification, this.synopsis,
+                this.releaseDate, this.director, this.cast, this.screenSize, upcomingTimes, cinemaRooms,
+                availableSeats);
         return info;
+    }
+
+    public List<Integer> getSeats(int upcomingTimeIdx) {
+        return seats.get(upcomingTimeIdx);
+    }
+
+    public boolean setSeats(int upcomingTimeIdx, int seat) {
+        int numSeats = seats.get(upcomingTimeIdx).get(seat);
+        if (numSeats <= 0) {
+            return false;
+        }
+        seats.get(upcomingTimeIdx).set(seat, numSeats - 1);
+        return true;
     }
 
 }

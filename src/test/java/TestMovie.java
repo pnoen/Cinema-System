@@ -24,8 +24,16 @@ public class TestMovie {
         String room = "1,2";
         List<String> cinemaRooms = Arrays.asList(room.split(","));
 
+        List<List<Integer>> allSeats = new ArrayList<List<Integer>>();
+        List<Integer> seats = new ArrayList<Integer>();
+        seats.add(1);
+        seats.add(1);
+        seats.add(1);
+        allSeats.add(seats);
+        allSeats.add(seats);
+
         Movie movie = new Movie("John", "John Smith", "G",
-                release_date, "John Smith", "John Smith", upcomingTimes, "Bronze", cinemaRooms);
+                release_date, "John Smith", "John Smith", upcomingTimes, "Bronze", cinemaRooms, allSeats);
         assertEquals(movie.getScreenSize(), "Bronze");
     }
 
@@ -45,8 +53,16 @@ public class TestMovie {
         String room = "1,2";
         List<String> cinemaRooms = Arrays.asList(room.split(","));
 
+        List<List<Integer>> allSeats = new ArrayList<List<Integer>>();
+        List<Integer> seats = new ArrayList<Integer>();
+        seats.add(1);
+        seats.add(1);
+        seats.add(1);
+        allSeats.add(seats);
+        allSeats.add(seats);
+
         Movie movie = new Movie("John", "John Smith", "G",
-                release_date, "John Smith", "John Smith", upcomingTimes, "Bronze", cinemaRooms);
+                release_date, "John Smith", "John Smith", upcomingTimes, "Bronze", cinemaRooms, allSeats);
         assertEquals(movie.getCinemaRooms().get(0), "1");
         assertEquals(movie.getCinemaRooms().get(1), "2");
     }

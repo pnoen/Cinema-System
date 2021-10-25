@@ -1,9 +1,13 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Account {
     private String username;
     private String password;
 //    private String cardNumber = null;
 //    private int cardPin = -1;
     private int perm;
+    private List<Transaction> transactions = new ArrayList<Transaction>();
 
     public Account(String username, String password, int perm) {
         this.username = username;
@@ -21,5 +25,13 @@ public class Account {
 
     public int getPerm(){
         return perm;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
     }
 }
