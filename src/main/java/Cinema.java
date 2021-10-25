@@ -459,14 +459,12 @@ public class Cinema {
     public void giftCardCreate() {
         boolean correct = false;
         String number;
-        int amount;
+
         while (true) { // The while loop ensures continual prompt in the case bad input is given
-            System.out.println("Please create a new gift card by entering the code and amount.");
+            System.out.println("Please create a new gift card by entering the code.");
             System.out.print("Code: ");
             Scanner code = new Scanner(System.in);
             number = code.nextLine();
-            System.out.print("Amount: ");
-            amount = code.nextInt();
             try {
                 BufferedReader giftCardReader = new BufferedReader(new FileReader(this.giftCardFile));
                 String line;
@@ -528,29 +526,24 @@ public class Cinema {
                 System.out.println("Error: couldn't update giftcards.csv");
                 break;
             }
-            if (amount == 0) {
-                System.out.println("\nGift card amount can not be zero. Please try again.\n");
-                continue;
-            } else {
-                break;
-            }
+
         }
         try {
             FileWriter csvWriter = new FileWriter(this.giftCardFile, true);
             BufferedWriter bw = new BufferedWriter(csvWriter);
-            bw.write(String.format("%s,%s,%s\n", number, amount, "0"));
+            bw.write(String.format("%s,%s\n", number, "0"));
             bw.close();
             System.out.println("\nYou have successfully created a new gift card.");
         } catch (IOException e) {
             System.out.println("Error: couldn't update giftcards.csv");
         }
 
-        GiftCard newCard = createNewGiftCard(number, amount, 0);
+        GiftCard newCard = createNewGiftCard(number, 0);
         this.giftCards.add(newCard);
     }
 
-    public GiftCard createNewGiftCard(String number, int amount, int redeemed){
-        return new GiftCard(number, amount, redeemed);
+    public GiftCard createNewGiftCard(String number, int redeemed){
+        return new GiftCard(number, redeemed);
     }
 
     public void managerLoginLogic(){
