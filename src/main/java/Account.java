@@ -34,4 +34,8 @@ public class Account {
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
+
+    public void removeTransaction(int ind) {
+        transactions.remove(ind);
+    }
 }

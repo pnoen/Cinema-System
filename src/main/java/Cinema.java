@@ -428,11 +428,13 @@ public class Cinema {
             else if (logged == 3) {
                 bookMovie();
             }
+            else if (logged == 4) {
+                cancelBooking();
+            }
             else if (logged == 5) {
                 this.loggedIn = false;
                 System.out.println("You have logged out");
             }
-
             else {
                 System.out.println("Error: Not a valid option.");
                 userInput.nextLine();
@@ -619,6 +621,12 @@ public class Cinema {
                 }
                 // generate transaction id
                 int payment = checkPayment();
+
+                String cancelReason = "";
+                if (payment == 1) {
+                    cancelReason = "card payment failed";
+                }
+
                 String randIdChars = "abcdefghijklmnopqrstuvwyxz";
                 randIdChars += randIdChars.toUpperCase();
                 randIdChars += "1234567890";
@@ -642,7 +650,7 @@ public class Cinema {
 
                 String[] cinemaSeats = {"Front", "Middle", "Rear"};
 
-                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats);
+                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats, cancelReason);
                 transactions.add(transaction);
                 currAcc.addTransaction(transaction);
 
@@ -650,8 +658,8 @@ public class Cinema {
                     System.out.println("----------------------\n" +
                             transaction.getTransactionInformation() +
                             "----------------------\n");
-                    choseSeat = true;
                 }
+                choseSeat = true;
 
             } else {
                 System.out.println("Error: Not a valid option.\n");
@@ -724,6 +732,55 @@ public class Cinema {
         }
         return 0;
     }
+
+    public void cancelBooking() {
+        Scanner userInput = new Scanner(System.in);
+        boolean cancelledBooking = false;
+        while (!cancelledBooking) {
+            System.out.println("Select the booking you would like to cancel:");
+            for (int i = 0; i < currAcc.getTransactions().size(); i++) {
+                Transaction transaction = currAcc.getTransactions().get(i);
+                System.out.println((i + 1) + ".");
+                System.out.println(transaction.getTransactionInformation());
+            }
+            System.out.println((currAcc.getTransactions().size() + 1) + ". Back to home page");
+
+            int entered = 0;
+            if (userInput.hasNextInt()) {
+                entered = userInput.nextInt();
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                userInput.nextLine();
+                continue;
+            }
+
+            if (entered > 0 && entered <= currAcc.getTransactions().size() + 1) {
+                if (entered == currAcc.getTransactions().size() + 1) {
+                    System.out.println("Returning back to customer home page.\n");
+                    return;
+                }
+
+                Transaction transaction = currAcc.getTransactions().get(entered - 1);
+                currAcc.removeTransaction(entered - 1);
+
+                List<String> cinemaSeats = Arrays.asList("Front", "Middle", "Rear");
+                int seat = cinemaSeats.indexOf(transaction.getSeat());
+                transaction.setCancelReason("user cancelled");
+
+                transaction.getMovie().addSeats(transaction.getMovieTime(), seat, transaction.getNumOfSeats());
+                System.out.println("Booking removed.\n");
+                cancelledBooking = true;
+
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                continue;
+            }
+
+        }
+
+
+    }
+
     public void staffLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
