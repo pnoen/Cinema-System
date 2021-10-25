@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,9 +17,11 @@ public class Cinema {
     private List<Movie> movies;
     private List<String> screenSizes;
     private List<Account> accounts;
+    private List<GiftCard> giftCards;
     private boolean loggedIn = false;
     private File accountsFile = new File("src/main/resources/accounts.csv");
     private File moviesFile = new File("src/main/resources/movies.csv");
+    private File giftCardFile = new File("src/main/resources/giftcards.csv");
     private Account currAcc;
     private List<String> allCinemaRooms;
     private List<Transaction> transactions = new ArrayList<Transaction>();
@@ -30,6 +33,7 @@ public class Cinema {
         this.screenSizes = Arrays.asList("Bronze", "Silver", "Gold");
         this.accounts = new ArrayList<Account>();
         this.allCinemaRooms = Arrays.asList("1", "2", "3");
+        this.giftCards = new ArrayList<GiftCard>();
     }
 
     /**
@@ -78,6 +82,10 @@ public class Cinema {
 
     public void setAccountsFile(File accountsFile) {
         this.accountsFile = accountsFile;
+    }
+
+    public void setGiftCardFile(File giftCardFile) {
+        this.giftCardFile = giftCardFile;
     }
 
     public void createAccounts() throws FileNotFoundException {
@@ -796,18 +804,183 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
+            switch (logged) {
+                case 5: giftCardManage();
+                        break;
+                case 6: this.loggedIn = false;
+                        System.out.println("You have logged out");
 
-            if (logged == 6) {
-                this.loggedIn = false;
-                System.out.println("You have logged out");
+                default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
+
+
             }
 
-            else {
-                System.out.println("Error: Not a valid option.");
-                userInput.nextLine();
-            }
         }
 //        userInput.close();
+    }
+
+    public void giftCardDelete(String GCNumber) {
+        String[] data = new String[99];
+        int count = 0;
+        int rowCount = 0;
+        try {
+            BufferedReader csvReader = new BufferedReader(new FileReader(this.giftCardFile));
+            String row;
+
+            while ((row = csvReader.readLine()) != null) {
+                if(row.split(",")[0].equals(GCNumber)){
+                    count++;
+                    continue;
+                }
+
+                data[rowCount] = row;
+                rowCount++;
+                count++;
+
+
+            }
+        }catch(IOException e){
+
+        }
+        try {
+            FileWriter csvWriter = new FileWriter(this.giftCardFile, false);
+            BufferedWriter bw = new BufferedWriter(csvWriter);
+            for (int j = 0; j < rowCount; j++) {
+                bw.append(String.valueOf(data[j]));
+                bw.append("\n");
+            }
+            bw.close();
+            System.out.println("\nYou have successfully updated the gift card database.");
+
+        }catch(IOException e){
+
+        }
+    }
+    public void giftCardManage(){
+        Scanner userInput = new Scanner(System.in);
+        String code = null;
+        boolean cont = true;
+
+        while (cont) {
+            System.out.println("Would you like to add or delete a gift card?\n" +
+                    "  1. Add\n" +
+                    "  2. Delete\n" +
+                    "  3. Exit");
+            int logged = 0;
+            if (userInput.hasNextInt()) {
+                logged = userInput.nextInt();
+            }
+            switch (logged) {
+                case 1: giftCardCreate();
+                        break;
+                case 2: System.out.println("Please input the gift card code to delete.");
+                        Scanner newInput = new Scanner(System.in);
+                        if (newInput.hasNextLine()) {
+                            code = newInput.nextLine();
+                        }
+                        giftCardDelete(code);
+                        break;
+                case 3: cont = false;
+                        break;
+
+
+                default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
+            }
+
+        }
+
+    }
+
+    public void giftCardCreate() {
+        boolean correct = false;
+        String number;
+
+        while (true) { // The while loop ensures continual prompt in the case bad input is given
+            System.out.println("Please create a new gift card by entering the code.");
+            System.out.print("Code: ");
+            Scanner code = new Scanner(System.in);
+            number = code.nextLine();
+            try {
+                BufferedReader giftCardReader = new BufferedReader(new FileReader(this.giftCardFile));
+                String line;
+                boolean unique = true;
+                while ((line = giftCardReader.readLine()) != null) {
+                    String[] ls = line.split(",");
+                    if (ls[0].equals(number)) {
+                        System.out.println("\nThis gift card has already been created. Please try again.\n");
+                        unique = false;
+                        break;
+                    } else if (number.matches(".*\\s.*")) {
+                        System.out.println("\nGift card code cannot contain spaces. Please try again.\n");
+                        unique = false;
+                        break;
+                    } else if (number.length() != 18){
+                        System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                        unique = false;
+                        break;
+                    } else if (number.length() == 0) {
+                        System.out.println("\nGift card code cannot be empty. Please try again.\n");
+                        unique = false;
+                        break;
+                    } else if (number.length() == 18){
+                        for(int count = 0; count < 15; count++){
+                            if(Character.isDigit(number.charAt(count)) == true){
+                                correct = true;
+                            } else {
+                                correct = false;
+                                unique = false;
+                                break;
+                            }
+
+                        }
+                        if(correct == true){
+                            if(number.charAt(16) == 'G'){
+                                if(number.charAt(17) == 'C'){
+                                    correct = true;
+                                } else{
+                                    System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                                    correct = false;
+                                    unique = false;
+                                    break;
+                                }
+                            } else{
+                                System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                                correct = false;
+                                unique = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+
+                if (!unique) {
+                    continue;
+                }
+            } catch (IOException e) {
+                System.out.println("Error: couldn't update giftcards.csv");
+                break;
+            }
+
+        }
+        try {
+            FileWriter csvWriter = new FileWriter(this.giftCardFile, true);
+            BufferedWriter bw = new BufferedWriter(csvWriter);
+            bw.write(String.format("%s,%s\n", number, "0"));
+            bw.close();
+            System.out.println("\nYou have successfully created a new gift card.");
+        } catch (IOException e) {
+            System.out.println("Error: couldn't update giftcards.csv");
+        }
+
+        GiftCard newCard = createNewGiftCard(number, 0);
+        this.giftCards.add(newCard);
+    }
+
+    public GiftCard createNewGiftCard(String number, int redeemed){
+        return new GiftCard(number, redeemed);
     }
 
     public void managerLoginLogic(){
@@ -818,7 +991,7 @@ public class Cinema {
                     "  2. Summary of Bookings\n" +
                     "  3. Movie Management\n" +
                     "  4. Add New Shows for Next Week\n" +
-                    "  5. Giftcard Management\n" +
+                    "  5. Gift Card Management\n" +
                     "  6. Staff management\n" +
                     "  7. Transaction management\n" +
                     "  8. Logout");
@@ -827,16 +1000,21 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
+            switch (logged) {
+                case 5: giftCardManage();
+                        break;
+                case 8: this.loggedIn = false;
+                        System.out.println("You have logged out");
 
-            if (logged == 8) {
-                this.loggedIn = false;
-                System.out.println("You have logged out");
+
+                default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
             }
 
-            else {
-                System.out.println("Error: Not a valid option.");
-                userInput.nextLine();
-            }
+
+
+
+
         }
 //        input.close();
     }

@@ -1,16 +1,19 @@
-//public class GiftCard {
-//    private String number;
-//    private boolean redeemed = false;
-//
-//    public GiftCard(String number) {
-//        this.number = number;
-//    }
-//
-//    public String getNumber() {
-//        return number;
-//    }
-//
-//    public boolean isRedeemed() {
-//        return redeemed;
-//    }
-//}
+public class GiftCard {
+    private String number;
+
+    private int redeemed;
+
+    public GiftCard(String number, int redeemed) {
+        this.number = number;
+
+        this.redeemed = redeemed;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public int isRedeemed() {
+        return redeemed;
+    }
+}
