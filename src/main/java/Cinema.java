@@ -460,7 +460,7 @@ public class Cinema {
             for (int i = 0; i < movieNames.size(); i++) {
                 System.out.println("  " + (i + 1) + ". " + movieNames.get(i));
             }
-            System.out.println("  " + (movieNames.size() + 1) + ". Cancel booking");
+            System.out.println("  " + (movieNames.size() + 1) + ". Back to home page");
 
             int entered = 0;
             if (userInput.hasNextInt()) {
@@ -497,7 +497,7 @@ public class Cinema {
             for (int i = 0; i < times.size(); i++) {
                 System.out.println("  " + (i + 1) + ". " + times.get(i));
             }
-            System.out.println("  " + (times.size() + 1) + ". Cancel booking");
+            System.out.println("  " + (times.size() + 1) + ". Back to home page");
 
             int entered = 0;
             if (userInput.hasNextInt()) {
@@ -533,7 +533,8 @@ public class Cinema {
                     "Child (under 12):\n" +
                     "Student:\n" +
                     "Adult:\n" +
-                    "Senior/Pensioner:");
+                    "Senior/Pensioner:\n" +
+                    "(Enter 'cancel' to return to the home page)");
             String selections = userInput.nextLine();
 
             // Split the selection input and convert to int
@@ -550,6 +551,10 @@ public class Cinema {
                     numOfSeats.add(input);
                     totalSeats += input;
                 } catch (NumberFormatException e) {
+                    if (s.equals("cancel")) {
+                        System.out.println("Returning back to customer home page.\n");
+                        return;
+                    }
                     invalid = true;
                 }
             }
@@ -585,7 +590,7 @@ public class Cinema {
                     "  1. Front\n" +
                     "  2. Middle\n" +
                     "  3. Rear\n" +
-                    "  4. Cancel booking");
+                    "  4. Back to home page");
 
             int entered = 0;
             if (userInput.hasNextInt()) {
