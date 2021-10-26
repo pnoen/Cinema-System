@@ -13,7 +13,17 @@ public class GiftCard {
         return number;
     }
 
-    public int isRedeemed() {
+    public int getRedeemed() {
         return redeemed;
     }
+    public void setRedeemed(int redeemed){
+        this.redeemed = redeemed;
+    }
+
+    public String getGCInfo(){
+        return String.format("Gift card number: %s\n" +
+                        "Redeemed State(0-Not Redeemed, 1-Redeemed): %s\n", this.number, this.redeemed);
+
+    }
+
 }
