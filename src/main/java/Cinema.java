@@ -469,6 +469,47 @@ public class Cinema {
         return found_movie;
     }
 
+    /**
+     * This is the interface for manager/cinema staff when they want to
+     * insert/delete/modify movie data
+     */
+    public void editingMovies(){
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Enter the number corresponding to the action you would like to take\n");
+        System.out.println("1. Insert a new Movie\n2. Modify a current Movie\n3. Delete a Movie\n");
+
+        int input = userInput.nextInt();
+        switch (input) {
+            case 1:
+                insertNewMovie();
+            case 2:
+                modifyCurrentMovie();
+            case 3:
+                deleteMovie();
+        }
+    }
+
+    /**
+     * Method in charge of inserting new movies
+     */
+    public void insertNewMovie(){
+
+    }
+
+    /**
+     * Method in charge of modifying current movies
+     */
+    public void modifyCurrentMovie(){
+
+    }
+
+    /**
+     * Method in charge of deleting movies
+     */
+    public void deleteMovie(){
+
+    }
+
     /***
      * Logic to deal with adding new shows
      * for cinema staff and manager
@@ -915,6 +956,8 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
+                case 3: editingMovies();
+                        break;
                 case 4: addNewShows();
                         break;
                 case 5: giftCardManage();
