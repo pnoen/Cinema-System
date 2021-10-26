@@ -39,4 +39,13 @@ public class Account {
     public void removeTransaction(int ind) {
         transactions.remove(ind);
     }
+
+
+    public void setHasCard(boolean hasCard){
+        this.hasCard = hasCard;
+    }
+
+    public boolean getHasCard(){
+        return this.hasCard;
+    }
 }

@@ -826,6 +826,8 @@ public class Cinema {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+
+
         while(this.checkPaymentVal == 5) {
             System.out.println("Select the payment option you would like\n" +
                     "  1. Credit Card\n" +
@@ -844,17 +846,22 @@ public class Cinema {
 
             if (entered > 0 && entered <= 4) {
                 if (entered == 1) {
+                    if(currAcc.getHasCard()){
+                        return 2;
+                    }
                     System.out.println("Please enter the card holders name and number");
                     System.out.print("Card holders name: ");
                     userInput.nextLine();
                     String name = userInput.nextLine();
-                    System.out.print("Card number: ");
-                    String number = userInput.nextLine();
+                    String number = PasswordMasker.readPassword("Card number: ");
+//                    String number = userInput.nextLine();
+//                    System.out.print("Card number: ");
 
                     for (Object n : cards) {
 
                         if (((JSONObject) n).get("name").equals(name) && ((JSONObject) n).get("number").equals(number)){
                             System.out.println("Transaction was successful");
+                            currAcc.setHasCard(true);
                             cardFound = true;
                             return 2;
                         }
@@ -868,8 +875,30 @@ public class Cinema {
 
                 }
                 else if (entered == 2){
-                    System.out.println("Gift card");
-                    return 2;
+                    System.out.println("Please enter the 16 digit gift card number followed by 'GC'");
+                    System.out.print("Card number: ");
+                    userInput.nextLine();
+                    String cardNo = userInput.nextLine();
+
+                    for (GiftCard c : this.giftCards){
+
+                        if(cardNo.equals(c.getNumber())){
+                            if(c.getRedeemed() == 1){
+                                System.out.println("\nGift card has already been redeemed, try again.\n");
+                                cardFound = true;
+                                continue;
+                            }
+                            System.out.println("\nCongratulations gift card has successfully been redeemed!\n");
+                            cardFound = true;
+                            updateGiftCardStateCSV(c);
+                            return 2;
+                        }
+                    }
+                    if (cardFound == false){
+                        System.out.println("Card details were incorrect, transaction was unsuccessful");
+                        return 1;
+                    }
+
                 }
                 else if (entered == 3) {
                     System.out.println("Returning back to customer home page.\n");
@@ -949,7 +978,7 @@ public class Cinema {
 
             if (logged == 4){
                 addNewShows();
-                break;
+//                break;
             }
             else if (logged == 5) {
                 giftCardManage();
@@ -965,6 +994,42 @@ public class Cinema {
 
         }
 //        userInput.close();
+    }
+
+    public void updateGiftCardStateCSV(GiftCard card){
+        card.setRedeemed(1);
+        List<List<String>> cardsDetails = new ArrayList<>();
+
+        for (GiftCard c : this.giftCards){
+            List<String> gc = new ArrayList<>(2);
+            for(int i = 0; i < 2;i++){
+                gc.add("");
+            }
+            String cardNum = c.getNumber();
+            String cardState = String.valueOf(c.getRedeemed());
+
+            gc.set(0,cardNum);
+            gc.set(1,cardState);
+
+            cardsDetails.add(gc);
+        }
+        try {
+            FileWriter csvWriter = new FileWriter(this.giftCardFile);
+            // Write all the details of the cards into the .csv file, having each card as a new entry on a new line
+            for (List<String> c : cardsDetails) {
+                csvWriter.append(String.join(",", c));  // Combine all elements in the list and separate by a comma
+                csvWriter.append("\n");
+            }
+
+            csvWriter.flush();
+            csvWriter.close();
+        }
+        catch (IOException e) {
+            System.out.println("Error: Couldn't update the database");
+        }
+
+
+
     }
 
     public void giftCardDelete(String GCNumber) {
@@ -1006,17 +1071,20 @@ public class Cinema {
     }
 
     public void giftCardView() {
-        try {
-            BufferedReader csvReader = new BufferedReader(new FileReader(this.giftCardFile));
-            String row;
+//        try {
+//            BufferedReader csvReader = new BufferedReader(new FileReader(this.giftCardFile));
+//            String row;
             System.out.println("Current gift cards:\n");
-            while ((row = csvReader.readLine()) != null) {
-                    System.out.println(row+"\n");
-                }
+//            while ((row = csvReader.readLine()) != null) {
+//                    System.out.println(row+"\n");
+//                }
+//            }
+//        catch(IOException e){
+//
+//        }
+            for(GiftCard c : this.giftCards){
+                System.out.println(c.getGCInfo());
             }
-        catch(IOException e){
-
-        }
 
     }
     public void giftCardManage(){
@@ -1083,7 +1151,7 @@ public class Cinema {
                         unique = false;
                         break;
                     } else if (number.length() != 18){
-                        System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                        System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n");
                         unique = false;
                         break;
                     } else if (number.length() == 0) {
@@ -1106,13 +1174,13 @@ public class Cinema {
                                 if(number.charAt(17) == 'C'){
                                     correct = true;
                                 } else{
-                                    System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                                    System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n");
                                     correct = false;
                                     unique = false;
                                     break;
                                 }
                             } else{
-                                System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' prefix. Please try again.\n");
+                                System.out.println("\nGift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n");
                                 correct = false;
                                 unique = false;
                                 break;
@@ -1125,6 +1193,7 @@ public class Cinema {
                 if (!unique) {
                     continue;
                 }
+                break;
             } catch (IOException e) {
                 System.out.println("Error: couldn't update giftcards.csv");
                 break;
