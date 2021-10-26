@@ -1020,6 +1020,10 @@ public class Cinema {
         return new GiftCard(number, redeemed);
     }
 
+    public void staffManage(){
+
+    }
+
     public void managerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
@@ -1042,6 +1046,8 @@ public class Cinema {
                         break;
                 case 8: this.loggedIn = false;
                         System.out.println("You have logged out");
+                case 6: staffManage();
+                        break;
 
 
                 default: System.out.println("Error: Not a valid option.");
