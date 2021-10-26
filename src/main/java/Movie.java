@@ -35,9 +35,9 @@ public class Movie {
 //        return synopsis;
 //    }
 //
-//    public String getClassification() {
-//        return classification;
-//    }
+    public String getClassification() {
+        return classification;
+    }
 //
 //    public Date getReleaseDate() {
 //        return releaseDate;
