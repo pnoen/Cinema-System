@@ -491,15 +491,101 @@ public class Cinema {
 
     /**
      * Method in charge of inserting new movies
+     * works but need to implement error checking
      */
     public void insertNewMovie(){
         //getting new movie info line
         String new_movie_line = "";
+        String[] new_movie_line_arr = new String[12];
 
-        String[] new_movie_line_arr;
+        Scanner userInput = new Scanner(System.in);
 
+        System.out.println("Enter Title:\n");
+        if (userInput.hasNext()) {
+            String title = userInput.nextLine();
+            System.out.println("Entered Title: "+title);
+            new_movie_line_arr[0] = title;
+        }
 
+        System.out.println("Enter Synopsis:\n");
+        if (userInput.hasNext()) {
+            String synopsis = userInput.nextLine();
+            System.out.println("Entered Synopsis: "+synopsis);
+            new_movie_line_arr[1] = synopsis;
+        }
 
+        System.out.println("Enter Classification:");
+        if (userInput.hasNext()) {
+            String classification = userInput.nextLine();
+            System.out.println("Entered Classification: "+classification);
+            new_movie_line_arr[2] = classification;
+        }
+
+        System.out.println("Enter Release Date:");
+        if (userInput.hasNext()) {
+            String release_date = userInput.nextLine();
+            System.out.println("Entered Release Date: "+release_date);
+            new_movie_line_arr[3] = release_date;
+        }
+
+        System.out.println("Enter Director:");
+        if (userInput.hasNext()) {
+            String director = userInput.nextLine();
+            System.out.println("Entered Director: "+director);
+            new_movie_line_arr[4] = director;
+        }
+
+        System.out.println("Enter Cast:");
+        if (userInput.hasNext()) {
+            String cast = userInput.nextLine();
+            System.out.println("Entered Cast: "+cast);
+            new_movie_line_arr[5] = cast;
+        }
+
+        System.out.println("Enter Upcoming Times:");
+        if (userInput.hasNext()) {
+            String upcoming_times = userInput.nextLine();
+            System.out.println("Entered Upcoming Times: "+upcoming_times);
+            new_movie_line_arr[6] = upcoming_times;
+        }
+
+        System.out.println("Enter Screen Size:");
+        if (userInput.hasNext()) {
+            String screen_size = userInput.nextLine();
+            System.out.println("Entered Screen Size: "+screen_size);
+            new_movie_line_arr[7] = screen_size;
+        }
+
+        System.out.println("Enter Cinema Rooms:");
+        if (userInput.hasNext()) {
+            String cinema_rooms = userInput.nextLine();
+            System.out.println("Entered Cinema Rooms: "+cinema_rooms);
+            new_movie_line_arr[8] = cinema_rooms;
+        }
+
+        System.out.println("Enter Front Seats:");
+        if (userInput.hasNext()) {
+            String front_seats = userInput.nextLine();
+            System.out.println("Entered Front Seats: "+front_seats);
+            new_movie_line_arr[9] = front_seats;
+        }
+
+        System.out.println("Enter Middle Seats:");
+        if (userInput.hasNext()) {
+            String middle_seats = userInput.nextLine();
+            System.out.println("Entered Middle Seats: "+middle_seats);
+            new_movie_line_arr[10] = middle_seats;
+        }
+
+        System.out.println("Enter Rear Seats:");
+        if (userInput.hasNext()) {
+            String rear_seats = userInput.nextLine();
+            System.out.println("Entered Rear Seats: "+rear_seats);
+            new_movie_line_arr[11] = rear_seats;
+        }
+
+        new_movie_line = String.join(";", new_movie_line_arr);
+        System.out.println("New Movie Inserted");
 
         try {
             BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
