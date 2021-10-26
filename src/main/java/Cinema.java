@@ -444,28 +444,21 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
+            switch(logged) {
+                case 1: displayMovies();
 
-            if (logged == 1){
-                displayMovies();
-            }
-            else if (logged == 2) {
-                filterMovies(userInput);
-            }
-            else if (logged == 3) {
-                bookMovie();
-            }
-            else if (logged == 4) {
-                cancelBooking();
-            }
-            else if (logged == 5) {
-                this.loggedIn = false;
-                System.out.println("You have logged out");
-            }
-            else {
-                System.out.println("Error: Not a valid option.");
-                userInput.nextLine();
-            }
+                case 2: filterMovies(userInput);
 
+                case 3: bookMovie();
+
+                case 4: cancelBooking();
+
+                case 5: this.loggedIn = false;
+                        System.out.println("You have logged out");
+
+                default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
+            }
 
         }
 //        userInput.close();
