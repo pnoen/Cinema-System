@@ -453,6 +453,116 @@ public class Cinema {
 //        userInput.close();
     }
 
+    /**
+     * Returns movie object based off title
+     * @param title
+     * @return
+     */
+    public Movie getMovie(String title){
+        //need to do error checking
+        Movie found_movie = null;
+        for (Movie movie: movies){
+            if (movie.getTitle() == title){
+                found_movie = movie;
+            }
+        }
+        return found_movie;
+    }
+
+    /***
+     * Logic to deal with adding new shows
+     * for cinema staff and manager
+     */
+    public void addNewShows() {
+
+        Map<Integer, Movie> movie_ref = new HashMap<Integer, Movie>();
+
+        //filling out hashmap with movies and references
+        int i = 0;
+        for (Movie movie : movies) {
+            movie_ref.put(i, movie);
+            i += 1;
+        }
+
+        Iterator iterator = movie_ref.entrySet().iterator();
+
+        //printing out movies and references to the user
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            System.out.println("Reference Number: " + (pair.getKey()));
+            Movie movie1 = (Movie) pair.getValue();
+            System.out.println(movie1.getCondensedMovieInformation());
+        }
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Enter the reference number of the film you would like to add a show for\n");
+
+        //going to have to add error checking to make sure
+        //all input that is given is correct ofc
+
+        int refnum = 100;
+        if (userInput.hasNextInt()) {
+            refnum = userInput.nextInt();
+            System.out.println("Adding show for the following movie:\n");
+            System.out.println(movie_ref.get(refnum).getCondensedMovieInformation());
+        }
+
+        Scanner userInput2 = new Scanner(System.in);
+        System.out.println("Enter the show time you would like to add (In form 'hh:mm:'):\n");
+        Boolean time_given = false;
+        String time = "";
+
+        if (userInput2.hasNext()) {
+            time = userInput2.nextLine();
+            System.out.println("Entering " + time + " into the system.");
+            time_given = true;
+        }
+
+        String updated_times;
+
+        //if we have given a time, can save it into the system
+        if (time_given) {
+
+            try {
+                BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
+                StringBuffer stringBuffer = new StringBuffer();
+
+                String line;
+
+                //getting relevant line
+                while ((line = movieReader.readLine()) != null) {
+
+                    String[] ls = line.split(";");
+
+                    if (ls[0].equals(movie_ref.get(refnum).getTitle())) {
+
+                        //updating upcoming times
+                        updated_times = ls[6] + "," + time;
+                        ls[6] = updated_times;
+                        String new_line = String.join(";", ls);
+                        line = new_line;
+                        System.out.println("\n" + movie_ref.get(refnum).getTitle());
+                        System.out.println("Updated Movie Upcoming Times: \n");
+                        System.out.println(updated_times + "\n");
+                        System.out.println("Successfully updated. Update will be visible once system is restarted.\n");
+                    }
+
+                    stringBuffer.append(line);
+                    stringBuffer.append('\n');
+
+                }
+                movieReader.close();
+
+                FileOutputStream fileOut = new FileOutputStream(this.moviesFile);
+                fileOut.write(stringBuffer.toString().getBytes());
+                fileOut.close();
+
+            } catch (IOException e) {
+                System.out.println("Error: couldn't update accounts.csv");
+            }
+
+        }
+    }
+
     public void bookMovie() {
         // list all movie names
         // check if the input is in range of 0 to length of movies array
@@ -805,6 +915,8 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
+                case 4: addNewShows();
+                        break;
                 case 5: giftCardManage();
                         break;
                 case 6: this.loggedIn = false;
@@ -1001,6 +1113,8 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
+                case 4: addNewShows();
+                        break;
                 case 5: giftCardManage();
                         break;
                 case 8: this.loggedIn = false;
@@ -1010,10 +1124,6 @@ public class Cinema {
                 default: System.out.println("Error: Not a valid option.");
                          userInput.nextLine();
             }
-
-
-
-
 
         }
 //        input.close();
