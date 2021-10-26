@@ -4,6 +4,7 @@ import java.util.List;
 public class Account {
     private String username;
     private String password;
+    private boolean hasCard;
 //    private String cardNumber = null;
 //    private int cardPin = -1;
     private int perm;
