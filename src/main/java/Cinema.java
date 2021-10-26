@@ -493,7 +493,40 @@ public class Cinema {
      * Method in charge of inserting new movies
      */
     public void insertNewMovie(){
+        //getting new movie info line
+        String new_movie_line = "";
 
+        String[] new_movie_line_arr;
+
+
+
+
+        try {
+            BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
+            StringBuffer stringBuffer = new StringBuffer();
+
+            String line;
+
+            //movie info that already exists
+            while ((line = movieReader.readLine()) != null) {
+
+                stringBuffer.append(line);
+                stringBuffer.append('\n');
+
+            }
+
+            //adding in our new line
+            stringBuffer.append(new_movie_line);
+            stringBuffer.append('\n');
+            movieReader.close();
+
+            FileOutputStream fileOut = new FileOutputStream(this.moviesFile);
+            fileOut.write(stringBuffer.toString().getBytes());
+            fileOut.close();
+
+        } catch (IOException e) {
+            System.out.println("Error: couldn't update accounts.csv");
+        }
     }
 
     /**
@@ -501,6 +534,34 @@ public class Cinema {
      */
     public void modifyCurrentMovie(){
 
+        Map<Integer, Movie> movie_ref = new HashMap<Integer, Movie>();
+
+        //filling out hashmap with movies and references
+        int i = 0;
+        for (Movie movie : movies) {
+            movie_ref.put(i, movie);
+            i += 1;
+        }
+
+        Iterator iterator = movie_ref.entrySet().iterator();
+
+        //printing out movies and references to the user
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            System.out.println("Reference Number: " + (pair.getKey()));
+            Movie movie1 = (Movie) pair.getValue();
+            System.out.println(movie1.getCondensedMovieInformation());
+        }
+
+        System.out.println("Enter reference number of movie you would like to modify:\n");
+        Scanner userInput = new Scanner(System.in);
+
+        int refnum = 100;
+        if (userInput.hasNextInt()) {
+            refnum = userInput.nextInt();
+            System.out.println("Selected Movie Current Data:\n");
+            System.out.println(movie_ref.get(refnum).getMovieInformation());
+        }
     }
 
     /**
@@ -598,7 +659,7 @@ public class Cinema {
                 fileOut.close();
 
             } catch (IOException e) {
-                System.out.println("Error: couldn't update accounts.csv");
+                System.out.println("Error: couldn't update movies.csv");
             }
 
         }
