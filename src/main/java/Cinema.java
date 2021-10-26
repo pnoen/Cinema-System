@@ -1020,7 +1020,170 @@ public class Cinema {
         return new GiftCard(number, redeemed);
     }
 
+    public void staffHire(){
+        String username;
+        String password;
+        while (true) { // The while loop ensures continual prompt in the case passwords do not match
+            System.out.println("Please enter a username and password for the new staff.");
+            System.out.print("Username: ");
+            Scanner name = new Scanner(System.in);
+            username = name.nextLine();
+            password = PasswordMasker.readPassword("Password: ");
+            String againPassword = PasswordMasker.readPassword("Confirm password: ");
+
+            try {
+                BufferedReader customersReader = new BufferedReader(new FileReader(this.accountsFile));
+                String line;
+                boolean unique = true;
+                while ((line = customersReader.readLine()) != null) {
+                    String[] ls = line.split(",");
+                    if (ls[0].equals(username)) {
+                        System.out.println("\nThis username is already taken. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                    else if (username.matches(".*\\s.*")) {
+                        System.out.println("\nUsername cannot contain spaces. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                    else if (username.length() == 0) {
+                        System.out.println("\nUsername cannot be empty. Please try again.\n");
+                        unique = false;
+                        break;
+                    }
+                }
+                if (!unique) {
+                    continue;
+                }
+            } catch (IOException e) {
+                System.out.println("Error: couldn't update accounts.csv");
+                break;
+            }
+
+            if (!password.equals(againPassword)) {
+                System.out.println("\nPasswords do not match. Please try again.\n");
+                continue;
+            } else if (password.matches(".*\\s.*")) {
+                System.out.println("\nPassword cannot contain spaces. Please try again.\n");
+                continue;
+            }
+            else if (password.length() == 0) {
+                System.out.println("\nPassword cannot be empty. Please try again.\n");
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+
+        // Opens the local customer database to store customer's details
+        try {
+            FileWriter csvWriter = new FileWriter(this.accountsFile, true);
+            BufferedWriter bw = new BufferedWriter(csvWriter);
+            bw.write(String.format("%s,%s,%s\n", username, password, "1"));
+            bw.close();
+            System.out.println("\nYou have successfully hired a new staff member to Fancy Cinemas!");
+            System.out.println("You will return to the staff management menu.\n");
+        }
+        catch (IOException e) {
+            System.out.println("Error: couldn't update accounts.csv");
+        }
+
+        Account acc = createNewAccount(username, password,0);
+        this.accounts.add(acc);
+
+    }
+    public void staffFire(String userName){
+        String[] data = new String[99];
+        int count = 0;
+        int rowCount = 0;
+        try {
+            BufferedReader csvReader = new BufferedReader(new FileReader(this.accountsFile));
+            String row;
+            while ((row = csvReader.readLine()) != null) {
+                if(row.split(",")[0].equals(userName)){
+                    count++;
+                    continue;
+                }
+
+                data[rowCount] = row;
+                rowCount++;
+                count++;
+            }
+        }catch(IOException e){
+
+        }
+        try {
+            FileWriter csvWriter = new FileWriter(this.accountsFile, false);
+            BufferedWriter bw = new BufferedWriter(csvWriter);
+            for (int j = 0; j < rowCount; j++) {
+                bw.append(String.valueOf(data[j]));
+                bw.append("\n");
+            }
+            bw.close();
+            System.out.println("\nYou have successfully removed that staff member.");
+
+        }catch(IOException e){
+
+        }
+
+    }
+
+    public void staffView(){
+        try {
+            BufferedReader csvReader = new BufferedReader(new FileReader(this.accountsFile));
+            String row;
+            System.out.println("Current staff members:\n");
+            while ((row = csvReader.readLine()) != null) {
+                if(row.split(",")[2].equals("1")) {
+                    System.out.println(row.split(",")[0] + "\n");
+                }
+            }
+        }
+        catch(IOException e){
+
+        }
+    }
+
     public void staffManage(){
+        Scanner userInput = new Scanner(System.in);
+        String code = null;
+        boolean cont = true;
+
+        while (cont) {
+            System.out.println("Would you like to hire/fire a staff member?\n" +
+                    "  1. Hire\n" +
+                    "  2. Fire\n" +
+                    "  3. View\n" +
+                    "  4. Exit");
+            int choice = 0;
+            if (userInput.hasNextInt()) {
+                choice = userInput.nextInt();
+            }
+            switch (choice) {
+                case 1: staffHire();
+                    break;
+                case 2: System.out.println("Please input the staff username to remove:");
+                        Scanner newInput = new Scanner(System.in);
+                        if (newInput.hasNextLine()) {
+                            code = newInput.nextLine();
+                        }
+                        staffFire(code);
+                        break;
+                case 3: staffView();
+                        break;
+
+                case 4: cont = false;
+                    break;
+
+
+                default: System.out.println("Error: Not a valid option.");
+                    userInput.nextLine();
+            }
+
+        }
+
 
     }
 
@@ -1044,10 +1207,12 @@ public class Cinema {
             switch (logged) {
                 case 5: giftCardManage();
                         break;
-                case 8: this.loggedIn = false;
-                        System.out.println("You have logged out");
                 case 6: staffManage();
                         break;
+                case 8: this.loggedIn = false;
+                        System.out.println("You have logged out");
+                        break;
+
 
 
                 default: System.out.println("Error: Not a valid option.");
