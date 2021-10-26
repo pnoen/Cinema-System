@@ -24,6 +24,7 @@ public class Cinema {
     private File giftCardFile = new File("src/main/resources/giftcards.csv");
     private Account currAcc;
     private List<String> allCinemaRooms;
+    private List<String> allRatings;
     private List<Transaction> transactions = new ArrayList<Transaction>();
     private JSONArray cards;
     private int checkPaymentVal = 5;
@@ -34,6 +35,7 @@ public class Cinema {
         this.accounts = new ArrayList<Account>();
         this.allCinemaRooms = Arrays.asList("1", "2", "3");
         this.giftCards = new ArrayList<GiftCard>();
+        this.allRatings = Arrays.asList("G", "PG", "M", "MA15+", "R18+");
     }
 
     /**
@@ -194,7 +196,13 @@ public class Cinema {
                 "Cinema Rooms:\n" +
                 "  4. Room 1\n" +
                 "  5. Room 2\n" +
-                "  6. Room 3\n"
+                "  6. Room 3\n" +
+                "Movie Ratings:\n" +
+                "  7. G\n" +
+                "  8. PG\n" +
+                "  9. M\n" +
+                "  10. MA15+\n" +
+                "  11. R18+\n"
         );
         selections = userInput.nextLine();
 
@@ -216,6 +224,7 @@ public class Cinema {
 
         List<String> screenSizeFilters = new ArrayList<String>();
         List<String> cinemaRoomFilters = new ArrayList<String>();
+        List<String> ratingFilters = new ArrayList<String>();
 
         // Check if all the selected options are valid
         for (int filter : filters) {
@@ -224,6 +233,9 @@ public class Cinema {
             }
             else if (filter >= 4 && filter <= 6) {
                 cinemaRoomFilters.add(this.allCinemaRooms.get(filter - 4));
+            }
+            else if (filter >= 7 && filter <= 11) {
+                ratingFilters.add(this.allRatings.get(filter - 7));
             }
             else {
                 System.out.println("Error: Invalid option selected.\n");
@@ -241,10 +253,13 @@ public class Cinema {
         if (cinemaRoomFilters.size() == 0) {
             cinemaRoomFilters = this.allCinemaRooms;
         }
+        if (ratingFilters.size() == 0) {
+            ratingFilters = this.allRatings;
+        }
 
         List<Movie> displayMovies = new ArrayList<Movie>();
         for (Movie movie : this.movies) {
-            if (screenSizeFilters.contains(movie.getScreenSize())) {
+            if (screenSizeFilters.contains(movie.getScreenSize()) && ratingFilters.contains(movie.getClassification())) {
                 boolean contains = false;
                 for (String room : movie.getCinemaRooms()) {
                     if (cinemaRoomFilters.contains(room)) {
@@ -444,20 +459,26 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
-            switch(logged) {
-                case 1: displayMovies();
 
-                case 2: filterMovies(userInput);
-
-                case 3: bookMovie();
-
-                case 4: cancelBooking();
-
-                case 5: this.loggedIn = false;
-                        System.out.println("You have logged out");
-
-                default: System.out.println("Error: Not a valid option.");
-                         userInput.nextLine();
+            if (logged == 1){
+                displayMovies();
+            }
+            else if (logged == 2) {
+                filterMovies(userInput);
+            }
+            else if (logged == 3) {
+                bookMovie();
+            }
+            else if (logged == 4) {
+                cancelBooking();
+            }
+            else if (logged == 5) {
+                this.loggedIn = false;
+                System.out.println("You have logged out");
+            }
+            else {
+                System.out.println("Error: Not a valid option.");
+                userInput.nextLine();
             }
 
         }
@@ -925,18 +946,21 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
-            switch (logged) {
-                case 4: addNewShows();
-                        break;
-                case 5: giftCardManage();
-                        break;
-                case 6: this.loggedIn = false;
-                        System.out.println("You have logged out");
 
-                default: System.out.println("Error: Not a valid option.");
-                         userInput.nextLine();
-
-
+            if (logged == 4){
+                addNewShows();
+                break;
+            }
+            else if (logged == 5) {
+                giftCardManage();
+            }
+            else if (logged == 6) {
+                this.loggedIn = false;
+                System.out.println("You have logged out");
+            }
+            else {
+                System.out.println("Error: Not a valid option.");
+                userInput.nextLine();
             }
 
         }

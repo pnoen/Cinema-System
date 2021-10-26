@@ -240,7 +240,7 @@ public class TestCinema {
 
     @Test
     public void testNumberInvalidOptionFilterMovies() {
-        Scanner scanner = new Scanner("\n10");
+        Scanner scanner = new Scanner("\n20");
         assertFalse(cinema.filterMovies(scanner));
 
         scanner = new Scanner("\n-3");
@@ -481,6 +481,12 @@ public class TestCinema {
                 "  4. Room 1\n" +
                 "  5. Room 2\n" +
                 "  6. Room 3\n" +
+                "Movie Ratings:\n" +
+                "  7. G\n" +
+                "  8. PG\n" +
+                "  9. M\n" +
+                "  10. MA15+\n" +
+                "  11. R18+\n" +
                 "\n" +
                 "The Shawshank Redemption\n" +
                 "Classification: MA15+\n" +
