@@ -1459,14 +1459,13 @@ public class Cinema {
     public void staffLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            bookingSummaries();
             System.out.println("Select the page you would like to visit:\n" +
                     "  1. Movie report\n" +
-                    "  2. Movie Management\n" +
-                    "  3. Add New Shows for Next Week\n" +
-                    "  4. Giftcard Management\n" +
-                    "  5. Logout\n" +
-                    "  The summary of today's bookings can be found in src/main/resources/bookings.txt");
+                    "  2. Booking Summaries\n" +
+                    "  3. Movie Management\n" +
+                    "  4. Add New Shows for Next Week\n" +
+                    "  5. Giftcard Management\n" +
+                    "  6. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -1901,7 +1900,6 @@ public class Cinema {
     public void managerLoginLogic(){
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
-            bookingSummaries();
             System.out.println("Select the page you would like to visit:\n" +
                     "  1. Movie report\n" +
                     "  2. Summary of Bookings\n" +

@@ -167,32 +167,32 @@ public class TestCinema {
         assertEquals(expected, actual.trim());
     }
 
-//    @Test
-//    void testStaffLoginLogic(){
-//        cinema.setLogged(true);
-//
-//        String userInput = "2\n6\n";
-//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-//        System.setIn(inputStream);
-//
-//        //catching output
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        PrintStream printStream = new PrintStream(outputStream);
-//        System.setOut(printStream);
-//
-//        cinema.staffLoginLogic();
-//
-//        String expected = "You have logged out";
-//        String[] output = outputStream.toString().split("\n");
-//        String actual = output[output.length-1];
-//        assertEquals(expected, actual.trim());
-//    }
+    @Test
+    void testStaffLoginLogic(){
+        cinema.setLogged(true);
+
+        String userInput = "9\n6\n";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(inputStream);
+
+        //catching output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema.staffLoginLogic();
+
+        String expected = "You have logged out";
+        String[] output = outputStream.toString().split("\n");
+        String actual = output[output.length-1];
+        assertEquals(expected, actual.trim());
+    }
 
     @Test
     void testManagerLoginLogic(){
         cinema.setLogged(true);
 
-        String userInput = "2\n7\n";
+        String userInput = "9\n8\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
