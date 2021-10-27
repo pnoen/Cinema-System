@@ -19,8 +19,8 @@ public class Transaction {
         return id;
     }
 
-    public Movie getMovie() {
-        return movie;
+    public String getMovie() {
+        return movie.getName();
     }
 
     public String getMovieTime() {
