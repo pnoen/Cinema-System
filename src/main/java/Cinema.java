@@ -1920,7 +1920,6 @@ public class Cinema {
                 case 2: bookingSummaries();
                         System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
                         break;
-
                 case 4: addNewShows();
                         break;
                 case 5: giftCardManage();
