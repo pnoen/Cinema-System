@@ -19,7 +19,11 @@ public class Transaction {
         return id;
     }
 
-    public String getMovie() {
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public String getMovieName() {
         return movie.getName();
     }
 

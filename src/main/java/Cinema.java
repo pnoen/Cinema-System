@@ -290,7 +290,7 @@ public class Cinema {
         List<String[]> sessions = new ArrayList<>();
         for (int i = 0; i < this.transactions.size(); i++) {
             String[] session = new String[2];
-            session[0] = this.transactions.get(i).getMovie();
+            session[0] = this.transactions.get(i).getMovieName();
             session[1] = this.transactions.get(i).getMovieTime();
             if (!sessions.contains(session)) {
                 sessions.add(session);
@@ -305,9 +305,9 @@ public class Cinema {
             for (int i = 0; i < sessions.size(); i++) {
                 int seatsBooked = 0;
                 int seatsAvailable = 0;
-                for (int j = 0; j < this.transactions.size(); j++) {
-                    if (sessions.get(i)[0].equals(this.transactions.get(j).getMovie()) && sessions.get(i)[1].equals(this.transactions.get(j).getMovieTime())) {
-                        seatsBooked += this.transactions.get(j).getNumOfSeats();
+                for (Transaction transaction : this.transactions) {
+                    if (sessions.get(i)[0].equals(transaction.getMovie()) && sessions.get(i)[1].equals(transaction.getMovieTime())) {
+                        seatsBooked += transaction.getNumOfSeats();
                     }
                 }
 
