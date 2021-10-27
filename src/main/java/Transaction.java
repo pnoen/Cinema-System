@@ -26,4 +26,16 @@ public class Transaction {
                 movieTime, seat, numOfSeats);
         return ticket;
     }
+
+    public String getMovie() {
+        return this.movie.getName();
+    }
+
+    public String getMovieTime() {
+        return this.movieTime;
+    }
+
+    public int getNumOfSeats() {
+        return this.numOfSeats;
+    }
 }

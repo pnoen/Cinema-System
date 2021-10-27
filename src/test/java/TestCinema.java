@@ -132,7 +132,7 @@ public class TestCinema {
     void testStaffLoginLogic(){
         cinema.setLogged(true);
 
-        String userInput = "2\n6\n";
+        String userInput = "2\n5\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -153,7 +153,7 @@ public class TestCinema {
     void testManagerLoginLogic(){
         cinema.setLogged(true);
 
-        String userInput = "2\n8\n";
+        String userInput = "2\n7\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
