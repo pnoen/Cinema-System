@@ -85,28 +85,26 @@ public class TestCinema {
         assertEquals(expected, actual);
     }
 
-//    @Test
-//    void testCustomerLoginLogic() {
-//        //Cinema cinema = new Cinema();
-//        assertEquals(false, cinema.getLogged());
-//        cinema.setLogged(true);
-//
-//        String userInput = "5\n";
-//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-//        System.setIn(inputStream);
-//
-//        //catching output
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        PrintStream printStream = new PrintStream(outputStream);
-//        System.setOut(printStream);
-//
-//        cinema.customerLoginLogic();
-//
-//        String expected = "You have logged out";
-//        String[] output = outputStream.toString().split("\n");
-//        String actual = output[output.length-1];
-//        assertEquals(expected, actual.trim());
-//    }
+    @Test
+    void testCustomerLoginLogic() {
+        //Cinema cinema = new Cinema();
+        assertEquals(false, cinema.getLogged());
+        cinema.setLogged(true);
+
+        Scanner scanner = new Scanner("\n5\n");
+
+        //catching output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema.customerLoginLogic(scanner);
+
+        String expected = "You have logged out";
+        String[] output = outputStream.toString().split("\n");
+        String actual = output[output.length-1];
+        assertEquals(expected, actual.trim());
+    }
 
 //    void testCorrectCustomerRegistrationLogic(){
 //        File accountsFile = new File("src/test/resources/accounts_test.csv");
@@ -133,26 +131,43 @@ public class TestCinema {
 //        assertEquals(expected, actual.trim());
 //    }
 
-//    @Test
-//    void badLogicInput(){
-//        cinema.setLogged(true);
-//
-//        String userInput = "1236\n5\n";
-//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-//        System.setIn(inputStream);
-//
-//        //catching output
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        PrintStream printStream = new PrintStream(outputStream);
-//        System.setOut(printStream);
-//
-//        cinema.customerLoginLogic();
-//
-//        String expected = "You have logged out";
-//        String[] output = outputStream.toString().split("\n");
-//        String actual = output[output.length-1];
-//        assertEquals(expected, actual.trim());
-//    }
+    @Test
+    void badLogicInput(){
+        cinema.setLogged(true);
+
+        Scanner scanner = new Scanner("\n1236\n5\n");
+
+        //catching output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema.customerLoginLogic(scanner);
+
+        String expected = "You have logged out";
+        String[] output = outputStream.toString().split("\n");
+        String actual = output[output.length-1];
+        assertEquals(expected, actual.trim());
+    }
+
+    @Test
+    void badLogicInputString(){
+        cinema.setLogged(true);
+
+        Scanner scanner = new Scanner("\nsdfg\n5\n");
+
+        //catching output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema.customerLoginLogic(scanner);
+
+        String expected = "You have logged out";
+        String[] output = outputStream.toString().split("\n");
+        String actual = output[output.length-1];
+        assertEquals(expected, actual.trim());
+    }
 
     @Test
     void testStaffLoginLogic(){
@@ -216,6 +231,21 @@ public class TestCinema {
         scanner = new Scanner("\n6");
         assertTrue(cinema.filterMovies(scanner));
 
+        scanner = new Scanner("\n7");
+        assertTrue(cinema.filterMovies(scanner));
+
+        scanner = new Scanner("\n8");
+        assertTrue(cinema.filterMovies(scanner));
+
+        scanner = new Scanner("\n9");
+        assertTrue(cinema.filterMovies(scanner));
+
+        scanner = new Scanner("\n10");
+        assertTrue(cinema.filterMovies(scanner));
+
+        scanner = new Scanner("\n11");
+        assertTrue(cinema.filterMovies(scanner));
+
         scanner = new Scanner("\n6  ");
         assertTrue(cinema.filterMovies(scanner));
 
@@ -247,8 +277,18 @@ public class TestCinema {
         scanner = new Scanner("\n 4, 6");
         assertTrue(cinema.filterMovies(scanner));
 
-        scanner = new Scanner("\n1,2,3,4,5,6");
+        scanner = new Scanner("\n1,7");
         assertTrue(cinema.filterMovies(scanner));
+
+        scanner = new Scanner("\n5,9");
+        assertTrue(cinema.filterMovies(scanner));
+
+        scanner = new Scanner("\n1,2,3,4,5,6,7,8,9,10,11");
+        assertTrue(cinema.filterMovies(scanner));
+
+        cinema_1_movie.getMovies();
+        scanner = new Scanner("\n3,6,10");
+        assertTrue(cinema_1_movie.filterMovies(scanner));
 
         scanner.close();
     }
@@ -780,6 +820,138 @@ public class TestCinema {
 
     }
 
+    @Test
+    public void TestCustomerLoginLogic_AllMovies() throws FileNotFoundException {
+        List<Movie> movies = cinema_1_movie.getMovies();
+        Account account = new Account("testing", "testing", 0);
+        cinema_1_movie.setCurrAcc(account);
+        cinema_1_movie.setLogged(true);
+        cinema_1_movie.createGiftCards();
+
+        Scanner scanner = new Scanner("\n1\n5\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.customerLoginLogic(scanner);
+
+        String expected = "Select the page you would like to visit:\n" +
+                "    1. All movies\n" +
+                "    2. Filter movies\n" +
+                "    3. Book\n" +
+                "    4. Cancel a booking\n" +
+                "    5. Logout\n" +
+                "    The Shawshank Redemption\n" +
+                "    Classification: MA15+\n" +
+                "    Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
+                "    Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
+                "    Director: Frank Darabont\n" +
+                "    Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
+                "    Screen size: Gold\n" +
+                "    Upcoming times: 10:45, 14:00\n" +
+                "    Cinema rooms: 1, 2\n" +
+                "    Available seats: 6, 6\n" +
+                "\n" +
+                "    Select the page you would like to visit:\n" +
+                "    1. All movies\n" +
+                "    2. Filter movies\n" +
+                "    3. Book\n" +
+                "    4. Cancel a booking\n" +
+                "    5. Logout\n" +
+                "    You have logged out";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    public void TestCustomerLoginLogic_FilterMovies() throws FileNotFoundException {
+        List<Movie> movies = cinema_1_movie.getMovies();
+        Account account = new Account("testing", "testing", 0);
+        cinema_1_movie.setCurrAcc(account);
+        cinema_1_movie.setLogged(true);
+        cinema_1_movie.createGiftCards();
+
+        Scanner scanner = new Scanner("\n2\n3\n5\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.customerLoginLogic(scanner);
+
+        String expected = "Select the page you would like to visit:\n" +
+                "    1. All movies\n" +
+                "    2. Filter movies\n" +
+                "    3. Book\n" +
+                "    4. Cancel a booking\n" +
+                "    5. Logout\n" +
+                "    Select the options that you would like to filter.\n" +
+                "    (To select multiple options, split by comma. E.g. 1,2)\n" +
+                "    Movie Screen Sizes:\n" +
+                "    1. Bronze\n" +
+                "    2. Silver\n" +
+                "    3. Gold\n" +
+                "    Cinema Rooms:\n" +
+                "    4. Room 1\n" +
+                "    5. Room 2\n" +
+                "    6. Room 3\n" +
+                "    Movie Ratings:\n" +
+                "    7. G\n" +
+                "    8. PG\n" +
+                "    9. M\n" +
+                "    10. MA15+\n" +
+                "    11. R18+\n" +
+                "\n" +
+                "    The Shawshank Redemption\n" +
+                "    Classification: MA15+\n" +
+                "    Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
+                "    Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
+                "    Director: Frank Darabont\n" +
+                "    Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
+                "    Screen size: Gold\n" +
+                "    Upcoming times: 10:45, 14:00\n" +
+                "    Cinema rooms: 1, 2\n" +
+                "    Available seats: 6, 6\n" +
+                "\n" +
+                "    Select the page you would like to visit:\n" +
+                "    1. All movies\n" +
+                "    2. Filter movies\n" +
+                "    3. Book\n" +
+                "    4. Cancel a booking\n" +
+                "    5. Logout\n" +
+                "    You have logged out";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
     public void TestCustomerLoginLogic_BookMovieValid() throws FileNotFoundException {
         List<Movie> movies = cinema_1_movie.getMovies();
         Account account = new Account("testing", "testing", 0);
@@ -857,6 +1029,68 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    public void TestCustomerLoginLogic_CancelBookingValid() throws FileNotFoundException {
+        List<Movie> movies = cinema_1_movie.getMovies();
+        Account account = new Account("testing", "testing", 0);
+        cinema_1_movie.setCurrAcc(account);
+        cinema_1_movie.setLogged(true);
+        cinema_1_movie.createGiftCards();
+        Transaction transaction = new Transaction("aHs98K", movies.get(0), movies.get(0).getUpcomingTimes().get(0), "Front", 1, "");
+        account.addTransaction(transaction);
+
+        Scanner scanner = new Scanner("\n4\n1\n5\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        assertEquals(account.getTransactions().size(), 1);
+        cinema_1_movie.customerLoginLogic(scanner);
+        assertEquals(account.getTransactions().size(), 0);
+
+        String expected = "Select the page you would like to visit:\n" +
+                "    1. All movies\n" +
+                "    2. Filter movies\n" +
+                "    3. Book\n" +
+                "    4. Cancel a booking\n" +
+                "    5. Logout\n" +
+                "    Select the booking you would like to cancel:\n" +
+                "    1.\n" +
+                "    Transaction ID: aHs98K\n" +
+                "    Movie: The Shawshank Redemption\n" +
+                "    Showing time: 10:45\n" +
+                "    Seat: Front\n" +
+                "    Number of seats: 1\n" +
+                "\n" +
+                "    2. Back to home page\n" +
+                "    Booking removed.\n" +
+                "\n" +
+                "    Select the page you would like to visit:\n" +
+                "    1. All movies\n" +
+                "    2. Filter movies\n" +
+                "    3. Book\n" +
+                "    4. Cancel a booking\n" +
+                "    5. Logout\n" +
+                "    You have logged out";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -898,6 +1132,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -939,6 +1174,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -980,6 +1216,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1023,6 +1260,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1066,6 +1304,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1109,6 +1348,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1158,6 +1398,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1207,6 +1448,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1256,6 +1498,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1305,6 +1548,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1350,6 +1594,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1395,6 +1640,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1440,6 +1686,7 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
     }
 
     @Test
@@ -1485,5 +1732,95 @@ public class TestCinema {
         expected = String.join("\n", expectedArr);
 
         assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    public void TestCancelBooking_InvalidInput() throws FileNotFoundException {
+        List<Movie> movies = cinema_1_movie.getMovies();
+        Account account = new Account("testing", "testing", 0);
+        cinema_1_movie.setCurrAcc(account);
+        cinema_1_movie.setLogged(true);
+        cinema_1_movie.createGiftCards();
+        Transaction transaction = new Transaction("aHs98K", movies.get(0), movies.get(0).getUpcomingTimes().get(0), "Front", 1, "");
+        account.addTransaction(transaction);
+
+        Scanner scanner = new Scanner("\n-10\n5\nasd\n2\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.cancelBooking(scanner);
+
+        String expected = "Select the booking you would like to cancel:\n" +
+                "    1.\n" +
+                "    Transaction ID: aHs98K\n" +
+                "    Movie: The Shawshank Redemption\n" +
+                "    Showing time: 10:45\n" +
+                "    Seat: Front\n" +
+                "    Number of seats: 1\n" +
+                "\n" +
+                "    2. Back to home page\n" +
+                "    Error: Not a valid option.\n" +
+                "\n" +
+                "    Select the booking you would like to cancel:\n" +
+                "    1.\n" +
+                "    Transaction ID: aHs98K\n" +
+                "    Movie: The Shawshank Redemption\n" +
+                "    Showing time: 10:45\n" +
+                "    Seat: Front\n" +
+                "    Number of seats: 1\n" +
+                "\n" +
+                "    2. Back to home page\n" +
+                "    Error: Not a valid option.\n" +
+                "\n" +
+                "    Select the booking you would like to cancel:\n" +
+                "    1.\n" +
+                "    Transaction ID: aHs98K\n" +
+                "    Movie: The Shawshank Redemption\n" +
+                "    Showing time: 10:45\n" +
+                "    Seat: Front\n" +
+                "    Number of seats: 1\n" +
+                "\n" +
+                "    2. Back to home page\n" +
+                "    Error: Not a valid option.\n" +
+                "\n" +
+                "    Select the booking you would like to cancel:\n" +
+                "    1.\n" +
+                "    Transaction ID: aHs98K\n" +
+                "    Movie: The Shawshank Redemption\n" +
+                "    Showing time: 10:45\n" +
+                "    Seat: Front\n" +
+                "    Number of seats: 1\n" +
+                "\n" +
+                "    2. Back to home page\n" +
+                "    Error: Not a valid option.\n" +
+                "\n" +
+                "    Select the booking you would like to cancel:\n" +
+                "    1.\n" +
+                "    Transaction ID: aHs98K\n" +
+                "    Movie: The Shawshank Redemption\n" +
+                "    Showing time: 10:45\n" +
+                "    Seat: Front\n" +
+                "    Number of seats: 1\n" +
+                "\n" +
+                "    2. Back to home page\n" +
+                "    Returning back to customer home page.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
     }
 }
