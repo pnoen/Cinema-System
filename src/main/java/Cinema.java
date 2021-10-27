@@ -648,6 +648,77 @@ public class Cinema {
             System.out.println("Selected Movie Current Data:\n");
             System.out.println(movie_ref.get(refnum).getMovieInformation());
         }
+
+        System.out.println("Enter reference number relating to what you would like to modify:\n");
+        System.out.println("1. Title\n2. Synopsis\n3. Classification\n4. Release Date\n5. Director\n6. Cast" +
+                "\n7. Screen Size\n8. Upcoming Times\n9. Cinema Rooms\n10.0 Available Seats\n");
+
+
+        try {
+            BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
+            StringBuffer stringBuffer = new StringBuffer();
+
+            String line;
+
+            //getting relevant line from file
+            while ((line = movieReader.readLine()) != null) {
+
+                String[] ls = line.split(";");
+
+                if (ls[0].equals(movie_ref.get(refnum).getTitle())) {
+
+                    //now that we have relevant line, got to determine what part to change
+                    int input = userInput.nextInt();
+                    String change;
+                    switch (input) {
+                        case 1:
+                            System.out.println("Enter modified title");
+                            if (userInput.hasNext()){
+                                System.out.println("WORKINGGG");
+                                System.out.println("line is: "+line);
+                                if (userInput.hasNext()){
+                                    System.out.println("aaa"+userInput.nextLine());
+                                    String title_input = userInput.nextLine();
+                                    ls[0] = title_input;
+                                    System.out.println("INPUT IS: "+title_input);
+                                }
+
+                            }
+                            break;
+                        case 2:
+
+                        case 3:
+
+                    }
+
+                    //updating upcoming times
+                    //updated_times = ls[6] + "," + time;
+                    //ls[6] = updated_times;
+                    String new_line = String.join(";", ls);
+                    line = new_line;
+                    System.out.println(new_line);
+                    System.out.println("Updated Movie Upcoming Times: \n");
+                    //System.out.println(updated_times + "\n");
+                    System.out.println("Successfully updated. Update will be visible once system is restarted.\n");
+                }
+
+                stringBuffer.append(line);
+                stringBuffer.append('\n');
+
+            }
+            movieReader.close();
+
+            FileOutputStream fileOut = new FileOutputStream(this.moviesFile);
+            fileOut.write(stringBuffer.toString().getBytes());
+            fileOut.close();
+
+        } catch (IOException e) {
+            System.out.println("Error: couldn't update movies.csv");
+        }
+
+
+
+
     }
 
     /**
