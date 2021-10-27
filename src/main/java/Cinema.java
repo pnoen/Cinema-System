@@ -1471,8 +1471,11 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 logged = userInput.nextInt();
             }
+            if(logged == 1){
+                displayMovies();
+            }
 
-            if (logged == 2) {
+            else if (logged == 2) {
                 bookingSummaries();
                 System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
             }
@@ -1916,6 +1919,8 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
+                case 1: displayMovies();
+                        break;
                 case 2: bookingSummaries();
                         System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
                         break;
