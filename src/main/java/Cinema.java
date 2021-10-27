@@ -1142,6 +1142,7 @@ public class Cinema {
 
                 default: System.out.println("Error: Not a valid option.");
                          userInput.nextLine();
+
             }
 
         }
@@ -1239,16 +1240,24 @@ public class Cinema {
         return new GiftCard(number, redeemed);
     }
 
-    public void staffHire(){
+    public void staffHire(int runVersion){
         String username;
         String password;
+        String againPassword;
         while (true) { // The while loop ensures continual prompt in the case passwords do not match
             System.out.println("Please enter a username and password for the new staff.");
             System.out.print("Username: ");
             Scanner name = new Scanner(System.in);
             username = name.nextLine();
-            password = PasswordMasker.readPassword("Password: ");
-            String againPassword = PasswordMasker.readPassword("Confirm password: ");
+            if(runVersion == 1){
+                System.out.println("Password: ");
+                password = name.nextLine();
+                System.out.println("Confirm password: ");
+                againPassword = name.nextLine();
+            } else {
+                password = PasswordMasker.readPassword("Password: ");
+                againPassword = PasswordMasker.readPassword("Confirm password: ");
+            }
 
             try {
                 BufferedReader customersReader = new BufferedReader(new FileReader(this.accountsFile));
@@ -1365,7 +1374,7 @@ public class Cinema {
         }
     }
 
-    public void staffManage(){
+    public void staffManage(int runVersion){
         Scanner userInput = new Scanner(System.in);
         String code = null;
         boolean cont = true;
@@ -1380,25 +1389,26 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 choice = userInput.nextInt();
             }
-            switch (choice) {
-                case 1: staffHire();
-                    break;
-                case 2: System.out.println("Please input the staff username to remove:");
-                        Scanner newInput = new Scanner(System.in);
-                        if (newInput.hasNextLine()) {
-                            code = newInput.nextLine();
-                        }
-                        staffFire(code);
-                        break;
-                case 3: staffView();
-                        break;
-
-                case 4: cont = false;
-                    break;
-
-
-                default: System.out.println("Error: Not a valid option.");
-                    userInput.nextLine();
+            if(choice == 1) {
+                staffHire(runVersion);
+                break;
+            } else if (choice == 2) {
+                System.out.println("Please input the staff username to remove:");
+                Scanner newInput = new Scanner(System.in);
+                if (newInput.hasNextLine()) {
+                    code = newInput.nextLine();
+                }
+                staffFire(code);
+                break;
+            } else if (choice == 3) {
+                staffView();
+                break;
+            } else if (choice == 4) {
+                cont = false;
+                break;
+            } else{
+                System.out.println("Error: Not a valid option.");
+                userInput.nextLine();
             }
 
         }
@@ -1428,7 +1438,7 @@ public class Cinema {
                         break;
                 case 5: giftCardManage();
                         break;
-                case 6: staffManage();
+                case 6: staffManage(2);
                         break;
                 case 8: this.loggedIn = false;
                         System.out.println("You have logged out");
