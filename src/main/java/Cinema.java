@@ -283,6 +283,22 @@ public class Cinema {
     }
 
     /**
+     * For staff and manager use only
+     * Displays the number of bookings, seats taken and seats available for each movie session
+     */
+    public void bookingSummaries() {
+        File bookings = new File("src/main/resources/bookings.csv");
+        for (int i = 0; i < bookings.length(); i++) {
+            System.out.println("Movie: ");
+            System.out.println("Session Time: ");
+            System.out.println("No. of Bookings: ");
+            System.out.println("No. of Seats Booked: ");
+            System.out.println("No. of Seats Available: ");
+            System.out.println();
+        }
+    }
+
+    /**
      * Displays a customer registration prompt
      * Allows the user to register as a customer
      * Stores the user's customer details into a local database
@@ -1413,7 +1429,12 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
 
-            if (logged == 4){
+            if (logged == 2) {
+                bookingSummaries();
+                System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
+            }
+
+            else if (logged == 4){
                 addNewShows();
 //                break;
             }
@@ -1851,6 +1872,10 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
+                case 2: bookingSummaries();
+                        System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
+                        break;
+
                 case 4: addNewShows();
                         break;
                 case 5: giftCardManage();
