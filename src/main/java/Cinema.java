@@ -1120,6 +1120,7 @@ public class Cinema {
 
 
                 default: System.out.println("Error: Not a valid option.");
+                         userInput.nextLine();
 
             }
 
