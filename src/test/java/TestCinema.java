@@ -547,25 +547,119 @@ public class TestCinema {
     }
 
     @Test
-    public void test_validStaff(){
+    public void test_fireStaff(){
         InputStream sysInBackup = System.in;
 
-        String userInput = "4\n";
+        String userInput = "2\ntony\n4\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
-        cinema.staffManage();
+        cinema.staffManage(2);
+
+        String expected = "Would you like to hire/fire a staff member?\n" +
+                "1. Hire\n" +
+                "2. Fire\n" +
+                "3. View\n" +
+                "4. Exit\n" +
+                "Please input the staff username to remove:\n" +
+                "\n" +
+                "You have successfully removed that staff member.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        System.setIn(sysInBackup);
+    }
+    @Test
+    public void test_hireStaff(){
+        InputStream sysInBackup = System.in;
+        String userInput = "tester\na1sd\na1sd\n";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(inputStream);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        cinema_1_movie.staffHire(1);
+
+        String expected = "Please enter a username and password for the new staff.\n" +
+                "Username: Password:\n" +
+                "Confirm password:\n" +
+                "\n" +
+                "You have successfully hired a new staff member to Fancy Cinemas!\n" +
+                "You will return to the staff management menu.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        System.setIn(sysInBackup);
+        cinema_1_movie.staffFire("tester");
+    }
+
+    @Test
+    public void test_viewStaff(){
+        InputStream sysInBackup = System.in;
+
+        String userInput = "5\n3\n4\n";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(inputStream);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        cinema.staffManage(2);
 
         String expected = "Would you like to hire/fire a staff member?\n" +
                 "  1. Hire\n" +
                 "  2. Fire\n" +
                 "  3. View\n" +
-                "  4. Exit";
+                "  4. Exit\n" +
+                "Error: Not a valid option.\n" +
+                "Would you like to hire/fire a staff member?\n" +
+                "  1. Hire\n" +
+                "  2. Fire\n" +
+                "  3. View\n" +
+                "  4. Exit\n" +
+                "Current staff members:\n" +
+                "\n" +
+                "john.smith";
 
-        assertEquals(expected,outputStream.toString().trim());
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
         System.setIn(sysInBackup);
 
 
@@ -596,12 +690,12 @@ public class TestCinema {
 
     }
 
-    /**
+
     @Test
     public void test_viewGiftCard() throws FileNotFoundException{
         InputStream sysInBackup = System.in;
 
-        String userInput = "3\n4\n";
+        String userInput = "5\n3\n4\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -612,10 +706,16 @@ public class TestCinema {
         cinema_1_movie.giftCardManage();
 
         String expected = "Would you like to add/delete or view gift cards?\n" +
-                "  1. Add\n" +
-                "  2. Delete\n" +
-                "  3. View\n" +
-                "  4. Exit\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit\n" +
+                "Error: Not a valid option.\n" +
+                "Would you like to add/delete or view gift cards?\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit\n" +
                 "Current gift cards:\n" +
                 "\n" +
                 "Gift card number: 1838281828382818GC\n" +
@@ -631,16 +731,28 @@ public class TestCinema {
                 "Redeemed State(0-Not Redeemed, 1-Redeemed): 0\n" +
                 "\n" +
                 "Would you like to add/delete or view gift cards?\n" +
-                "  1. Add\n" +
-                "  2. Delete\n" +
-                "  3. View\n" +
-                "  4. Exit";
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit";
 
-        assertEquals(expected,outputStream.toString().trim());
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
         System.setIn(sysInBackup);
 
     }
-    */
+
 
 
 

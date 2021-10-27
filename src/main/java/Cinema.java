@@ -1218,16 +1218,24 @@ public class Cinema {
         return new GiftCard(number, redeemed);
     }
 
-    public void staffHire(){
+    public void staffHire(int runVersion){
         String username;
         String password;
+        String againPassword;
         while (true) { // The while loop ensures continual prompt in the case passwords do not match
             System.out.println("Please enter a username and password for the new staff.");
             System.out.print("Username: ");
             Scanner name = new Scanner(System.in);
             username = name.nextLine();
-            password = PasswordMasker.readPassword("Password: ");
-            String againPassword = PasswordMasker.readPassword("Confirm password: ");
+            if(runVersion == 1){
+                System.out.println("Password: ");
+                password = name.nextLine();
+                System.out.println("Confirm password: ");
+                againPassword = name.nextLine();
+            } else {
+                password = PasswordMasker.readPassword("Password: ");
+                againPassword = PasswordMasker.readPassword("Confirm password: ");
+            }
 
             try {
                 BufferedReader customersReader = new BufferedReader(new FileReader(this.accountsFile));
@@ -1344,7 +1352,7 @@ public class Cinema {
         }
     }
 
-    public void staffManage(){
+    public void staffManage(int runVersion){
         Scanner userInput = new Scanner(System.in);
         String code = null;
         boolean cont = true;
@@ -1360,7 +1368,7 @@ public class Cinema {
                 choice = userInput.nextInt();
             }
             if(choice == 1) {
-                staffHire();
+                staffHire(runVersion);
                 break;
             } else if (choice == 2) {
                 System.out.println("Please input the staff username to remove:");
@@ -1408,7 +1416,7 @@ public class Cinema {
                         break;
                 case 5: giftCardManage();
                         break;
-                case 6: staffManage();
+                case 6: staffManage(2);
                         break;
                 case 8: this.loggedIn = false;
                         System.out.println("You have logged out");
