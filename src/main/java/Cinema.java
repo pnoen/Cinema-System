@@ -507,6 +507,422 @@ public class Cinema {
         return found_movie;
     }
 
+    /**
+     * This is the interface for manager/cinema staff when they want to
+     * insert/delete/modify movie data
+     */
+    public void editingMovies(){
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Enter the number corresponding to the action you would like to take\n");
+        System.out.println("1. Insert a new Movie\n2. Modify a current Movie\n3. Delete a Movie\n");
+
+        int input = userInput.nextInt();
+        switch (input) {
+            case 1:
+                insertNewMovie();
+            case 2:
+                modifyCurrentMovie();
+            case 3:
+                deleteMovie();
+        }
+    }
+
+    /**
+     * Method in charge of inserting new movies
+     * works but need to implement error checking
+     */
+    public void insertNewMovie(){
+        //getting new movie info line
+        String new_movie_line = "";
+        String[] new_movie_line_arr = new String[12];
+
+        Scanner userInput = new Scanner(System.in);
+
+        System.out.println("Enter Title:\n");
+        if (userInput.hasNext()) {
+            String title = userInput.nextLine();
+            System.out.println("Entered Title: "+title);
+            new_movie_line_arr[0] = title;
+        }
+
+        System.out.println("Enter Synopsis:\n");
+        if (userInput.hasNext()) {
+            String synopsis = userInput.nextLine();
+            System.out.println("Entered Synopsis: "+synopsis);
+            new_movie_line_arr[1] = synopsis;
+        }
+
+        System.out.println("Enter Classification:");
+        if (userInput.hasNext()) {
+            String classification = userInput.nextLine();
+            System.out.println("Entered Classification: "+classification);
+            new_movie_line_arr[2] = classification;
+        }
+
+        System.out.println("Enter Release Date:");
+        if (userInput.hasNext()) {
+            String release_date = userInput.nextLine();
+            System.out.println("Entered Release Date: "+release_date);
+            new_movie_line_arr[3] = release_date;
+        }
+
+        System.out.println("Enter Director:");
+        if (userInput.hasNext()) {
+            String director = userInput.nextLine();
+            System.out.println("Entered Director: "+director);
+            new_movie_line_arr[4] = director;
+        }
+
+        System.out.println("Enter Cast:");
+        if (userInput.hasNext()) {
+            String cast = userInput.nextLine();
+            System.out.println("Entered Cast: "+cast);
+            new_movie_line_arr[5] = cast;
+        }
+
+        System.out.println("Enter Upcoming Times:");
+        if (userInput.hasNext()) {
+            String upcoming_times = userInput.nextLine();
+            System.out.println("Entered Upcoming Times: "+upcoming_times);
+            new_movie_line_arr[6] = upcoming_times;
+        }
+
+        System.out.println("Enter Screen Size:");
+        if (userInput.hasNext()) {
+            String screen_size = userInput.nextLine();
+            System.out.println("Entered Screen Size: "+screen_size);
+            new_movie_line_arr[7] = screen_size;
+        }
+
+        System.out.println("Enter Cinema Rooms:");
+        if (userInput.hasNext()) {
+            String cinema_rooms = userInput.nextLine();
+            System.out.println("Entered Cinema Rooms: "+cinema_rooms);
+            new_movie_line_arr[8] = cinema_rooms;
+        }
+
+        System.out.println("Enter Front Seats:");
+        if (userInput.hasNext()) {
+            String front_seats = userInput.nextLine();
+            System.out.println("Entered Front Seats: "+front_seats);
+            new_movie_line_arr[9] = front_seats;
+        }
+
+        System.out.println("Enter Middle Seats:");
+        if (userInput.hasNext()) {
+            String middle_seats = userInput.nextLine();
+            System.out.println("Entered Middle Seats: "+middle_seats);
+            new_movie_line_arr[10] = middle_seats;
+        }
+
+        System.out.println("Enter Rear Seats:");
+        if (userInput.hasNext()) {
+            String rear_seats = userInput.nextLine();
+            System.out.println("Entered Rear Seats: "+rear_seats);
+            new_movie_line_arr[11] = rear_seats;
+        }
+
+        new_movie_line = String.join(";", new_movie_line_arr);
+        System.out.println("New Movie Inserted");
+
+        try {
+            BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
+            StringBuffer stringBuffer = new StringBuffer();
+
+            String line;
+
+            //movie info that already exists
+            while ((line = movieReader.readLine()) != null) {
+
+                stringBuffer.append(line);
+                stringBuffer.append('\n');
+
+            }
+
+            //adding in our new line
+            stringBuffer.append(new_movie_line);
+            stringBuffer.append('\n');
+            movieReader.close();
+
+            FileOutputStream fileOut = new FileOutputStream(this.moviesFile);
+            fileOut.write(stringBuffer.toString().getBytes());
+            fileOut.close();
+
+        } catch (IOException e) {
+            System.out.println("Error: couldn't update accounts.csv");
+        }
+    }
+
+    /**
+     * Method in charge of modifying current movies
+     */
+    public void modifyCurrentMovie(){
+
+        Map<Integer, Movie> movie_ref = new HashMap<Integer, Movie>();
+
+        //filling out hashmap with movies and references
+        int i = 0;
+        for (Movie movie : movies) {
+            movie_ref.put(i, movie);
+            i += 1;
+        }
+
+        Iterator iterator = movie_ref.entrySet().iterator();
+
+        //printing out movies and references to the user
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            System.out.println("Reference Number: " + (pair.getKey()));
+            Movie movie1 = (Movie) pair.getValue();
+            System.out.println(movie1.getCondensedMovieInformation());
+        }
+
+        System.out.println("Enter reference number of movie you would like to modify:\n");
+        Scanner userInput = new Scanner(System.in);
+
+        int refnum = 100;
+        if (userInput.hasNextInt()) {
+            refnum = userInput.nextInt();
+            System.out.println("Selected Movie Current Data:\n");
+            System.out.println(movie_ref.get(refnum).getMovieInformation());
+        }
+
+        System.out.println("Enter reference number relating to what you would like to modify:\n");
+        System.out.println("1. Title\n2. Synopsis\n3. Classification\n4. Release Date\n5. Director\n6. Cast" +
+                "\n7. Screen Size\n8. Upcoming Times\n9. Cinema Rooms\n10. Available Seats\n");
+
+
+        try {
+            BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
+            StringBuffer stringBuffer = new StringBuffer();
+
+            String line;
+
+            //getting relevant line from file
+            while ((line = movieReader.readLine()) != null) {
+
+                String[] ls = line.split(";");
+
+                if (ls[0].equals(movie_ref.get(refnum).getTitle())) {
+
+                    //now that we have relevant line, got to determine what part to change
+                    int input = userInput.nextInt();
+                    String change;
+                    switch (input) {
+                        case 1:
+                            System.out.println("Enter New Title:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String title_input = userInput.nextLine();
+                                    ls[0] = title_input;
+                                }
+
+                            }
+                            break;
+
+                        case 2:
+                            System.out.println("Enter New Synopsis:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String synopsis_input = userInput.nextLine();
+                                    ls[1] = synopsis_input;
+                                }
+
+                            }
+                            break;
+
+                        case 3:
+                            System.out.println("Enter New Classification:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String classification_input = userInput.nextLine();
+                                    ls[2] = classification_input;
+                                }
+
+                            }
+                            break;
+
+                        case 4:
+                            System.out.println("Enter New Release Date:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String release_date_input = userInput.nextLine();
+                                    ls[3] = release_date_input;
+                                }
+
+                            }
+                            break;
+
+                        case 5:
+                            System.out.println("Enter New Director:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String director_input = userInput.nextLine();
+                                    ls[4] = director_input;
+                                }
+
+                            }
+                            break;
+
+                        case 6:
+                            System.out.println("Enter New Cast:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String cast_input = userInput.nextLine();
+                                    ls[5] = cast_input;
+                                }
+
+                            }
+                            break;
+
+                        case 7:
+                            System.out.println("Enter New Screen Size:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String screen_size_input = userInput.nextLine();
+                                    ls[6] = screen_size_input;
+                                }
+
+                            }
+                            break;
+
+                        case 8:
+                            System.out.println("Enter New Upcoming Times:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String upcoming_times_input = userInput.nextLine();
+                                    ls[7] = upcoming_times_input;
+                                }
+
+                            }
+                            break;
+
+                        case 9:
+                            System.out.println("Enter New Cinema Rooms:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String cinema_rooms_input = userInput.nextLine();
+                                    ls[8] = cinema_rooms_input;
+                                }
+
+                            }
+                            break;
+
+                        case 10:
+                            System.out.println("Enter New Available Seats:");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String available_seats_input = userInput.nextLine();
+                                    ls[8] = available_seats_input;
+                                }
+
+                            }
+                            break;
+                    }
+
+
+                    String new_line = String.join(";", ls);
+                    line = new_line;
+                    System.out.println("Updated Information: \n");
+                    System.out.println(new_line);
+                    //System.out.println(updated_times + "\n");
+                    System.out.println("\nSuccessfully updated. Update will be visible once system is restarted.\n");
+                }
+
+                stringBuffer.append(line);
+                stringBuffer.append('\n');
+
+            }
+            movieReader.close();
+
+            FileOutputStream fileOut = new FileOutputStream(this.moviesFile);
+            fileOut.write(stringBuffer.toString().getBytes());
+            fileOut.close();
+
+        } catch (IOException e) {
+            System.out.println("Error: couldn't update movies.csv");
+        }
+
+    }
+
+    /**
+     * Method in charge of deleting movies
+     */
+    public void deleteMovie(){
+        Map<Integer, Movie> movie_ref = new HashMap<Integer, Movie>();
+
+        //filling out hashmap with movies and references
+        int i = 0;
+        for (Movie movie : movies) {
+            movie_ref.put(i, movie);
+            i += 1;
+        }
+
+        Iterator iterator = movie_ref.entrySet().iterator();
+
+        //printing out movies and references to the user
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            System.out.println("Reference Number: " + (pair.getKey()));
+            Movie movie1 = (Movie) pair.getValue();
+            System.out.println(movie1.getCondensedMovieInformation());
+        }
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Enter the reference number of the film you would like to delete\n");
+        int refnum = 100;
+        if (userInput.hasNextInt()) {
+            refnum = userInput.nextInt();
+        }
+
+        try {
+            BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
+            StringBuffer stringBuffer = new StringBuffer();
+
+            String line;
+
+            //getting relevant line
+            while ((line = movieReader.readLine()) != null) {
+
+                String[] ls = line.split(";");
+
+                if (!(ls[0].equals(movie_ref.get(refnum).getTitle()))) {
+                    stringBuffer.append(line);
+                    stringBuffer.append('\n');
+                }
+
+            }
+            movieReader.close();
+
+            FileOutputStream fileOut = new FileOutputStream(this.moviesFile);
+            fileOut.write(stringBuffer.toString().getBytes());
+            fileOut.close();
+
+        } catch (IOException e) {
+            System.out.println("Error: couldn't update movies.csv");
+        }
+
+    }
+
     /***
      * Logic to deal with adding new shows
      * for cinema staff and manager
@@ -595,7 +1011,7 @@ public class Cinema {
                 fileOut.close();
 
             } catch (IOException e) {
-                System.out.println("Error: couldn't update accounts.csv");
+                System.out.println("Error: couldn't update movies.csv");
             }
 
         }
@@ -1000,6 +1416,9 @@ public class Cinema {
             if (logged == 4){
                 addNewShows();
 //                break;
+            }
+            else if (logged == 3) {
+                editingMovies();
             }
             else if (logged == 5) {
                 giftCardManage();
