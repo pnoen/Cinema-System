@@ -22,6 +22,7 @@ public class Cinema {
     private File accountsFile = new File("src/main/resources/accounts.csv");
     private File moviesFile = new File("src/main/resources/movies.csv");
     private File giftCardFile = new File("src/main/resources/giftcards.csv");
+    private String creditCardFile = "src/main/resources/credit_cards.json";
     private Account currAcc;
     private List<String> allCinemaRooms;
     private List<String> allRatings;
@@ -441,12 +442,17 @@ public class Cinema {
         return this.loggedIn;
     }
 
+    public Account getCurrAcc() {
+        return this.currAcc;
+    }
+
     public void setLogged(boolean state){
         this.loggedIn = state;
     }
 
-    public void customerLoginLogic(){
-        Scanner userInput = new Scanner(System.in);
+    public void customerLoginLogic(Scanner userInput){
+        userInput.nextLine();
+//        Scanner userInput = new Scanner(System.in);
         while(loggedIn){
             System.out.println("Select the page you would like to visit:\n" +
                     "  1. All movies\n" +
@@ -467,7 +473,7 @@ public class Cinema {
                 filterMovies(userInput);
             }
             else if (logged == 3) {
-                bookMovie();
+                bookMovie(userInput);
             }
             else if (logged == 4) {
                 cancelBooking();
@@ -595,7 +601,11 @@ public class Cinema {
         }
     }
 
-    public void bookMovie() {
+    public void setCurrAcc(Account account) {
+        this.currAcc = account;
+    }
+
+    public void bookMovie(Scanner userInput) {
         // list all movie names
         // check if the input is in range of 0 to length of movies array
         // display upcoming time for movie selected
@@ -606,12 +616,13 @@ public class Cinema {
         // add to a list of transactions in cinema
         // add to a list of bookings in account
 
+        userInput.nextLine();
         List<String> movieNames = new ArrayList<String>();
         for (Movie movie : movies) {
             movieNames.add(movie.getName());
         }
 
-        Scanner userInput = new Scanner(System.in);
+//        Scanner userInput = new Scanner(System.in);
         boolean bookedMovie = false;
         while (!bookedMovie) {
             System.out.println("Select a movie you would like to book:");
@@ -635,7 +646,7 @@ public class Cinema {
                     return;
                 }
 
-                pickBookingTime(entered - 1);
+                pickBookingTime(userInput, entered - 1);
                 bookedMovie = true;
             } else {
                 System.out.println("Error: Not a valid option.\n");
@@ -644,11 +655,13 @@ public class Cinema {
         }
     }
 
-    public void pickBookingTime(int movieIdx) {
+    public void pickBookingTime(Scanner userInput, int movieIdx) {
+        userInput.nextLine();
+
         Movie movie = movies.get(movieIdx);
         List<String> times = movie.getUpcomingTimes();
 
-        Scanner userInput = new Scanner(System.in);
+//        Scanner userInput = new Scanner(System.in);
         boolean choseTime = false;
         while (!choseTime) {
             System.out.println("Select a time to book for the movie:");
@@ -673,7 +686,7 @@ public class Cinema {
                 }
 
 //                pickBookingSeat(movie, entered - 1);
-                bookingNumOfSeats(movie, entered - 1);
+                bookingNumOfSeats(userInput, movie, entered - 1);
                 choseTime = true;
             } else {
                 System.out.println("Error: Not a valid option.\n");
@@ -682,8 +695,9 @@ public class Cinema {
         }
     }
 
-    public void bookingNumOfSeats(Movie movie, int timeIdx) {
-        Scanner userInput = new Scanner(System.in);
+    public void bookingNumOfSeats(Scanner userInput, Movie movie, int timeIdx) {
+        userInput.nextLine();
+//        Scanner userInput = new Scanner(System.in);
         boolean choseNumSeats = false;
         while (!choseNumSeats) {
             System.out.println("Enter the number of seats you would like book.\n" +
@@ -731,17 +745,18 @@ public class Cinema {
                 continue;
             }
 
-            pickBookingSeat(movie, timeIdx, totalSeats);
+            pickBookingSeat(userInput, movie, timeIdx, totalSeats);
             choseNumSeats = true;
 
         }
     }
 
-    public void pickBookingSeat(Movie movie, int timeIdx, int numOfBookingSeats) {
+    public void pickBookingSeat(Scanner userInput, Movie movie, int timeIdx, int numOfBookingSeats) {
+        userInput.nextLine();
         List<String> times = movie.getUpcomingTimes();
 //        List<Integer> seats = movie.getSeats(timeIdx);
 
-        Scanner userInput = new Scanner(System.in);
+//        Scanner userInput = new Scanner(System.in);
         boolean choseSeat = false;
         while (!choseSeat) {
             System.out.println("Select the seat you would like:\n" +
@@ -770,7 +785,7 @@ public class Cinema {
                     continue;
                 }
                 // generate transaction id
-                int payment = checkPayment();
+                int payment = checkPayment(userInput);
 
                 String cancelReason = "";
                 if (payment == 1) {
@@ -817,12 +832,18 @@ public class Cinema {
             }
         }
     }
-    public int checkPayment(){
+
+//    public void setCreditCardFile(String file) {
+//        this.creditCardFile = file;
+//    }
+
+    public int checkPayment(Scanner userInput){
         JSONParser parser = new JSONParser();
         boolean cardFound = false;
-        Scanner userInput = new Scanner(System.in);
+//        Scanner userInput = new Scanner(System.in);
+//        userInput.nextLine();
         try {
-            cards = (JSONArray) parser.parse(new FileReader("src/main/resources/credit_cards.json"));
+            cards = (JSONArray) parser.parse(new FileReader(this.creditCardFile));
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -1474,7 +1495,7 @@ public class Cinema {
             //logged in customer screen
             if (this.loggedIn) {
                 if(currAcc.getPerm() == 0){
-                    customerLoginLogic();
+                    customerLoginLogic(userInput);
 
                 }
 
