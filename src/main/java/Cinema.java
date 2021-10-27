@@ -476,7 +476,7 @@ public class Cinema {
                 bookMovie(userInput);
             }
             else if (logged == 4) {
-                cancelBooking();
+                cancelBooking(userInput);
             }
             else if (logged == 5) {
                 this.loggedIn = false;
@@ -933,8 +933,8 @@ public class Cinema {
         return 0;
     }
 
-    public void cancelBooking() {
-        Scanner userInput = new Scanner(System.in);
+    public void cancelBooking(Scanner userInput) {
+//        Scanner userInput = new Scanner(System.in);
         boolean cancelledBooking = false;
         while (!cancelledBooking) {
             System.out.println("Select the booking you would like to cancel:");
