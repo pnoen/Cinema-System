@@ -1120,7 +1120,7 @@ public class Cinema {
 
 
                 default: System.out.println("Error: Not a valid option.");
-                         userInput.nextLine();
+
             }
 
         }
@@ -1359,25 +1359,26 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 choice = userInput.nextInt();
             }
-            switch (choice) {
-                case 1: staffHire();
-                    break;
-                case 2: System.out.println("Please input the staff username to remove:");
-                        Scanner newInput = new Scanner(System.in);
-                        if (newInput.hasNextLine()) {
-                            code = newInput.nextLine();
-                        }
-                        staffFire(code);
-                        break;
-                case 3: staffView();
-                        break;
-
-                case 4: cont = false;
-                    break;
-
-
-                default: System.out.println("Error: Not a valid option.");
-                    userInput.nextLine();
+            if(choice == 1) {
+                staffHire();
+                break;
+            } else if (choice == 2) {
+                System.out.println("Please input the staff username to remove:");
+                Scanner newInput = new Scanner(System.in);
+                if (newInput.hasNextLine()) {
+                    code = newInput.nextLine();
+                }
+                staffFire(code);
+                break;
+            } else if (choice == 3) {
+                staffView();
+                break;
+            } else if (choice == 4) {
+                cont = false;
+                break;
+            } else{
+                System.out.println("Error: Not a valid option.");
+                userInput.nextLine();
             }
 
         }
