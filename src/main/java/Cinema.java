@@ -1610,8 +1610,9 @@ public class Cinema {
                 case 1: giftCardCreate(userInput);
                         break;
                 case 2: System.out.println("Please input the gift card code to delete.");
-                        if (userInput.hasNextLine()) {
-                            code = userInput.nextLine();
+                        Scanner newInput = new Scanner(System.in);
+                        if (newInput.hasNextLine()) {
+                            code = newInput.nextLine();
                         }
                         giftCardDelete(code);
                         break;

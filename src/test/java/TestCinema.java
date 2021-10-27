@@ -1046,6 +1046,12 @@ public class TestCinema {
                 "1. Add\n" +
                 "2. Delete\n" +
                 "3. View\n" +
+                "4. Exit\n" +
+                "Error: Not a valid option.\n" +
+                "Would you like to add/delete or view gift cards?\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
                 "4. Exit";
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
