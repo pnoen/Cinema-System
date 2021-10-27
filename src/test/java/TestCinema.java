@@ -20,8 +20,6 @@ public class TestCinema {
         cinema_1_movie.setMovies(movie_file);
 
         File accounts_file = new File("src/test/resources/accounts_test.csv");
-        File giftCard_file = new File("src/test/resources/giftcard_test.csv");
-        cinema_1_movie.setGiftCardFile(giftCard_file);
         cinema_1_movie.setAccountsFile(accounts_file);
 
         File giftcards_file = new File("src/test/resources/giftcards_test.csv");
@@ -756,7 +754,74 @@ public class TestCinema {
         System.setIn(sysInBackup);
 
     }
+    @Test
+    public void test_giftCardCreate() throws FileNotFoundException {
+        InputStream sysInBackup = System.in;
 
+        String userInput = "1\n1092380138203801GC\n \n\n182738273817283728\n1827382738172837G3\n1837284756475645GC\n4\n";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(inputStream);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        cinema_1_movie.createGiftCards();
+        cinema_1_movie.giftCardManage();
+
+
+        String expected = "Would you like to add/delete or view gift cards?\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit\n" +
+                "Please create a new gift card by entering the code.\n" +
+                "Code:\n" +
+                "Gift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n" +
+                "\n" +
+                "Please create a new gift card by entering the code.\n" +
+                "Code:\n" +
+                "This gift card has already been created. Please try again.\n" +
+                "\n" +
+                "Please create a new gift card by entering the code.\n" +
+                "Code:\n" +
+                "Gift card code cannot contain spaces. Please try again.\n" +
+                "\n" +
+                "Please create a new gift card by entering the code.\n" +
+                "Code:\n" +
+                "Gift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n" +
+                "\n" +
+                "Please create a new gift card by entering the code.\n" +
+                "Code:\n" +
+                "Gift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n" +
+                "\n" +
+                "Please create a new gift card by entering the code.\n" +
+                "Code:\n" +
+                "Gift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n" +
+                "\n" +
+                "Please create a new gift card by entering the code.\n" +
+                "Code:\n" +
+                "You have successfully created a new gift card.\n" +
+                "Would you like to add/delete or view gift cards?\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        System.setIn(sysInBackup);
+    }
 
     @Test
     public void test_viewGiftCard() throws FileNotFoundException{
@@ -786,7 +851,7 @@ public class TestCinema {
                 "Current gift cards:\n" +
                 "\n" +
                 "Gift card number: 1838281828382818GC\n" +
-                "Redeemed State(0-Not Redeemed, 1-Redeemed): 0\n" +
+                "Redeemed State(0-Not Redeemed, 1-Redeemed): 1\n" +
                 "\n" +
                 "Gift card number: 1092380138203801GC\n" +
                 "Redeemed State(0-Not Redeemed, 1-Redeemed): 0\n" +
@@ -934,7 +999,6 @@ public class TestCinema {
                 "    4. Cancel a booking\n" +
                 "    5. Logout\n" +
                 "    You have logged out";
-
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
             output[i] = output[i].trim();
@@ -952,6 +1016,54 @@ public class TestCinema {
     }
 
     @Test
+    public void TestGiftCardDelete() throws FileNotFoundException {
+        InputStream sysInBackup = System.in;
+
+        String userInput = "2\n1092380138203801GC\n4\n";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(inputStream);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        cinema_1_movie.createGiftCards();
+        cinema_1_movie.giftCardManage();
+        String expected = "Would you like to add/delete or view gift cards?\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit\n" +
+                "Please input the gift card code to delete.\n" +
+                "\n" +
+                "You have successfully updated the gift card database.\n" +
+                "Would you like to add/delete or view gift cards?\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit\n" +
+                "Error: Not a valid option.\n" +
+                "Would you like to add/delete or view gift cards?\n" +
+                "1. Add\n" +
+                "2. Delete\n" +
+                "3. View\n" +
+                "4. Exit";
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        System.setIn(sysInBackup);
+    }
+
+  @Test
     public void TestCustomerLoginLogic_BookMovieValid() throws FileNotFoundException {
         List<Movie> movies = cinema_1_movie.getMovies();
         Account account = new Account("testing", "testing", 0);
@@ -964,7 +1076,7 @@ public class TestCinema {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
         System.setOut(printStream);
-      
+
         cinema_1_movie.customerLoginLogic(scanner);
 
         String expected = "Select the page you would like to visit:\n" +

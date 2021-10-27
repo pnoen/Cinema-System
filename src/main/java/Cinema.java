@@ -1124,12 +1124,11 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
-                case 1: giftCardCreate();
+                case 1: giftCardCreate(userInput);
                         break;
                 case 2: System.out.println("Please input the gift card code to delete.");
-                        Scanner newInput = new Scanner(System.in);
-                        if (newInput.hasNextLine()) {
-                            code = newInput.nextLine();
+                        if (userInput.hasNextLine()) {
+                            code = userInput.nextLine();
                         }
                         giftCardDelete(code);
                         break;
@@ -1149,15 +1148,14 @@ public class Cinema {
 
     }
 
-    public void giftCardCreate() {
+    public void giftCardCreate(Scanner userInput) {
         boolean correct = false;
         String number;
 
         while (true) { // The while loop ensures continual prompt in the case bad input is given
             System.out.println("Please create a new gift card by entering the code.");
             System.out.print("Code: ");
-            Scanner code = new Scanner(System.in);
-            number = code.nextLine();
+            number = userInput.nextLine();
             try {
                 BufferedReader giftCardReader = new BufferedReader(new FileReader(this.giftCardFile));
                 String line;
