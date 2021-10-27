@@ -4,6 +4,7 @@ import java.util.List;
 public class Account {
     private String username;
     private String password;
+    private boolean hasCard;
 //    private String cardNumber = null;
 //    private int cardPin = -1;
     private int perm;
@@ -37,5 +38,14 @@ public class Account {
 
     public void removeTransaction(int ind) {
         transactions.remove(ind);
+    }
+
+
+    public void setHasCard(boolean hasCard){
+        this.hasCard = hasCard;
+    }
+
+    public boolean getHasCard(){
+        return this.hasCard;
     }
 }
