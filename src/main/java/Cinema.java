@@ -283,6 +283,65 @@ public class Cinema {
     }
 
     /**
+     * For staff and manager use only
+     * Displays the number of bookings, seats taken and seats available for each movie session
+     */
+    public void bookingSummaries() {
+        List<String[]> sessions = new ArrayList<>();
+        for (int i = 0; i < this.transactions.size(); i++) {
+            String[] session = new String[2];
+            session[0] = this.transactions.get(i).getMovieName();
+            session[1] = this.transactions.get(i).getMovieTime();
+            if (!sessions.contains(session)) {
+                sessions.add(session);
+            }
+        }
+
+        try {
+            File bookingsFile = new File("src/main/resources/bookings.txt");
+            FileWriter bookingsWriter = new FileWriter(bookingsFile);
+            BufferedWriter bw = new BufferedWriter(bookingsWriter);
+            bw.write("----------------------------------------------\n");
+            for (int i = 0; i < sessions.size(); i++) {
+                int seatsBooked = 0;
+                int seatsAvailable = 0;
+                for (Transaction transaction : this.transactions) {
+                    if (sessions.get(i)[0].equals(transaction.getMovie()) && sessions.get(i)[1].equals(transaction.getMovieTime())) {
+                        seatsBooked += transaction.getNumOfSeats();
+                    }
+                }
+
+                for (Movie m : this.movies) {
+                    if (m.getName().equals(sessions.get(i)[0])) {
+                        seatsAvailable = m.numOfSeats();
+                    }
+                }
+
+//                Scanner bookingsReader = new Scanner(new File("src/main/resources/bookings.txt"));
+//                boolean inBookings = false;
+//                while (bookingsReader.hasNextLine()) {
+//                    System.out.println("\nNext line: " + bookingsReader.nextLine() + "\n");
+//                    if (bookingsReader.nextLine().contains(sessions.get(i)[0])) {
+//                        System.out.println(true);
+//                    }
+//                }
+
+//                if (inBookings == false) {
+                    bw.write("Movie: " + sessions.get(i)[0] + "\n");
+                    bw.write("Session Time: " + sessions.get(i)[1] + "\n");
+                    bw.write("Number of Seats Booked: " + Integer.toString(seatsBooked) + "\n");
+                    bw.write("Number of Seats Available: " + Integer.toString(seatsAvailable) + "\n");
+                    bw.write("----------------------------------------------\n");
+//                }
+            }
+            bw.close();
+        }
+        catch (IOException e) {
+            System.out.println("\nError: Booking summaries could not be provided.\n");
+        }
+    }
+
+    /**
      * Displays a customer registration prompt
      * Allows the user to register as a customer
      * Stores the user's customer details into a local database
@@ -1235,7 +1294,7 @@ public class Cinema {
                 transactions.add(transaction);
                 currAcc.addTransaction(transaction);
 
-                if (payment == 2){
+                if (payment == 2) {
                     System.out.println("----------------------\n" +
                             transaction.getTransactionInformation() +
                             "----------------------\n");
@@ -1402,7 +1461,7 @@ public class Cinema {
         while(loggedIn){
             System.out.println("Select the page you would like to visit:\n" +
                     "  1. Movie report\n" +
-                    "  2. Summary of Bookings\n" +
+                    "  2. Booking Summaries\n" +
                     "  3. Movie Management\n" +
                     "  4. Add New Shows for Next Week\n" +
                     "  5. Giftcard Management\n" +
@@ -1413,7 +1472,12 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
 
-            if (logged == 4){
+            if (logged == 2) {
+                bookingSummaries();
+                System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
+            }
+
+            else if (logged == 4){
                 addNewShows();
 //                break;
             }
@@ -1851,6 +1915,9 @@ public class Cinema {
                 logged = userInput.nextInt();
             }
             switch (logged) {
+                case 2: bookingSummaries();
+                        System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
+                        break;
                 case 4: addNewShows();
                         break;
                 case 5: giftCardManage();

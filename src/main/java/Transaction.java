@@ -23,6 +23,10 @@ public class Transaction {
         return movie;
     }
 
+    public String getMovieName() {
+        return movie.getName();
+    }
+
     public String getMovieTime() {
         return movieTime;
     }

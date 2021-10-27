@@ -51,6 +51,8 @@ public class Movie {
 //        return cast;
 //    }
 //
+    public int numOfSeats() { return (this.seats.get(0).get(0) + this.seats.get(0).get(1) + this.seats.get(0).get(2)); }
+
     public List<String> getUpcomingTimes() {
         return upcomingTimes;
     }
