@@ -33,9 +33,9 @@ public class Movie {
         return name;
     }
 //
-//    public String getSynopsis() {
-//        return synopsis;
-//    }
+    public String getSynopsis() {
+        return synopsis;
+    }
 //
     public String getClassification() {
         return classification;
@@ -45,13 +45,13 @@ public class Movie {
 //        return releaseDate;
 //    }
 //
-//    public String getDirector() {
-//        return director;
-//    }
-//
-//    public String getCast() {
-//        return cast;
-//    }
+    public String getDirector() {
+        return director;
+    }
+
+    public String getCast() {
+        return cast;
+    }
 //
     public int numOfSeats() { return (this.seats.get(0).get(0) + this.seats.get(0).get(1) + this.seats.get(0).get(2)); }
 

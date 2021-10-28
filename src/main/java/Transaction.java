@@ -1,3 +1,5 @@
+import java.util.Date;
+
 public class Transaction {
     private String id;
     private Movie movie;
@@ -5,6 +7,7 @@ public class Transaction {
     private String seat;
     private int numOfSeats;
     private String cancelReason;
+    private Date cancelDate = null;
 
     public Transaction(String id, Movie movie, String movieTime, String seat, int numOfSeats, String cancelReason) {
         this.id = id;
@@ -55,5 +58,13 @@ public class Transaction {
 
     public void setCancelReason(String reason) {
         cancelReason = reason;
+    }
+
+    public void setCancelDate(Date date) {
+        cancelDate = date;
+    }
+
+    public Date getCancelDate() {
+        return cancelDate;
     }
 }

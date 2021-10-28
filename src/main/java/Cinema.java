@@ -346,7 +346,8 @@ public class Cinema {
         for (Transaction transaction : this.transactions) {
             if (!transaction.getCancelReason().equals("")) {
                 String[] session = new String[3];
-                session[0] = transaction.getMovie().getName();//date and time
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss z", Locale.ENGLISH);
+                session[0] = sdf.format(transaction.getCancelDate());
                 session[1] = "Anonymous";
                 session[2] = transaction.getCancelReason();
                 if (!sessions.contains(session)) {
@@ -362,8 +363,8 @@ public class Cinema {
             bw.write("----------------------------------------------\n");
             for (int i = 0; i < sessions.size(); i++) {
                 bw.write("Date: " + sessions.get(i)[0] + "\n");
-                bw.write("Movie Name: " + sessions.get(i)[1] + "\n");
-                bw.write("Cancellation reason: " + sessions.get(i)[0] + "\n");
+                bw.write("User: " + sessions.get(i)[1] + "\n");
+                bw.write("Cancellation reason: " + sessions.get(i)[2] + "\n");
                 bw.write("----------------------------------------------\n");
             }
             bw.close();
@@ -1369,9 +1370,13 @@ public class Cinema {
 
                 Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats, cancelReason);
                 transactions.add(transaction);
-                currAcc.addTransaction(transaction);
 
+                if (payment == 1) {
+                    Date date = new Date(System.currentTimeMillis());
+                    transaction.setCancelDate(date);
+                }
                 if (payment == 2) {
+                    currAcc.addTransaction(transaction);
                     System.out.println("----------------------\n" +
                             transaction.getTransactionInformation() +
                             "----------------------\n");
@@ -1518,6 +1523,9 @@ public class Cinema {
                 List<String> cinemaSeats = Arrays.asList("Front", "Middle", "Rear");
                 int seat = cinemaSeats.indexOf(transaction.getSeat());
                 transaction.setCancelReason("user cancelled");
+
+                Date date = new Date(System.currentTimeMillis());
+                transaction.setCancelDate(date);
 
                 transaction.getMovie().addSeats(transaction.getMovieTime(), seat, transaction.getNumOfSeats());
                 System.out.println("Booking removed.\n");
