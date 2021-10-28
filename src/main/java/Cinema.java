@@ -140,7 +140,7 @@ public class Cinema {
      * @return List of movie objects
      */
     public List<Movie> getMovies() {
-
+        this.movies.clear();
         Scanner sc = null;
         try {
             sc = new Scanner(moviesFile);
@@ -333,6 +333,38 @@ public class Cinema {
                     bw.write("Number of Seats Available: " + Integer.toString(seatsAvailable) + "\n");
                     bw.write("----------------------------------------------\n");
 //                }
+            }
+            bw.close();
+        }
+        catch (IOException e) {
+            System.out.println("\nError: Booking summaries could not be provided.\n");
+        }
+    }
+
+    public void cancelledBookingSummary() {
+        List<String[]> sessions = new ArrayList<>();
+        for (Transaction transaction : this.transactions) {
+            if (!transaction.getCancelReason().equals("")) {
+                String[] session = new String[3];
+                session[0] = transaction.getMovie().getName();//date and time
+                session[1] = "Anonymous";
+                session[2] = transaction.getCancelReason();
+                if (!sessions.contains(session)) {
+                    sessions.add(session);
+                }
+            }
+        }
+
+        try {
+            File bookingsFile = new File("src/main/resources/cancelledbookings.txt");
+            FileWriter bookingsWriter = new FileWriter(bookingsFile);
+            BufferedWriter bw = new BufferedWriter(bookingsWriter);
+            bw.write("----------------------------------------------\n");
+            for (int i = 0; i < sessions.size(); i++) {
+                bw.write("Date: " + sessions.get(i)[0] + "\n");
+                bw.write("Movie Name: " + sessions.get(i)[1] + "\n");
+                bw.write("Cancellation reason: " + sessions.get(i)[0] + "\n");
+                bw.write("----------------------------------------------\n");
             }
             bw.close();
         }
@@ -579,10 +611,13 @@ public class Cinema {
         switch (input) {
             case 1:
                 insertNewMovie();
+                break;
             case 2:
                 modifyCurrentMovie();
+                break;
             case 3:
                 deleteMovie();
+                break;
         }
     }
 
@@ -597,92 +632,95 @@ public class Cinema {
 
         Scanner userInput = new Scanner(System.in);
 
-        System.out.println("Enter Title:\n");
+        System.out.print("Enter Title: ");
         if (userInput.hasNext()) {
             String title = userInput.nextLine();
-            System.out.println("Entered Title: "+title);
+//            System.out.println("Entered Title: "+title);
             new_movie_line_arr[0] = title;
         }
 
-        System.out.println("Enter Synopsis:\n");
+        System.out.print("Enter Synopsis: ");
         if (userInput.hasNext()) {
             String synopsis = userInput.nextLine();
-            System.out.println("Entered Synopsis: "+synopsis);
+//            System.out.println("Entered Synopsis: "+synopsis);
             new_movie_line_arr[1] = synopsis;
         }
 
-        System.out.println("Enter Classification:");
+        System.out.print("Enter Classification: ");
         if (userInput.hasNext()) {
             String classification = userInput.nextLine();
-            System.out.println("Entered Classification: "+classification);
+//            System.out.println("Entered Classification: "+classification);
             new_movie_line_arr[2] = classification;
         }
 
-        System.out.println("Enter Release Date:");
+        System.out.print("Enter Release Date: ");
         if (userInput.hasNext()) {
             String release_date = userInput.nextLine();
-            System.out.println("Entered Release Date: "+release_date);
+//            System.out.println("Entered Release Date: "+release_date);
             new_movie_line_arr[3] = release_date;
         }
 
-        System.out.println("Enter Director:");
+        System.out.print("Enter Director: ");
         if (userInput.hasNext()) {
             String director = userInput.nextLine();
-            System.out.println("Entered Director: "+director);
+//            System.out.println("Entered Director: "+director);
             new_movie_line_arr[4] = director;
         }
 
-        System.out.println("Enter Cast:");
+        System.out.print("Enter Cast: ");
         if (userInput.hasNext()) {
             String cast = userInput.nextLine();
-            System.out.println("Entered Cast: "+cast);
+//            System.out.println("Entered Cast: "+cast);
             new_movie_line_arr[5] = cast;
         }
 
-        System.out.println("Enter Upcoming Times:");
+        System.out.print("Enter Upcoming Times: ");
         if (userInput.hasNext()) {
             String upcoming_times = userInput.nextLine();
-            System.out.println("Entered Upcoming Times: "+upcoming_times);
+//            System.out.println("Entered Upcoming Times: "+upcoming_times);
             new_movie_line_arr[6] = upcoming_times;
         }
 
-        System.out.println("Enter Screen Size:");
+        System.out.print("Enter Screen Size: ");
         if (userInput.hasNext()) {
             String screen_size = userInput.nextLine();
-            System.out.println("Entered Screen Size: "+screen_size);
+//            System.out.println("Entered Screen Size: "+screen_size);
             new_movie_line_arr[7] = screen_size;
         }
 
-        System.out.println("Enter Cinema Rooms:");
+        System.out.print("Enter Cinema Rooms: ");
         if (userInput.hasNext()) {
             String cinema_rooms = userInput.nextLine();
-            System.out.println("Entered Cinema Rooms: "+cinema_rooms);
+//            System.out.println("Entered Cinema Rooms: "+cinema_rooms);
             new_movie_line_arr[8] = cinema_rooms;
         }
 
-        System.out.println("Enter Front Seats:");
+        System.out.print("Enter Front Seats: ");
         if (userInput.hasNext()) {
             String front_seats = userInput.nextLine();
-            System.out.println("Entered Front Seats: "+front_seats);
+//            System.out.println("Entered Front Seats: "+front_seats);
             new_movie_line_arr[9] = front_seats;
         }
 
-        System.out.println("Enter Middle Seats:");
+        System.out.print("Enter Middle Seats: ");
         if (userInput.hasNext()) {
             String middle_seats = userInput.nextLine();
-            System.out.println("Entered Middle Seats: "+middle_seats);
+//            System.out.println("Entered Middle Seats: "+middle_seats);
             new_movie_line_arr[10] = middle_seats;
         }
 
-        System.out.println("Enter Rear Seats:");
+        System.out.print("Enter Rear Seats: ");
         if (userInput.hasNext()) {
             String rear_seats = userInput.nextLine();
-            System.out.println("Entered Rear Seats: "+rear_seats);
+//            System.out.println("Entered Rear Seats: "+rear_seats);
             new_movie_line_arr[11] = rear_seats;
         }
 
         new_movie_line = String.join(";", new_movie_line_arr);
-        System.out.println("New Movie Inserted");
+        Movie movie = createMovie(new_movie_line_arr);
+        this.movies.add(movie);
+
+        System.out.println("New movie inserted\n");
 
         try {
             BufferedReader movieReader = new BufferedReader(new FileReader(this.moviesFile));
@@ -736,7 +774,7 @@ public class Cinema {
             System.out.println(movie1.getCondensedMovieInformation());
         }
 
-        System.out.println("Enter reference number of movie you would like to modify:\n");
+        System.out.print("Enter reference number of movie you would like to modify: ");
         Scanner userInput = new Scanner(System.in);
 
         int refnum = 100;
@@ -748,7 +786,7 @@ public class Cinema {
 
         System.out.println("Enter reference number relating to what you would like to modify:\n");
         System.out.println("1. Title\n2. Synopsis\n3. Classification\n4. Release Date\n5. Director\n6. Cast" +
-                "\n7. Screen Size\n8. Upcoming Times\n9. Cinema Rooms\n10. Available Seats\n");
+                "\n7. Screen Size\n8. Upcoming Times\n9. Cinema Rooms\n10. Available front seats\n11. Available middle seats\n12. Available rear seats\n");
 
 
         try {
@@ -776,6 +814,7 @@ public class Cinema {
                                     userInput.nextLine();
                                     String title_input = userInput.nextLine();
                                     ls[0] = title_input;
+                                    this.movies.get(refnum).setName(ls[0]);
                                 }
 
                             }
@@ -789,6 +828,7 @@ public class Cinema {
                                     userInput.nextLine();
                                     String synopsis_input = userInput.nextLine();
                                     ls[1] = synopsis_input;
+                                    this.movies.get(refnum).setSynopsis(ls[1]);
                                 }
 
                             }
@@ -802,6 +842,7 @@ public class Cinema {
                                     userInput.nextLine();
                                     String classification_input = userInput.nextLine();
                                     ls[2] = classification_input;
+                                    this.movies.get(refnum).setClassification(ls[2]);
                                 }
 
                             }
@@ -815,6 +856,7 @@ public class Cinema {
                                     userInput.nextLine();
                                     String release_date_input = userInput.nextLine();
                                     ls[3] = release_date_input;
+                                    this.movies.get(refnum).setReleaseDate(ls[3]);
                                 }
 
                             }
@@ -828,6 +870,7 @@ public class Cinema {
                                     userInput.nextLine();
                                     String director_input = userInput.nextLine();
                                     ls[4] = director_input;
+                                    this.movies.get(refnum).setDirector(ls[4]);
                                 }
 
                             }
@@ -841,6 +884,7 @@ public class Cinema {
                                     userInput.nextLine();
                                     String cast_input = userInput.nextLine();
                                     ls[5] = cast_input;
+                                    this.movies.get(refnum).setCast(ls[5]);
                                 }
 
                             }
@@ -854,6 +898,7 @@ public class Cinema {
                                     userInput.nextLine();
                                     String screen_size_input = userInput.nextLine();
                                     ls[6] = screen_size_input;
+                                    this.movies.get(refnum).setScreenSize(ls[6]);
                                 }
 
                             }
@@ -867,32 +912,63 @@ public class Cinema {
                                     userInput.nextLine();
                                     String upcoming_times_input = userInput.nextLine();
                                     ls[7] = upcoming_times_input;
+                                    this.movies.get(refnum).setUpcomingTimes(ls[7]);
                                 }
 
                             }
                             break;
 
                         case 9:
-                            System.out.println("Enter New Cinema Rooms:");
+                            System.out.print("Enter New Cinema Rooms:");
                             if (userInput.hasNext()){
 
                                 if (userInput.hasNext()){
                                     userInput.nextLine();
                                     String cinema_rooms_input = userInput.nextLine();
                                     ls[8] = cinema_rooms_input;
+                                    this.movies.get(refnum).setCinemaRooms(ls[8]);
                                 }
 
                             }
                             break;
 
                         case 10:
-                            System.out.println("Enter New Available Seats:");
+                            System.out.print("Enter new front seats: ");
                             if (userInput.hasNext()){
 
                                 if (userInput.hasNext()){
                                     userInput.nextLine();
-                                    String available_seats_input = userInput.nextLine();
-                                    ls[8] = available_seats_input;
+                                    String frontSeatsInput = userInput.nextLine();
+                                    ls[9] = frontSeatsInput;
+                                    this.movies.get(refnum).setSeatsModify(ls[9], ls[10], ls[11]);
+                                }
+
+                            }
+                            break;
+                        case 11:
+                            System.out.print("Enter new middle seats: ");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String middleSeatsInput = userInput.nextLine();
+                                    ls[10] = middleSeatsInput;
+                                    this.movies.get(refnum).setSeatsModify(ls[9], ls[10], ls[11]);
+
+                                }
+
+                            }
+                            break;
+                        case 12:
+                            System.out.print("Enter new rear seats: ");
+                            if (userInput.hasNext()){
+
+                                if (userInput.hasNext()){
+                                    userInput.nextLine();
+                                    String rearSeatsInput = userInput.nextLine();
+                                    ls[11] = rearSeatsInput;
+                                    this.movies.get(refnum).setSeatsModify(ls[9], ls[10], ls[11]);
+
                                 }
 
                             }
@@ -918,7 +994,7 @@ public class Cinema {
             fileOut.write(stringBuffer.toString().getBytes());
             fileOut.close();
 
-        } catch (IOException e) {
+        } catch (IOException | java.text.ParseException e) {
             System.out.println("Error: couldn't update movies.csv");
         }
 
@@ -947,7 +1023,7 @@ public class Cinema {
             System.out.println(movie1.getCondensedMovieInformation());
         }
         Scanner userInput = new Scanner(System.in);
-        System.out.println("Enter the reference number of the film you would like to delete\n");
+        System.out.print("Enter the reference number of the film you would like to delete: ");
         int refnum = 100;
         if (userInput.hasNextInt()) {
             refnum = userInput.nextInt();
@@ -970,6 +1046,7 @@ public class Cinema {
                 }
 
             }
+            this.movies.remove(refnum);
             movieReader.close();
 
             FileOutputStream fileOut = new FileOutputStream(this.moviesFile);
@@ -1919,11 +1996,15 @@ public class Cinema {
                 case 2: bookingSummaries();
                         System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
                         break;
+                case 3: editingMovies();
+                        break;
                 case 4: addNewShows();
                         break;
                 case 5: giftCardManage();
                         break;
                 case 6: staffManage(2);
+                        break;
+                case 7: transactionManagement();
                         break;
                 case 8: this.loggedIn = false;
                         System.out.println("You have logged out");
@@ -1938,6 +2019,43 @@ public class Cinema {
         }
 //        input.close();
     }
+
+    public void transactionManagement(){
+        Scanner userInput = new Scanner(System.in);
+
+        while(true){
+            System.out.println("Select the report option you would like\n" +
+                    "  1. Bookings Summary\n" +
+                    "  2. Cancelled Bookings Summary\n" +
+                    "  3. Return to menu");
+
+
+            int entered = 0;
+            if (userInput.hasNextInt()) {
+                entered = userInput.nextInt();
+            } else {
+                System.out.println("Error: Not a valid option.\n");
+                userInput.nextLine();
+                continue;
+            }
+
+            if (entered > 0 && entered <= 4) {
+                    if (entered == 1){
+                        bookingSummaries();
+                        break;
+                    }
+                    else if (entered == 2){
+                        cancelledBookingSummary();
+                        break;
+                    }
+                    else if (entered == 3){
+                        return;
+                    }
+                }
+            }
+        }
+
+
 
     // MAIN LOOP WILL BE HERE RATHER THAN IN MAIN.
     // DATABASE FILES WILL BE LOCATED IN 'src/main/resources'.
