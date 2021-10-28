@@ -1,3 +1,5 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Movie {
@@ -144,6 +146,57 @@ public class Movie {
         int currSeats = seats.get(ind).get(seat);
         currSeats += numOfSeats;
         seats.get(ind).set(seat, currSeats);
+    }
+
+    public void setName(String title){
+        this.name = title;
+    }
+
+    public void setSynopsis(String synopsis){
+        this.synopsis = synopsis;
+    }
+
+    public void setClassification(String classification){
+        this.classification = classification;
+    }
+
+    public void setReleaseDate(String releaseDate) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        this.releaseDate = sdf.parse(releaseDate);
+    }
+
+    public void setSeatsModify(String frontSeats, String middleSeats, String rearSeats){
+        List<List<Integer>> allSeats = new ArrayList<List<Integer>>();
+
+        List<Integer> seats = new ArrayList<Integer>();
+        seats.add(Integer.valueOf(frontSeats));
+        seats.add(Integer.valueOf(middleSeats));
+        seats.add(Integer.valueOf(rearSeats));
+        for (int i = 0; i < this.upcomingTimes.size(); i++) {
+            allSeats.add(seats);
+        }
+        this.seats = allSeats;
+
+    }
+
+    public void setDirector(String director){
+        this.director = director;
+    }
+
+    public void setCast(String cast){
+        this.cast = cast;
+    }
+
+    public void setUpcomingTimes(String upcomingTimes){
+        this.upcomingTimes = Arrays.asList(upcomingTimes.split(","));
+    }
+
+    public void setScreenSize(String screenSize){
+        this.screenSize = screenSize;
+    }
+
+    public void setCinemaRooms(String cinemaRooms){
+        this.cinemaRooms = Arrays.asList(cinemaRooms.split(","));
     }
 
 }
