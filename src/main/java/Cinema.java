@@ -606,7 +606,7 @@ public class Cinema {
     public void editingMovies(){
         Scanner userInput = new Scanner(System.in);
         System.out.println("Enter the number corresponding to the action you would like to take\n");
-        System.out.println("1. Insert a new Movie\n2. Modify a current Movie\n3. Delete a Movie\n");
+        System.out.println("1. Insert a new Movie\n2. Modify a current Movie\n3. Delete a Movie\n4. Return to menu");
 
         int input = userInput.nextInt();
         switch (input) {
@@ -619,6 +619,8 @@ public class Cinema {
             case 3:
                 deleteMovie();
                 break;
+            case 4:
+                return;
         }
     }
 
@@ -1085,7 +1087,7 @@ public class Cinema {
             System.out.println(movie1.getCondensedMovieInformation());
         }
         Scanner userInput = new Scanner(System.in);
-        System.out.println("Enter the reference number of the film you would like to add a show for\n");
+        System.out.print("Enter the reference number of the film you would like to add a show for: ");
 
         //going to have to add error checking to make sure
         //all input that is given is correct ofc
@@ -1093,12 +1095,12 @@ public class Cinema {
         int refnum = 100;
         if (userInput.hasNextInt()) {
             refnum = userInput.nextInt();
-            System.out.println("Adding show for the following movie:\n");
+            System.out.print("Adding show for the following movie: ");
             System.out.println(movie_ref.get(refnum).getCondensedMovieInformation());
         }
 
         Scanner userInput2 = new Scanner(System.in);
-        System.out.println("Enter the show time you would like to add (In form 'hh:mm:'):\n");
+        System.out.print("Enter the show time you would like to add (In form 'hh:mm:'): ");
         Boolean time_given = false;
         String time = "";
 
