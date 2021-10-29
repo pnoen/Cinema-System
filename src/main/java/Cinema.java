@@ -614,7 +614,7 @@ public class Cinema {
                 insertNewMovie();
                 break;
             case 2:
-                modifyCurrentMovie();
+//                modifyCurrentMovie();
                 break;
             case 3:
                 deleteMovie();
