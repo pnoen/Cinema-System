@@ -3,6 +3,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.*;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TestCinema {
@@ -1940,5 +1941,65 @@ public class TestCinema {
 
         assertEquals(expected, actual);
         scanner.close();
+    }
+
+    @Test
+    public void TestCreateTransaction() {
+        Date release_date = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        try {
+            release_date = sdf.parse("01/01/2000");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String time = "10:30,21:12";
+        List<String> upcomingTimes = Arrays.asList(time.split(","));
+
+        String room = "1,2";
+        List<String> cinemaRooms = Arrays.asList(room.split(","));
+
+        List<List<Integer>> allSeats = new ArrayList<List<Integer>>();
+        List<Integer> seats = new ArrayList<Integer>();
+        seats.add(1);
+        seats.add(1);
+        seats.add(1);
+        allSeats.add(seats);
+        allSeats.add(seats);
+
+        Movie movie = new Movie("John", "Bob Smith", "G",
+                release_date, "John Smith", "Smith Smith", upcomingTimes, "Bronze", cinemaRooms, allSeats);
+        Transaction transaction = cinema.createTranscation(movie, movie.getUpcomingTimes().get(0), "Front", 1, "");
+
+        assertEquals(movie, transaction.getMovie());
+        assertEquals("10:30", transaction.getMovieTime());
+        assertEquals("Front", transaction.getSeat());
+        assertEquals(1, transaction.getNumOfSeats());
+        assertEquals("", transaction.getCancelReason());
+    }
+
+    @Test
+    public void TestUserTimeout() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema.userTimeout(null, null, null, -1);
+        Transaction transaction = cinema.getTransactions().get(0);
+
+        String expected = "Booking has timed out.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        assertEquals(expected, actual);
+        assertNull(transaction.getMovie());
+        assertNull(transaction.getMovieTime());
+        assertNull(transaction.getSeat());
+        assertEquals(-1, transaction.getNumOfSeats());
+        assertEquals("user timeout", transaction.getCancelReason());
     }
 }

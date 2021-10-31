@@ -2132,20 +2132,24 @@ public class Cinema {
             }
 
             if (entered > 0 && entered <= 4) {
-                    if (entered == 1){
-                        bookingSummaries();
-                        break;
-                    }
-                    else if (entered == 2){
-                        cancelledBookingSummary();
-                        break;
-                    }
-                    else if (entered == 3){
-                        return;
-                    }
+                if (entered == 1){
+                    bookingSummaries();
+                    break;
+                }
+                else if (entered == 2){
+                    cancelledBookingSummary();
+                    break;
+                }
+                else if (entered == 3){
+                    return;
                 }
             }
         }
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
 
 
 
