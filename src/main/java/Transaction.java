@@ -27,7 +27,7 @@ public class Transaction {
     }
 
     public String getMovieName() {
-        return movie.getName();
+        return getMovie().getName();
     }
 
     public String getMovieTime() {

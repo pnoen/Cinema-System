@@ -297,47 +297,45 @@ public class Cinema {
             }
         }
 
-        try {
-            File bookingsFile = new File("src/main/resources/bookings.txt");
-            FileWriter bookingsWriter = new FileWriter(bookingsFile);
-            BufferedWriter bw = new BufferedWriter(bookingsWriter);
-            bw.write("----------------------------------------------\n");
-            for (int i = 0; i < sessions.size(); i++) {
-                int seatsBooked = 0;
-                int seatsAvailable = 0;
-                for (Transaction transaction : this.transactions) {
-                    if (sessions.get(i)[0].equals(transaction.getMovie()) && sessions.get(i)[1].equals(transaction.getMovieTime())) {
-                        seatsBooked += transaction.getNumOfSeats();
-                    }
+        String summariesString = "----------------------------------------------\n";
+        for (int i = 0; i < sessions.size(); i++) {
+            int seatsBooked = 0;
+            int seatsAvailable = 0;
+            for (Transaction transaction : this.transactions) {
+                if (transaction.getMovieName().equals(sessions.get(i)[0]) && transaction.getMovieTime().equals(sessions.get(i)[1])) {
+                    seatsBooked += transaction.getNumOfSeats();
                 }
-
-                for (Movie m : this.movies) {
-                    if (m.getName().equals(sessions.get(i)[0])) {
-                        seatsAvailable = m.numOfSeats();
-                    }
-                }
-
-//                Scanner bookingsReader = new Scanner(new File("src/main/resources/bookings.txt"));
-//                boolean inBookings = false;
-//                while (bookingsReader.hasNextLine()) {
-//                    System.out.println("\nNext line: " + bookingsReader.nextLine() + "\n");
-//                    if (bookingsReader.nextLine().contains(sessions.get(i)[0])) {
-//                        System.out.println(true);
-//                    }
-//                }
-
-//                if (inBookings == false) {
-                    bw.write("Movie: " + sessions.get(i)[0] + "\n");
-                    bw.write("Session Time: " + sessions.get(i)[1] + "\n");
-                    bw.write("Number of Seats Booked: " + Integer.toString(seatsBooked) + "\n");
-                    bw.write("Number of Seats Available: " + Integer.toString(seatsAvailable) + "\n");
-                    bw.write("----------------------------------------------\n");
-//                }
             }
-            bw.close();
-        }
-        catch (IOException e) {
-            System.out.println("\nError: Booking summaries could not be provided.\n");
+
+            for (Movie m : this.movies) {
+                if (m.getName().equals(sessions.get(i)[0])) {
+                    seatsAvailable = m.numOfSeats();
+                }
+            }
+
+            boolean inBookings = false;
+            if (summariesString.contains(sessions.get(i)[0])) {
+                inBookings = true;
+            }
+
+            if (inBookings == false) {
+                summariesString += "Movie: " + sessions.get(i)[0] +
+                        "\nSession Time: " + sessions.get(i)[1] +
+                        "\nNumber of Seats Booked: " + Integer.toString(seatsBooked) +
+                        "\nNumber of Seats Available: " + Integer.toString(seatsAvailable) +
+                        "\n----------------------------------------------\n";
+            }
+            try {
+                File bookingsFile = new File("src/main/resources/bookings.txt");
+                FileWriter bookingsWriter = new FileWriter(bookingsFile);
+                BufferedWriter bw = new BufferedWriter(bookingsWriter);
+                bw.write(summariesString);
+                bw.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("Error: Booking summaries could not be found.");
+            } catch (IOException e) {
+                System.out.println("Error: Booking summaries could not be provided.");
+            }
         }
     }
 
