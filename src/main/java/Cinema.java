@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,6 +30,7 @@ public class Cinema {
     private List<Transaction> transactions = new ArrayList<Transaction>();
     private JSONArray cards;
     private int checkPaymentVal = 5;
+    private int timeoutTime = 10*1000;
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
@@ -1160,6 +1162,16 @@ public class Cinema {
         this.currAcc = account;
     }
 
+    public void userTimeout(Movie movie, String time, String seat, int numOfSeats) {
+        System.out.println("Booking has timed out.");
+        String cancelReason = "user timeout";
+        Transaction transaction = createTranscation(movie, time, seat, numOfSeats, cancelReason);
+        transactions.add(transaction);
+
+        Date date = new Date(System.currentTimeMillis());
+        transaction.setCancelDate(date);
+    }
+
     public void bookMovie(Scanner userInput) {
         // list all movie names
         // check if the input is in range of 0 to length of movies array
@@ -1187,11 +1199,20 @@ public class Cinema {
             System.out.println("  " + (movieNames.size() + 1) + ". Back to home page");
 
             int entered = 0;
+            long currentTime = System.currentTimeMillis();
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    userTimeout(null, null, null, -1);
+                    return;
+                }
             } else {
-                System.out.println("Error: Not a valid option.\n");
                 userInput.nextLine();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    userTimeout(null, null, null, -1);
+                    return;
+                }
+                System.out.println("Error: Not a valid option.\n");
                 continue;
             }
 
@@ -1226,11 +1247,20 @@ public class Cinema {
             System.out.println("  " + (times.size() + 1) + ". Back to home page");
 
             int entered = 0;
+            long currentTime = System.currentTimeMillis();
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    userTimeout(movie, null, null, -1);
+                    return;
+                }
             } else {
-                System.out.println("Error: Not a valid option.\n");
                 userInput.nextLine();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    userTimeout(movie, null, null, -1);
+                    return;
+                }
+                System.out.println("Error: Not a valid option.\n");
                 continue;
             }
 
@@ -1262,7 +1292,12 @@ public class Cinema {
                     "Adult:\n" +
                     "Senior/Pensioner:\n" +
                     "(Enter 'cancel' to return to the home page)");
-            String selections = userInput.nextLine();
+            long currentTime = System.currentTimeMillis();
+            String selections = userInput.next();
+            if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, -1);
+                return;
+            }
 
             // Split the selection input and convert to int
             List<Integer> numOfSeats = new ArrayList<Integer>();
@@ -1321,11 +1356,20 @@ public class Cinema {
                     "  4. Back to home page");
 
             int entered = 0;
+            long currentTime = System.currentTimeMillis();
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, numOfBookingSeats);
+                    return;
+                }
             } else {
-                System.out.println("Error: Not a valid option.\n");
                 userInput.nextLine();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, numOfBookingSeats);
+                    return;
+                }
+                System.out.println("Error: Not a valid option.\n");
                 continue;
             }
 
@@ -1342,35 +1386,20 @@ public class Cinema {
                 // generate transaction id
                 int payment = checkPayment(userInput);
 
+                String[] cinemaSeats = {"Front", "Middle", "Rear"};
+
                 String cancelReason = "";
                 if (payment == 1) {
                     cancelReason = "card payment failed";
                 }
-
-                String randIdChars = "abcdefghijklmnopqrstuvwyxz";
-                randIdChars += randIdChars.toUpperCase();
-                randIdChars += "1234567890";
-                String transactionId = "";
-                boolean unique = false;
-                while (!unique) {
-                    transactionId = "";
-                    Random rand = new Random();
-                    for (int i = 0; i < 6; i++){
-                        int num = rand.nextInt(randIdChars.length());
-                        transactionId += randIdChars.charAt(num);
-                    }
-
-                    for (Transaction transaction : transactions) {
-                        if (transaction.getId().equals(transactionId)) {
-                            continue;
-                        }
-                    }
-                    unique = true;
+                else if (payment == 3) { // TIMEOUT AT PAYMENT
+                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats);
+                    return;
                 }
 
-                String[] cinemaSeats = {"Front", "Middle", "Rear"};
+                Transaction transaction = createTranscation(movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats, cancelReason);
 
-                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats, cancelReason);
+//                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats, cancelReason);
                 transactions.add(transaction);
 
                 if (payment == 1) {
@@ -1390,6 +1419,36 @@ public class Cinema {
                 continue;
             }
         }
+    }
+
+    public Transaction createTranscation(Movie movie, String time, String seat, int numOfSeats, String cancelReason) {
+        String randIdChars = "abcdefghijklmnopqrstuvwyxz";
+        randIdChars += randIdChars.toUpperCase();
+        randIdChars += "1234567890";
+        String transactionId = "";
+        boolean unique = false;
+        while (!unique) {
+            transactionId = "";
+            Random rand = new Random();
+            for (int i = 0; i < 6; i++){
+                int num = rand.nextInt(randIdChars.length());
+                transactionId += randIdChars.charAt(num);
+            }
+
+            boolean uniqueId = true;
+            for (Transaction transaction : transactions) {
+                if (transaction.getId().equals(transactionId)) {
+                    uniqueId = false;
+                    break;
+                }
+            }
+            if (!uniqueId) {
+                continue;
+            }
+            unique = true;
+        }
+
+        return new Transaction(transactionId, movie, time, seat, numOfSeats, cancelReason);
     }
 
 //    public void setCreditCardFile(String file) {
@@ -1415,12 +1474,19 @@ public class Cinema {
                     "  3. Return to seat selection");
 
 
+            long currentTime = System.currentTimeMillis();
             int entered = 0;
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    return 3;
+                }
             } else {
-                System.out.println("Error: Not a valid option.\n");
                 userInput.nextLine();
+                if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                    return 3;
+                }
+                System.out.println("Error: Not a valid option.\n");
                 continue;
             }
 
@@ -1432,8 +1498,17 @@ public class Cinema {
                     System.out.println("Please enter the card holders name and number");
                     System.out.print("Card holders name: ");
                     userInput.nextLine();
+                    currentTime = System.currentTimeMillis();
                     String name = userInput.nextLine();
+                    if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                        return 3;
+                    }
+
+                    currentTime = System.currentTimeMillis();
                     String number = PasswordMasker.readPassword("Card number: ");
+                    if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                        return 3;
+                    }
 //                    String number = userInput.nextLine();
 //                    System.out.print("Card number: ");
 
@@ -1458,7 +1533,11 @@ public class Cinema {
                     System.out.println("Please enter the 16 digit gift card number followed by 'GC'");
                     System.out.print("Card number: ");
                     userInput.nextLine();
+                    currentTime = System.currentTimeMillis();
                     String cardNo = userInput.nextLine();
+                    if (System.currentTimeMillis() - currentTime > timeoutTime) {
+                        return 3;
+                    }
 
                     for (GiftCard c : this.giftCards){
 
