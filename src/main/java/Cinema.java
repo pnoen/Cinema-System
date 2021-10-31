@@ -1762,6 +1762,7 @@ public class Cinema {
         Scanner userInput = new Scanner(System.in);
         String code = null;
         boolean cont = true;
+        GiftCard removedCard = null;
 
         while (cont) {
             System.out.println("Would you like to add/delete or view gift cards?\n" +
@@ -1782,6 +1783,14 @@ public class Cinema {
                             code = newInput.nextLine();
                         }
                         giftCardDelete(code);
+                        for(GiftCard c : this.giftCards) {
+                            if(c.getNumber().equals(code)){
+                                removedCard = c;
+                            }
+                        }
+                        this.giftCards.remove(removedCard);
+
+
                         break;
                 case 3: giftCardView();
                         break;
