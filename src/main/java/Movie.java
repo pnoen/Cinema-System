@@ -32,19 +32,19 @@ public class Movie {
     public String getName() {
         return name;
     }
-//
+
     public String getSynopsis() {
         return synopsis;
     }
-//
+
     public String getClassification() {
         return classification;
     }
-//
-//    public Date getReleaseDate() {
-//        return releaseDate;
-//    }
-//
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
     public String getDirector() {
         return director;
     }
@@ -52,7 +52,7 @@ public class Movie {
     public String getCast() {
         return cast;
     }
-//
+
     public int numOfSeats() { return (this.seats.get(0).get(0) + this.seats.get(0).get(1) + this.seats.get(0).get(2)); }
 
     public List<String> getUpcomingTimes() {
@@ -129,7 +129,7 @@ public class Movie {
 
     public boolean setSeats(int upcomingTimeIdx, int seat, int numOfBookingSeats) {
         int numSeats = seats.get(upcomingTimeIdx).get(seat);
-        if (numSeats < 0) {
+        if (numSeats <= 0) {
             System.out.println("There are no available seats in this row.\n");
             return false;
         }
