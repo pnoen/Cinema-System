@@ -50,6 +50,28 @@ public class TestCinema {
         }
     }
 
+    @BeforeEach
+    public void resetAccountsCSV() {
+        List<List<String>> accounts = new ArrayList<List<String>>();
+        accounts.add(Arrays.asList("john", "smith", "0"));
+        accounts.add(Arrays.asList("tony", "pit", "1"));
+        accounts.add(Arrays.asList("bob", "jones", "2"));
+
+        try {
+            FileWriter csvWriter = new FileWriter("src/test/resources/accounts_test.csv");
+
+            for (List<String> a : accounts) {
+                csvWriter.append(String.join(",", a));
+                csvWriter.append("\n");
+            }
+            csvWriter.flush();
+            csvWriter.close();
+        }
+        catch (IOException e) {
+            System.out.println("Error");
+        }
+    }
+
     @Test
     void testDisplayMovies(){
         cinema_1_movie.getMovies();
@@ -105,30 +127,260 @@ public class TestCinema {
         assertEquals(expected, actual.trim());
     }
 
-//    void testCorrectCustomerRegistrationLogic(){
-//        File accountsFile = new File("src/test/resources/accounts_test.csv");
-//        cinema.setAccounts(accountsFile);
-//
-//        //catching input
-//        String userInput = String.format("bradpitt%sfightclub%sfightclub",
-//                System.lineSeparator(), System.lineSeparator());
-//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-//        System.setIn(inputStream);
-//
-//        //catching output
-//        String expected = String.format("%sYou have successfully registered as a new customer. Welcome to Fancy Cinemas!%s" +
-//                "You will return to the main menu logged into your new account.%s",
-//                System.lineSeparator(), System.lineSeparator(), System.lineSeparator());
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        PrintStream printStream = new PrintStream(outputStream);
-//        System.setOut(printStream);
-//
-//        //running method
-//        cinema.registerCustomer();
-//        String[] output = outputStream.toString().split(System.lineSeparator());
-//        String actual = output[output.length - 1];
-//        assertEquals(expected, actual.trim());
-//    }
+    @Test
+    void testCustomerRegister_valid() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+
+        Scanner scanner = new Scanner("\nusername\npassword\npassword\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.registerCustomer(scanner, true);
+
+        String expected = "Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    You have successfully registered as a new customer. Welcome to Fancy Cinemas!\n" +
+                "    You will return to the main menu logged into your new account.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    void testCustomerRegister_DifferentConfirmPassword() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+
+        Scanner scanner = new Scanner("\nusername\npassword\npass\nusername\npassword\npassword\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.registerCustomer(scanner, true);
+
+        String expected = "Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    Passwords do not match. Please try again.\n" +
+                "\n" +
+                "    Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    You have successfully registered as a new customer. Welcome to Fancy Cinemas!\n" +
+                "    You will return to the main menu logged into your new account.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    void testCustomerRegister_PasswordSpace() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+
+        Scanner scanner = new Scanner("\nusername\npass word\npass word\nusername\npassword\npassword\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.registerCustomer(scanner, true);
+
+        String expected = "Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    Password cannot contain spaces. Please try again.\n" +
+                "\n" +
+                "    Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    You have successfully registered as a new customer. Welcome to Fancy Cinemas!\n" +
+                "    You will return to the main menu logged into your new account.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    void testCustomerRegister_EmptyPassword() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+
+        Scanner scanner = new Scanner("\nusername\n\n\nusername\npassword\npassword\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.registerCustomer(scanner, true);
+
+        String expected = "Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    Password cannot be empty. Please try again.\n" +
+                "\n" +
+                "    Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    You have successfully registered as a new customer. Welcome to Fancy Cinemas!\n" +
+                "    You will return to the main menu logged into your new account.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    void testCustomerRegister_TakenUsername() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+
+        Scanner scanner = new Scanner("\njohn\npassword\npassword\nusername\npassword\npassword\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.registerCustomer(scanner, true);
+
+        String expected = "Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    This username is already taken. Please try again.\n" +
+                "\n" +
+                "    Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    You have successfully registered as a new customer. Welcome to Fancy Cinemas!\n" +
+                "    You will return to the main menu logged into your new account.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    void testCustomerRegister_UsernameSpace() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+
+        Scanner scanner = new Scanner("\nuser name\npassword\npassword\nusername\npassword\npassword\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.registerCustomer(scanner, true);
+
+        String expected = "Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    Username cannot contain spaces. Please try again.\n" +
+                "\n" +
+                "    Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    You have successfully registered as a new customer. Welcome to Fancy Cinemas!\n" +
+                "    You will return to the main menu logged into your new account.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
+
+    @Test
+    void testCustomerRegister_EmptyUsername() throws FileNotFoundException {
+        cinema_1_movie.createAccounts();
+
+        Scanner scanner = new Scanner("\n\npassword\npassword\nusername\npassword\npassword\n");
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.registerCustomer(scanner, true);
+
+        String expected = "Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    Username cannot be empty. Please try again.\n" +
+                "\n" +
+                "    Please enter a username and password to register as a new Fancy Cinemas customer.\n" +
+                "    Username: Password: Confirm password:\n" +
+                "    You have successfully registered as a new customer. Welcome to Fancy Cinemas!\n" +
+                "    You will return to the main menu logged into your new account.";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+
+        assertEquals(expected, actual);
+        scanner.close();
+    }
 
     @Test
     void badLogicInput(){

@@ -379,16 +379,27 @@ public class Cinema {
      * Allows the user to register as a customer
      * Stores the user's customer details into a local database
      */
-    public void registerCustomer() {
+    public void registerCustomer(Scanner userInput, boolean testing) {
         String username;
         String password;
+        String againPassword;
+        userInput.nextLine();
         while (true) { // The while loop ensures continual prompt in the case passwords do not match
             System.out.println("Please enter a username and password to register as a new Fancy Cinemas customer.");
             System.out.print("Username: ");
-            Scanner name = new Scanner(System.in);
-            username = name.nextLine();
-            password = PasswordMasker.readPassword("Password: ");
-            String againPassword = PasswordMasker.readPassword("Confirm password: ");
+//            Scanner name = new Scanner(System.in);
+            username = userInput.nextLine();
+            if (testing) {
+                System.out.print("Password: ");
+                password = userInput.nextLine();
+                System.out.print("Confirm password: ");
+                againPassword = userInput.nextLine();
+            }
+            else {
+                password = PasswordMasker.readPassword("Password: ");
+                againPassword = PasswordMasker.readPassword("Confirm password: ");
+            }
+
 
             try {
                 BufferedReader customersReader = new BufferedReader(new FileReader(this.accountsFile));
@@ -2197,7 +2208,7 @@ public class Cinema {
                 filterMovies(userInput);
             }
             else if (entered == 3) {
-                registerCustomer();
+                registerCustomer(userInput, true);
             }
             else if (entered == 4) {
                 loginUser();
