@@ -2235,4 +2235,44 @@ public class TestCinema {
         assertEquals(-1, transaction.getNumOfSeats());
         assertEquals("user timeout", transaction.getCancelReason());
     }
+
+//    @Test
+//    public void testBookingSummariesCorrect() {
+//        cinema_1_movie.setLogged(true);
+//
+//        String userInput = "2\n6\n";
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
+//
+//        //catching output
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        PrintStream printStream = new PrintStream(outputStream);
+//        System.setOut(printStream);
+//
+//        cinema_1_movie.staffLoginLogic();
+//
+//        String expected = "\nThe summary of today's bookings can be found in src/main/resources/bookings.txt\n" +
+//                "Select the page you would like to visit:\n" +
+//                "  1. Movie report\n" +
+//                "  2. Booking Summaries\n" +
+//                "  3. Movie Management\n" +
+//                "  4. Add New Shows for Next Week\n" +
+//                "  5. Giftcard Management\n" +
+//                "  6. Logout" +
+//                "\n" +
+//                "You have logged out\n";
+//
+//        String[] output = outputStream.toString().trim().split("\n");
+//        for (int i = 0; i < output.length; i++) {
+//            output[i] = output[i].trim();
+//        }
+//        String actual = String.join("\n", output);
+//
+//        String[] expectedArr = expected.trim().split("\n");
+//        for (int i = 0; i < expectedArr.length; i++) {
+//            expectedArr[i] = expectedArr[i].trim();
+//        }
+//        expected = String.join("\n", expectedArr);
+//        assertEquals(expected, actual);
+//    }
 }
