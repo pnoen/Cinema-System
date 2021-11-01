@@ -972,34 +972,11 @@ public class Cinema {
                         case 8:
                             ls[6] = modifyingList(refnum, ls, 6);
                             this.movies.get(refnum).setUpcomingTimes(ls[6]);
-
-                            /**
-                            System.out.println("Enter New Upcoming Times:");
-                            if (userInput.hasNext()){
-
-                                if (userInput.hasNext()){
-                                    userInput.nextLine();
-                                    String upcoming_times_input = userInput.nextLine();
-                                    ls[7] = upcoming_times_input;
-                                    this.movies.get(refnum).setUpcomingTimes(ls[7]);
-                                }
-
-                            }
-                             **/
                             break;
 
                         case 9:
-                            System.out.print("Enter New Cinema Rooms:");
-                            if (userInput.hasNext()){
-
-                                if (userInput.hasNext()){
-                                    userInput.nextLine();
-                                    String cinema_rooms_input = userInput.nextLine();
-                                    ls[8] = cinema_rooms_input;
-                                    this.movies.get(refnum).setCinemaRooms(ls[8]);
-                                }
-
-                            }
+                            ls[8] = modifyingList(refnum, ls, 8);
+                            this.movies.get(refnum).setCinemaRooms(ls[8]);
                             break;
 
                         case 10:
