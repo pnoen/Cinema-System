@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.String;
@@ -13,6 +14,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javax.print.attribute.standard.PresentationDirection;
 
 public class Cinema {
     private List<Movie> movies;
@@ -31,6 +34,7 @@ public class Cinema {
     private JSONArray cards;
     private int checkPaymentVal = 5;
     private int timeoutTime = 10*1000;
+    private int totalTicketValue;
 
     public Cinema() {
         this.movies = new ArrayList<Movie>();
@@ -293,6 +297,9 @@ public class Cinema {
     public void bookingSummaries() {
         List<String[]> sessions = new ArrayList<>();
         for (int i = 0; i < this.transactions.size(); i++) {
+            if (!(this.transactions.get(i).getCancelReason().equals(""))){
+                continue;
+            }
             String[] session = new String[2];
             session[0] = this.transactions.get(i).getMovieName();
             session[1] = this.transactions.get(i).getMovieTime();
@@ -302,6 +309,20 @@ public class Cinema {
         }
 
         String summariesString = "----------------------------------------------\n";
+        if(sessions.size() == 0){
+            try {
+                File bookingsFile = new File("src/main/resources/bookings.txt");
+                FileWriter bookingsWriter = new FileWriter(bookingsFile);
+                BufferedWriter bw = new BufferedWriter(bookingsWriter);
+                bw.write(summariesString);
+                bw.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("Error: Booking summaries could not be found.");
+            } catch (IOException e) {
+                System.out.println("Error: Booking summaries could not be provided.");
+            }
+
+        }
         for (int i = 0; i < sessions.size(); i++) {
             int seatsBooked = 0;
             int seatsAvailable = 0;
@@ -627,7 +648,7 @@ public class Cinema {
                 insertNewMovie();
                 break;
             case 2:
-//                modifyCurrentMovie();
+                modifyCurrentMovie();
                 break;
             case 3:
                 deleteMovie();
@@ -764,6 +785,51 @@ public class Cinema {
         } catch (IOException e) {
             System.out.println("Error: couldn't update accounts.csv");
         }
+    }
+
+    /**
+     * Helper method for modifying movie attributes
+     * that are in the form of lists
+     */
+
+    public String modifyingList(int refnum, String[] line,  int line_item_code){
+        Scanner userInput = new Scanner(System.in);
+
+        System.out.println("Enter 1 to replace item or 2 to add to the item:");
+        String result = "";
+        if (userInput.hasNextInt()){
+            int answer = userInput.nextInt();
+
+            //replace
+            if (answer == 1){
+                System.out.println("Currently is: "+ line[line_item_code]);
+                System.out.println("\nEnter replacement: ");
+                if (userInput.hasNext()) {
+                    userInput.nextLine();
+                    result = userInput.nextLine();
+
+                }
+            }
+
+            //add to
+            if (answer == 2){
+                System.out.println("Currently is: "+ line[line_item_code]);
+                System.out.println("\nEnter addition: ");
+                //NOT WORKING!!!!!!
+                userInput.nextLine();
+                if (userInput.hasNext()){
+
+                    String addition = userInput.nextLine();
+                    System.out.println("Addition is: " + addition);
+                    result = line[line_item_code] + ","+ addition;
+
+                }
+            }
+
+        }
+
+        System.out.println("Result: "+result);
+        return result;
     }
 
     /**
@@ -906,6 +972,7 @@ public class Cinema {
                             }
                             break;
 
+
                         case 7:
                             System.out.println("Enter New Screen Size:");
                             if (userInput.hasNext()){
@@ -913,39 +980,21 @@ public class Cinema {
                                 if (userInput.hasNext()){
                                     userInput.nextLine();
                                     String screen_size_input = userInput.nextLine();
-                                    ls[6] = screen_size_input;
-                                    this.movies.get(refnum).setScreenSize(ls[6]);
+                                    ls[7] = screen_size_input;
+                                    this.movies.get(refnum).setScreenSize(ls[7]);
                                 }
 
                             }
                             break;
 
                         case 8:
-                            System.out.println("Enter New Upcoming Times:");
-                            if (userInput.hasNext()){
-
-                                if (userInput.hasNext()){
-                                    userInput.nextLine();
-                                    String upcoming_times_input = userInput.nextLine();
-                                    ls[7] = upcoming_times_input;
-                                    this.movies.get(refnum).setUpcomingTimes(ls[7]);
-                                }
-
-                            }
+                            ls[6] = modifyingList(refnum, ls, 6);
+                            this.movies.get(refnum).setUpcomingTimes(ls[6]);
                             break;
 
                         case 9:
-                            System.out.print("Enter New Cinema Rooms:");
-                            if (userInput.hasNext()){
-
-                                if (userInput.hasNext()){
-                                    userInput.nextLine();
-                                    String cinema_rooms_input = userInput.nextLine();
-                                    ls[8] = cinema_rooms_input;
-                                    this.movies.get(refnum).setCinemaRooms(ls[8]);
-                                }
-
-                            }
+                            ls[8] = modifyingList(refnum, ls, 8);
+                            this.movies.get(refnum).setCinemaRooms(ls[8]);
                             break;
 
                         case 10:
@@ -1293,16 +1342,17 @@ public class Cinema {
     }
 
     public void bookingNumOfSeats(Scanner userInput, Movie movie, int timeIdx) {
+        int tickets = 0;
         userInput.nextLine();
 //        Scanner userInput = new Scanner(System.in);
         boolean choseNumSeats = false;
         while (!choseNumSeats) {
             System.out.println("Enter the number of seats you would like book.\n" +
                     "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                    "Child (under 12):\n" +
-                    "Student:\n" +
-                    "Adult:\n" +
-                    "Senior/Pensioner:\n" +
+                    "Child (under 12): $5\n" +
+                    "Student: $12\n" +
+                    "Adult: $20\n" +
+                    "Senior/Pensioner: $10\n" +
                     "(Enter 'cancel' to return to the home page)");
             long currentTime = System.currentTimeMillis();
             String selections = userInput.next();
@@ -1312,7 +1362,12 @@ public class Cinema {
             }
 
             // Split the selection input and convert to int
-            List<Integer> numOfSeats = new ArrayList<Integer>();
+            List<Integer> numOfSeats = new ArrayList<>();
+            List<Integer> valueOfSeats = new ArrayList<>();
+            valueOfSeats.add(5);
+            valueOfSeats.add(12);
+            valueOfSeats.add(20);
+            valueOfSeats.add(10);
             boolean invalid = false;
             int totalSeats = 0;
             for (String s : selections.split(",")) {
@@ -1346,6 +1401,11 @@ public class Cinema {
                 System.out.println("Error: Invalid option entered.\n");
                 continue;
             }
+            for(int i = 0;i < valueOfSeats.size();i++){
+                int ticketValue = numOfSeats.get(i) * valueOfSeats.get(i);
+                tickets+=ticketValue;
+            }
+            totalTicketValue = tickets;
 
             pickBookingSeat(userInput, movie, timeIdx, totalSeats);
             choseNumSeats = true;
@@ -1554,14 +1614,24 @@ public class Cinema {
                     for (GiftCard c : this.giftCards){
 
                         if(cardNo.equals(c.getNumber())){
-                            if(c.getRedeemed() == 1){
-                                System.out.println("\nGift card has already been redeemed, try again.\n");
+                            if(c.getValue() == 0){
+                                System.out.println("\nGift card has no value left, try again.\n");
                                 cardFound = true;
                                 continue;
                             }
-                            System.out.println("\nCongratulations gift card has successfully been redeemed!\n");
+                            if((c.getValue() - totalTicketValue) < 0){
+                                System.out.println("\nGift card has insufficient funds, try again.");
+                                System.out.printf("Gift card value: $%d\n", c.getValue());
+                                cardFound = true;
+                                continue;
+
+                            }
+                            System.out.println("\nCongratulations gift card has successfully been redeemed!");
+                            c.setValue(c.getValue() - totalTicketValue);
+                            System.out.printf("Remaning Gift Card Balance: %d\n", c.getValue());
+
                             cardFound = true;
-                            updateGiftCardStateCSV(c);
+                            updateGiftCardStateCSV();
                             return 2;
                         }
                     }
@@ -1667,7 +1737,7 @@ public class Cinema {
                 editingMovies();
             }
             else if (logged == 5) {
-                giftCardManage();
+                giftCardManage(userInput);
             }
             else if (logged == 6) {
                 this.loggedIn = false;
@@ -1682,8 +1752,8 @@ public class Cinema {
 //        userInput.close();
     }
 
-    public void updateGiftCardStateCSV(GiftCard card){
-        card.setRedeemed(1);
+    public void updateGiftCardStateCSV(){
+//        card.setValue(1);
         List<List<String>> cardsDetails = new ArrayList<>();
 
         for (GiftCard c : this.giftCards){
@@ -1692,10 +1762,10 @@ public class Cinema {
                 gc.add("");
             }
             String cardNum = c.getNumber();
-            String cardState = String.valueOf(c.getRedeemed());
+            String cardValue = String.valueOf(c.getValue());
 
             gc.set(0,cardNum);
-            gc.set(1,cardState);
+            gc.set(1,cardValue);
 
             cardsDetails.add(gc);
         }
@@ -1780,8 +1850,9 @@ public class Cinema {
         }
 
     }
-    public void giftCardManage(){
-        Scanner userInput = new Scanner(System.in);
+    public void giftCardManage(Scanner userInput){
+//        Scanner userInput = new Scanner(System.in);
+        userInput.nextLine();
         String code = null;
         boolean cont = true;
 
@@ -1825,6 +1896,8 @@ public class Cinema {
     public void giftCardCreate(Scanner userInput) {
         boolean correct = false;
         String number;
+        int value = 0;
+        userInput.nextLine();
 
         while (true) { // The while loop ensures continual prompt in the case bad input is given
             System.out.println("Please create a new gift card by entering the code.");
@@ -1887,6 +1960,9 @@ public class Cinema {
                 if (!unique) {
                     continue;
                 }
+                System.out.print("Enter amount to be added to giftcard: ");
+                value = userInput.nextInt();
+
                 break;
             } catch (IOException e) {
                 System.out.println("Error: couldn't update giftcards.csv");
@@ -1897,19 +1973,19 @@ public class Cinema {
         try {
             FileWriter csvWriter = new FileWriter(this.giftCardFile, true);
             BufferedWriter bw = new BufferedWriter(csvWriter);
-            bw.write(String.format("%s,%s\n", number, "0"));
+            bw.write(String.format("%s,%s\n", number, value));
             bw.close();
             System.out.println("\nYou have successfully created a new gift card.");
         } catch (IOException e) {
             System.out.println("Error: couldn't update giftcards.csv");
         }
 
-        GiftCard newCard = createNewGiftCard(number, 0);
+        GiftCard newCard = createNewGiftCard(number, value);
         this.giftCards.add(newCard);
     }
 
-    public GiftCard createNewGiftCard(String number, int redeemed){
-        return new GiftCard(number, redeemed);
+    public GiftCard createNewGiftCard(String number, int value){
+        return new GiftCard(number, value);
     }
 
     public void staffHire(int runVersion){
@@ -2093,13 +2169,12 @@ public class Cinema {
         while(loggedIn){
             System.out.println("Select the page you would like to visit:\n" +
                     "  1. Movie report\n" +
-                    "  2. Summary of Bookings\n" +
-                    "  3. Movie Management\n" +
-                    "  4. Add New Shows for Next Week\n" +
-                    "  5. Gift Card Management\n" +
-                    "  6. Staff management\n" +
-                    "  7. Transaction management\n" +
-                    "  8. Logout");
+                    "  2. Movie Management\n" +
+                    "  3. Add New Shows for Next Week\n" +
+                    "  4. Gift Card Management\n" +
+                    "  5. Staff management\n" +
+                    "  6. Transaction management\n" +
+                    "  7. Logout");
 
             int logged = 0;
             if (userInput.hasNextInt()) {
@@ -2107,26 +2182,21 @@ public class Cinema {
             }
             switch (logged) {
                 case 1: displayMovies();
-                    System.out.println("\nThe Movie Report can also be found in src/main/resource/movies.csv for a file format.");
-                    break;
-                case 2: bookingSummaries();
-                    System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
-                    break;
-                case 3: editingMovies();
-                    break;
-                case 4: addNewShows();
-                    break;
-                case 5: giftCardManage();
-                    break;
-                case 6: staffManage(2);
-                    break;
-                case 7: transactionManagement();
-                    break;
-                case 8: this.loggedIn = false;
-                    System.out.println("You have logged out");
-                    break;
-
-
+                        System.out.println("\nThe Movie Report can also be found in src/main/resource/movies.csv for a file format.");
+                        break;
+                case 2: editingMovies();
+                        break;
+                case 3: addNewShows();
+                        break;
+                case 4: giftCardManage(userInput);
+                        break;
+                case 5: staffManage(2);
+                        break;
+                case 6: transactionManagement();
+                        break;
+                case 7: this.loggedIn = false;
+                        System.out.println("You have logged out");
+                        break;
 
                 default: System.out.println("Error: Not a valid option.");
                     userInput.nextLine();
@@ -2158,6 +2228,7 @@ public class Cinema {
             if (entered > 0 && entered <= 4) {
                 if (entered == 1){
                     bookingSummaries();
+                    System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
                     break;
                 }
                 else if (entered == 2){
