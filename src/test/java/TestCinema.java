@@ -30,9 +30,9 @@ public class TestCinema {
     @BeforeEach
     public void resetGiftCardCSV() {
         List<List<String>> cardsDetails = new ArrayList<List<String>>();
-        cardsDetails.add(Arrays.asList("1838281828382818GC", "1"));
-        cardsDetails.add(Arrays.asList("1092380138203801GC", "0"));
-        cardsDetails.add(Arrays.asList("6123876381763821GC", "0"));
+        cardsDetails.add(Arrays.asList("1838281828382818GC", "100"));
+        cardsDetails.add(Arrays.asList("1092380138203801GC", "5"));
+        cardsDetails.add(Arrays.asList("6123876381763821GC", "30"));
         cardsDetails.add(Arrays.asList("1212121212121212GC", "0"));
 
         try {
@@ -438,7 +438,7 @@ public class TestCinema {
     void testManagerLoginLogic(){
         cinema.setLogged(true);
 
-        String userInput = "9\n8\n";
+        String userInput = "8\n7\n";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
         System.setIn(inputStream);
 
@@ -973,15 +973,16 @@ public class TestCinema {
     public void test_validGiftCard() throws FileNotFoundException{
         InputStream sysInBackup = System.in;
 
-        String userInput = "4\n";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-        System.setIn(inputStream);
+//        String userInput = "4\n";
+        Scanner scanner = new Scanner("\n4\n");
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
         cinema_1_movie.createGiftCards();
-        cinema_1_movie.giftCardManage();
+        cinema_1_movie.giftCardManage(scanner);
 
         String expected = "Would you like to add/delete or view gift cards?\n" +
                 "  1. Add\n" +
@@ -996,16 +997,17 @@ public class TestCinema {
     @Test
     public void test_giftCardCreate() throws FileNotFoundException {
         InputStream sysInBackup = System.in;
+        Scanner scanner = new Scanner("\n1\n1092380138203801GC\n \n\n182738273817283728\n1827382738172837G3\n1837284756475645GC\n100\n4\n");
 
-        String userInput = "1\n1092380138203801GC\n \n\n182738273817283728\n1827382738172837G3\n1837284756475645GC\n4\n";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-        System.setIn(inputStream);
+//        String userInput = "1\n1092380138203801GC\n \n\n182738273817283728\n1827382738172837G3\n1837284756475645GC\n4\n";
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
         cinema_1_movie.createGiftCards();
-        cinema_1_movie.giftCardManage();
+        cinema_1_movie.giftCardManage(scanner);
 
 
         String expected = "Would you like to add/delete or view gift cards?\n" +
@@ -1013,10 +1015,6 @@ public class TestCinema {
                 "2. Delete\n" +
                 "3. View\n" +
                 "4. Exit\n" +
-                "Please create a new gift card by entering the code.\n" +
-                "Code:\n" +
-                "Gift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n" +
-                "\n" +
                 "Please create a new gift card by entering the code.\n" +
                 "Code:\n" +
                 "This gift card has already been created. Please try again.\n" +
@@ -1038,7 +1036,7 @@ public class TestCinema {
                 "Gift card code has to be a 16 digit number followed by 'GC' suffix. Please try again.\n" +
                 "\n" +
                 "Please create a new gift card by entering the code.\n" +
-                "Code:\n" +
+                "Code: Enter amount to be added to giftcard:\n" +
                 "You have successfully created a new gift card.\n" +
                 "Would you like to add/delete or view gift cards?\n" +
                 "1. Add\n" +
@@ -1066,15 +1064,16 @@ public class TestCinema {
     public void test_viewGiftCard() throws FileNotFoundException{
         InputStream sysInBackup = System.in;
 
-        String userInput = "5\n3\n4\n";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-        System.setIn(inputStream);
+//        String userInput = "5\n3\n4\n";
+        Scanner scanner = new Scanner("\n5\n3\n4\n");
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
         cinema_1_movie.createGiftCards();
-        cinema_1_movie.giftCardManage();
+        cinema_1_movie.giftCardManage(scanner);
 
         String expected = "Would you like to add/delete or view gift cards?\n" +
                 "1. Add\n" +
@@ -1090,16 +1089,16 @@ public class TestCinema {
                 "Current gift cards:\n" +
                 "\n" +
                 "Gift card number: 1838281828382818GC\n" +
-                "Redeemed State(0-Not Redeemed, 1-Redeemed): 1\n" +
+                "Remaining value: $100\n" +
                 "\n" +
                 "Gift card number: 1092380138203801GC\n" +
-                "Redeemed State(0-Not Redeemed, 1-Redeemed): 0\n" +
+                "Remaining value: $5\n" +
                 "\n" +
                 "Gift card number: 6123876381763821GC\n" +
-                "Redeemed State(0-Not Redeemed, 1-Redeemed): 0\n" +
+                "Remaining value: $30\n" +
                 "\n" +
                 "Gift card number: 1212121212121212GC\n" +
-                "Redeemed State(0-Not Redeemed, 1-Redeemed): 0\n" +
+                "Remaining value: $0\n" +
                 "\n" +
                 "Would you like to add/delete or view gift cards?\n" +
                 "1. Add\n" +
@@ -1251,15 +1250,16 @@ public class TestCinema {
     public void TestGiftCardDelete() throws FileNotFoundException {
         InputStream sysInBackup = System.in;
 
-        String userInput = "2\n1092380138203801GC\n4\n";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-        System.setIn(inputStream);
+//        String userInput = "2\n1092380138203801GC\n4\n";
+        Scanner scanner = new Scanner("\n2\n1092380138203801GC\n4\n");
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
         cinema_1_movie.createGiftCards();
-        cinema_1_movie.giftCardManage();
+        cinema_1_movie.giftCardManage(scanner);
         String expected = "Would you like to add/delete or view gift cards?\n" +
                 "1. Add\n" +
                 "2. Delete\n" +
@@ -1318,53 +1318,55 @@ public class TestCinema {
         cinema_1_movie.customerLoginLogic(scanner);
 
         String expected = "Select the page you would like to visit:\n" +
-                "    1. All movies\n" +
-                "    2. Filter movies\n" +
-                "    3. Book\n" +
-                "    4. Cancel a booking\n" +
-                "    5. Logout\n" +
-                "    Select a movie you would like to book:\n" +
-                "    1. The Shawshank Redemption\n" +
-                "    2. Back to home page\n" +
-                "    Select a time to book for the movie:\n" +
-                "    1. 10:45\n" +
-                "    2. 14:00\n" +
-                "    3. Back to home page\n" +
-                "    Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Select the seat you would like:\n" +
-                "    1. Front\n" +
-                "    2. Middle\n" +
-                "    3. Rear\n" +
-                "    4. Back to home page\n" +
-                "    Select the payment option you would like\n" +
-                "    1. Credit Card\n" +
-                "    2. Gift Card\n" +
-                "    3. Return to seat selection\n" +
-                "    Please enter the 16 digit gift card number followed by 'GC'\n" +
-                "    Card number:\n" +
-                "    Congratulations gift card has successfully been redeemed!\n" +
+                "1. All movies\n" +
+                "2. Filter movies\n" +
+                "3. Book\n" +
+                "4. Cancel a booking\n" +
+                "5. Logout\n" +
+                "Select a movie you would like to book:\n" +
+                "1. The Shawshank Redemption\n" +
+                "2. Back to home page\n" +
+                "Select a time to book for the movie:\n" +
+                "1. 10:45\n" +
+                "2. 14:00\n" +
+                "3. Back to home page\n" +
+                "Enter the number of seats you would like book.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Select the seat you would like:\n" +
+                "1. Front\n" +
+                "2. Middle\n" +
+                "3. Rear\n" +
+                "4. Back to home page\n" +
+                "Select the payment option you would like\n" +
+                "1. Credit Card\n" +
+                "2. Gift Card\n" +
+                "3. Return to seat selection\n" +
+                "Please enter the 16 digit gift card number followed by 'GC'\n" +
+                "Card number:\n" +
+                "Congratulations gift card has successfully been redeemed!\n" +
+                "Remaning Gift Card Balance: 0\n" +
+                "----------------------\n" +
+                "Transaction ID: " + cinema_1_movie.getCurrAcc().getTransactions().get(0).getId() + "\n" +
+                "Movie: The Shawshank Redemption\n" +
+                "Showing time: 10:45\n" +
+                "Seat: Front\n" +
+                "Number of seats: 1\n" +
+                "----------------------\n" +
                 "\n" +
-                "    ----------------------\n" +
-                "    Transaction ID: " + cinema_1_movie.getCurrAcc().getTransactions().get(0).getId() + "\n" +
-                "    Movie: The Shawshank Redemption\n" +
-                "    Showing time: 10:45\n" +
-                "    Seat: Front\n" +
-                "    Number of seats: 1\n" +
-                "    ----------------------\n" +
-                "\n" +
-                "    Select the page you would like to visit:\n" +
-                "    1. All movies\n" +
-                "    2. Filter movies\n" +
-                "    3. Book\n" +
-                "    4. Cancel a booking\n" +
-                "    5. Logout\n" +
-                "    You have logged out";
+                "Select the page you would like to visit:\n" +
+                "1. All movies\n" +
+                "2. Filter movies\n" +
+                "3. Book\n" +
+                "4. Cancel a booking\n" +
+                "5. Logout\n" +
+                "You have logged out";
+
+
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
@@ -1718,22 +1720,22 @@ public class TestCinema {
         cinema_1_movie.bookingNumOfSeats(scanner, movies.get(0), 0);
 
         String expected = "Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Error: Invalid option entered.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Error: Invalid option entered.\n" +
                 "\n" +
-                "    Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Returning back to customer home page.";
+                "Enter the number of seats you would like book.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Returning back to customer home page.";
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
@@ -1768,22 +1770,22 @@ public class TestCinema {
         cinema_1_movie.bookingNumOfSeats(scanner, movies.get(0), 0);
 
         String expected = "Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Error: Invalid option entered.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Error: Invalid option entered.\n" +
                 "\n" +
-                "    Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Returning back to customer home page.";
+                "Enter the number of seats you would like book.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Returning back to customer home page.";
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
@@ -1818,22 +1820,22 @@ public class TestCinema {
         cinema_1_movie.bookingNumOfSeats(scanner, movies.get(0), 0);
 
         String expected = "Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Error: Invalid option entered.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Error: Invalid option entered.\n" +
                 "\n" +
-                "    Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Returning back to customer home page.";
+                "Enter the number of seats you would like book.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Returning back to customer home page.";
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
@@ -1868,22 +1870,22 @@ public class TestCinema {
         cinema_1_movie.bookingNumOfSeats(scanner, movies.get(0), 0);
 
         String expected = "Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Error: Invalid option entered.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Error: Invalid option entered.\n" +
                 "\n" +
-                "    Enter the number of seats you would like book.\n" +
-                "    (Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
-                "    Child (under 12):\n" +
-                "    Student:\n" +
-                "    Adult:\n" +
-                "    Senior/Pensioner:\n" +
-                "    (Enter 'cancel' to return to the home page)\n" +
-                "    Returning back to customer home page.";
+                "Enter the number of seats you would like book.\n" +
+                "(Required to enter for all options. Split by comma. E.g. 0,0,1,1)\n" +
+                "Child (under 12): $5\n" +
+                "Student: $12\n" +
+                "Adult: $20\n" +
+                "Senior/Pensioner: $10\n" +
+                "(Enter 'cancel' to return to the home page)\n" +
+                "Returning back to customer home page.";
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
