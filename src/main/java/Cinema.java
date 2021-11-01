@@ -797,9 +797,10 @@ public class Cinema {
             if (answer == 2){
                 System.out.println("Currently is: "+ line[line_item_code]);
                 System.out.println("\nEnter addition: ");
-
+                //NOT WORKING!!!!!!
+                userInput.nextLine();
                 if (userInput.hasNext()){
-                    //userInput.nextLine();
+
                     String addition = userInput.nextLine();
                     System.out.println("Addition is: " + addition);
                     result = line[line_item_code] + ","+ addition;
