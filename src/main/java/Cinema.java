@@ -855,12 +855,12 @@ public class Cinema {
 
         Iterator iterator = movie_ref.entrySet().iterator();
 
-        //printing out movies and references to the user
+        System.out.format("%-8s%-25s%-25s\n","Ref Num", "Title", "Upcoming times");
+        System.out.println("--------------------------------------------------------------");
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
-            System.out.println("Reference Number: " + (pair.getKey()));
             Movie movie1 = (Movie) pair.getValue();
-            System.out.println(movie1.getCondensedMovieInformation());
+            System.out.format("%-8s%-50s\n", pair.getKey(),movie1.getCondensedMovieInformation());
         }
 
         System.out.print("Enter reference number of movie you would like to modify: ");
