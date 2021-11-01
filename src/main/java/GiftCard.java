@@ -1,28 +1,27 @@
 public class GiftCard {
     private String number;
+    private int value;
 
-    private int redeemed;
-
-    public GiftCard(String number, int redeemed) {
+    public GiftCard(String number, int value) {
         this.number = number;
 
-        this.redeemed = redeemed;
+        this.value = value;
     }
 
     public String getNumber() {
         return number;
     }
 
-    public int getRedeemed() {
-        return redeemed;
+    public int getValue() {
+        return this.value;
     }
-    public void setRedeemed(int redeemed){
-        this.redeemed = redeemed;
+    public void setValue(int value){
+        this.value = value;
     }
 
     public String getGCInfo(){
         return String.format("Gift card number: %s\n" +
-                        "Redeemed State(0-Not Redeemed, 1-Redeemed): %s\n", this.number, this.redeemed);
+                        "Remaining value: $%s\n", this.number, this.value);
 
     }
 
