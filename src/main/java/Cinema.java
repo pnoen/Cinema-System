@@ -178,6 +178,8 @@ public class Cinema {
      */
     public void displayMovies() {
 //        List<Movie> movies = getMovies();
+        System.out.format("%-25s%-8s%-20s%-15s%-20s%-20s%-15s%-20s%-15s\n", "Name", "Rating", "Synopsis", "Release date", "Director", "Cast", "Screen size", "Upcoming times", "Cinema Rooms", "Avail. Seats");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------");
         for (Movie movie: movies){
             System.out.println(movie.getMovieInformation());
 //            System.out.println();
@@ -277,7 +279,7 @@ public class Cinema {
         }
 
         for (Movie movie : displayMovies) {
-            System.out.println(movie.getMovieInformation());
+            System.out.println(movie.getLongSingleInfo());
         }
 //            filterComplete = true;
 //        }
@@ -1718,6 +1720,7 @@ public class Cinema {
         String[] data = new String[99];
         int count = 0;
         int rowCount = 0;
+        GiftCard removedCard = null;
         try {
             BufferedReader csvReader = new BufferedReader(new FileReader(this.giftCardFile));
             String row;
@@ -1725,6 +1728,12 @@ public class Cinema {
             while ((row = csvReader.readLine()) != null) {
                 if(row.split(",")[0].equals(GCNumber)){
                     count++;
+                    for(GiftCard c : this.giftCards) {
+                        if(c.getNumber().equals(GCNumber)){
+                            removedCard = c;
+                        }
+                    }
+                    this.giftCards.remove(removedCard);
                     continue;
                 }
 
@@ -1773,7 +1782,7 @@ public class Cinema {
         Scanner userInput = new Scanner(System.in);
         String code = null;
         boolean cont = true;
-        GiftCard removedCard = null;
+
 
         while (cont) {
             System.out.println("Would you like to add/delete or view gift cards?\n" +
@@ -1794,14 +1803,6 @@ public class Cinema {
                             code = newInput.nextLine();
                         }
                         giftCardDelete(code);
-                        for(GiftCard c : this.giftCards) {
-                            if(c.getNumber().equals(code)){
-                                removedCard = c;
-                            }
-                        }
-                        this.giftCards.remove(removedCard);
-
-
                         break;
                 case 3: giftCardView();
                         break;

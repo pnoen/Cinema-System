@@ -80,16 +80,9 @@ public class TestCinema {
 
         cinema_1_movie.displayMovies();
 
-        String expected = "The Shawshank Redemption\n" +
-                "Classification: MA15+\n" +
-                "Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
-                "Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
-                "Director: Frank Darabont\n" +
-                "Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
-                "Screen size: Gold\n" +
-                "Upcoming times: 10:45, 14:00\n" +
-                "Cinema rooms: 1, 2\n" +
-                "Available seats: 6, 6\n";
+        String expected = "Name                     Rating  Synopsis            Release date   Director            Cast                Screen size    Upcoming times      Cinema Rooms\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "The Shawshank Redemp...  MA15+   Two imprisoned ...  1995-02-16     Frank Darabont      Tim Robbins, Mo...  Gold           10:45, 14:00        1, 2";
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
@@ -730,28 +723,21 @@ public class TestCinema {
         cinema_1_movie.run();
 
         String expected = "Select the page you would like to visit:\n" +
-                "  1. All movies\n" +
-                "  2. Filter movies\n" +
-                "  3. Register as Fancy Cinemas Customer\n" +
-                "  4. Login\n" +
-                "  5. Exit\n" +
-                "The Shawshank Redemption\n" +
-                "Classification: MA15+\n" +
-                "Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
-                "Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
-                "Director: Frank Darabont\n" +
-                "Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
-                "Screen size: Gold\n" +
-                "Upcoming times: 10:45, 14:00\n" +
-                "Cinema rooms: 1, 2\n" +
-                "Available seats: 6, 6\n" +
+                "1. All movies\n" +
+                "2. Filter movies\n" +
+                "3. Register as Fancy Cinemas Customer\n" +
+                "4. Login\n" +
+                "5. Exit\n" +
+                "Name                     Rating  Synopsis            Release date   Director            Cast                Screen size    Upcoming times      Cinema Rooms\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "The Shawshank Redemp...  MA15+   Two imprisoned ...  1995-02-16     Frank Darabont      Tim Robbins, Mo...  Gold           10:45, 14:00        1, 2\n" +
                 "\n" +
                 "Select the page you would like to visit:\n" +
-                "  1. All movies\n" +
-                "  2. Filter movies\n" +
-                "  3. Register as Fancy Cinemas Customer\n" +
-                "  4. Login\n" +
-                "  5. Exit";
+                "1. All movies\n" +
+                "2. Filter movies\n" +
+                "3. Register as Fancy Cinemas Customer\n" +
+                "4. Login\n" +
+                "5. Exit";
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
@@ -1155,29 +1141,22 @@ public class TestCinema {
         cinema_1_movie.customerLoginLogic(scanner);
 
         String expected = "Select the page you would like to visit:\n" +
-                "    1. All movies\n" +
-                "    2. Filter movies\n" +
-                "    3. Book\n" +
-                "    4. Cancel a booking\n" +
-                "    5. Logout\n" +
-                "    The Shawshank Redemption\n" +
-                "    Classification: MA15+\n" +
-                "    Synopsis: Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.\n" +
-                "    Release date: Thu Feb 16 00:00:00 AEDT 1995\n" +
-                "    Director: Frank Darabont\n" +
-                "    Cast: Tim Robbins, Morgan Freeman, Bob Gunton\n" +
-                "    Screen size: Gold\n" +
-                "    Upcoming times: 10:45, 14:00\n" +
-                "    Cinema rooms: 1, 2\n" +
-                "    Available seats: 6, 6\n" +
+                "1. All movies\n" +
+                "2. Filter movies\n" +
+                "3. Book\n" +
+                "4. Cancel a booking\n" +
+                "5. Logout\n" +
+                "Name                     Rating  Synopsis            Release date   Director            Cast                Screen size    Upcoming times      Cinema Rooms\n" +
+                "-----------------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+                "The Shawshank Redemp...  MA15+   Two imprisoned ...  1995-02-16     Frank Darabont      Tim Robbins, Mo...  Gold           10:45, 14:00        1, 2\n" +
                 "\n" +
-                "    Select the page you would like to visit:\n" +
-                "    1. All movies\n" +
-                "    2. Filter movies\n" +
-                "    3. Book\n" +
-                "    4. Cancel a booking\n" +
-                "    5. Logout\n" +
-                "    You have logged out";
+                "Select the page you would like to visit:\n" +
+                "1. All movies\n" +
+                "2. Filter movies\n" +
+                "3. Book\n" +
+                "4. Cancel a booking\n" +
+                "5. Logout\n" +
+                "You have logged out";
 
         String[] output = outputStream.toString().trim().split("\n");
         for (int i = 0; i < output.length; i++) {
