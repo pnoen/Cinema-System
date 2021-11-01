@@ -26,6 +26,7 @@ public class Cinema {
     private File accountsFile = new File("src/main/resources/accounts.csv");
     private File moviesFile = new File("src/main/resources/movies.csv");
     private File giftCardFile = new File("src/main/resources/giftcards.csv");
+    private File bookingsFile = new File("src/main/resources/bookings.txt");
     private String creditCardFile = "src/main/resources/credit_cards.json";
     private Account currAcc;
     private List<String> allCinemaRooms;
@@ -91,6 +92,10 @@ public class Cinema {
 
     public void setAccountsFile(File accountsFile) {
         this.accountsFile = accountsFile;
+    }
+
+    public void setBookingsFile(File bookingsFile) {
+        this.bookingsFile = bookingsFile;
     }
 
     public void setGiftCardFile(File giftCardFile) {
@@ -294,7 +299,7 @@ public class Cinema {
      * For staff and manager use only
      * Displays the number of bookings, seats taken and seats available for each movie session
      */
-    public void bookingSummaries() {
+    public void bookingSummaries() throws FileNotFoundException {
         List<String[]> sessions = new ArrayList<>();
         for (int i = 0; i < this.transactions.size(); i++) {
             if (!(this.transactions.get(i).getCancelReason().equals(""))){
@@ -308,21 +313,22 @@ public class Cinema {
             }
         }
 
-        String summariesString = "----------------------------------------------\n";
         if(sessions.size() == 0){
             try {
-                File bookingsFile = new File("src/main/resources/bookings.txt");
-                FileWriter bookingsWriter = new FileWriter(bookingsFile);
+//                File bookingsFile = new File("src/main/resources/bookings.txt");
+                FileWriter bookingsWriter = new FileWriter(this.bookingsFile);
                 BufferedWriter bw = new BufferedWriter(bookingsWriter);
-                bw.write(summariesString);
+                bw.write("----------------------------------------------\nNo bookings were made today.\n----------------------------------------------");
                 bw.close();
             } catch (FileNotFoundException e) {
-                System.out.println("Error: Booking summaries could not be found.");
+                throw new FileNotFoundException("Error: Booking summaries could not be found.");
+//                System.out.println("Error: Booking summaries could not be found.");
             } catch (IOException e) {
                 System.out.println("Error: Booking summaries could not be provided.");
             }
 
         }
+        String summariesString = "----------------------------------------------\n";
         for (int i = 0; i < sessions.size(); i++) {
             int seatsBooked = 0;
             int seatsAvailable = 0;
@@ -351,13 +357,14 @@ public class Cinema {
                         "\n----------------------------------------------\n";
             }
             try {
-                File bookingsFile = new File("src/main/resources/bookings.txt");
-                FileWriter bookingsWriter = new FileWriter(bookingsFile);
+//                File bookingsFile = new File("src/main/resources/bookings.txt");
+                FileWriter bookingsWriter = new FileWriter(this.bookingsFile);
                 BufferedWriter bw = new BufferedWriter(bookingsWriter);
                 bw.write(summariesString);
                 bw.close();
             } catch (FileNotFoundException e) {
-                System.out.println("Error: Booking summaries could not be found.");
+                throw new FileNotFoundException("Error: Booking summaries could not be found.");
+//                System.out.println("Error: Booking summaries could not be found.");
             } catch (IOException e) {
                 System.out.println("Error: Booking summaries could not be provided.");
             }
@@ -1704,8 +1711,9 @@ public class Cinema {
 
     }
 
-    public void staffLoginLogic(){
-        Scanner userInput = new Scanner(System.in);
+    public void staffLoginLogic(Scanner userInput) throws FileNotFoundException{
+        userInput.nextLine();
+//        Scanner userInput = new Scanner(System.in);
         while(loggedIn){
             System.out.println("Select the page you would like to visit:\n" +
                     "  1. Movie report\n" +
@@ -2164,7 +2172,7 @@ public class Cinema {
 
     }
 
-    public void managerLoginLogic(){
+    public void managerLoginLogic() throws FileNotFoundException{
         Scanner userInput = new Scanner(System.in);
         while(loggedIn){
             System.out.println("Select the page you would like to visit:\n" +
@@ -2192,7 +2200,7 @@ public class Cinema {
                         break;
                 case 5: staffManage(2);
                         break;
-                case 6: transactionManagement();
+                case 6: transactionManagement(userInput);
                         break;
                 case 7: this.loggedIn = false;
                         System.out.println("You have logged out");
@@ -2206,8 +2214,9 @@ public class Cinema {
 //        input.close();
     }
 
-    public void transactionManagement(){
-        Scanner userInput = new Scanner(System.in);
+    public void transactionManagement(Scanner userInput) throws FileNotFoundException{
+        userInput.nextLine();
+//        Scanner userInput = new Scanner(System.in);
 
         while(true){
             System.out.println("Select the report option you would like\n" +
@@ -2304,7 +2313,7 @@ public class Cinema {
                 }
 
                 else if(currAcc.getPerm() == 1){
-                    staffLoginLogic();
+                    staffLoginLogic(userInput);
                 }
 
                 else if(currAcc.getPerm() == 2){
