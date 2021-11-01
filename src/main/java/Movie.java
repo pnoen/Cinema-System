@@ -105,17 +105,17 @@ public class Movie {
         }
 
         String info = String.format("%s\n" +
-         "Classification: %s\n" +
-         "Synopsis: %s\n" +
-         "Release date: %s\n" +
-         "Director: %s\n" +
-         "Cast: %s\n" +
-         "Screen size: %s\n" +
-         "Upcoming times: %s\n" +
-         "Cinema rooms: %s\n" +
-         "Available seats: %s\n", this.name, this.classification, this.synopsis,
-         this.releaseDate, this.director, this.cast, this.screenSize, upcomingTimes, cinemaRooms,
-         availableSeats);
+                        "Classification: %s\n" +
+                        "Synopsis: %s\n" +
+                        "Release date: %s\n" +
+                        "Director: %s\n" +
+                        "Cast: %s\n" +
+                        "Screen size: %s\n" +
+                        "Upcoming times: %s\n" +
+                        "Cinema rooms: %s\n" +
+                        "Available seats: %s\n", this.name, this.classification, this.synopsis,
+                this.releaseDate, this.director, this.cast, this.screenSize, upcomingTimes, cinemaRooms,
+                availableSeats);
 
         return info;
 
@@ -142,18 +142,18 @@ public class Movie {
             }
         }
         /**
-        String info = String.format("%s\n" +
-                        "Classification: %s\n" +
-                        "Synopsis: %s\n" +
-                        "Release date: %s\n" +
-                        "Director: %s\n" +
-                        "Cast: %s\n" +
-                        "Screen size: %s\n" +
-                        "Upcoming times: %s\n" +
-                        "Cinema rooms: %s\n" +
-                        "Available seats: %s\n", this.name, this.classification, truncateString(this.synopsis, 30),
-                this.releaseDate, this.director, this.cast, this.screenSize, upcomingTimes, cinemaRooms,
-                availableSeats);
+         String info = String.format("%s\n" +
+         "Classification: %s\n" +
+         "Synopsis: %s\n" +
+         "Release date: %s\n" +
+         "Director: %s\n" +
+         "Cast: %s\n" +
+         "Screen size: %s\n" +
+         "Upcoming times: %s\n" +
+         "Cinema rooms: %s\n" +
+         "Available seats: %s\n", this.name, this.classification, truncateString(this.synopsis, 30),
+         this.releaseDate, this.director, this.cast, this.screenSize, upcomingTimes, cinemaRooms,
+         availableSeats);
          */
         String info = String.format("%-25s" +
                 "%-8s" +
@@ -176,7 +176,9 @@ public class Movie {
      */
     public String getCondensedMovieInformation(){
         String upcomingTimes = String.join(", ", this.upcomingTimes);
-        String info = String.format("Title: %s\n" + "Upcoming Times: %s\n", this.name, upcomingTimes);
+        String info = String.format(
+                "%-25s" +
+                "%-25s\n", truncateString(this.name,15), upcomingTimes);
         return info;
     }
 

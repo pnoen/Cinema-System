@@ -1093,11 +1093,12 @@ public class Cinema {
         Iterator iterator = movie_ref.entrySet().iterator();
 
         //printing out movies and references to the user
+        System.out.format("%-8s%-25s%-25s\n","Ref Num", "Title", "Upcoming times");
+        System.out.println("--------------------------------------------------------------");
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
-            System.out.println("Reference Number: " + (pair.getKey()));
             Movie movie1 = (Movie) pair.getValue();
-            System.out.println(movie1.getCondensedMovieInformation());
+            System.out.format("%-8s%-50s\n", pair.getKey(),movie1.getCondensedMovieInformation());
         }
         Scanner userInput = new Scanner(System.in);
         System.out.print("Enter the reference number of the film you would like to add a show for: ");
@@ -1650,6 +1651,7 @@ public class Cinema {
             }
             if(logged == 1){
                 displayMovies();
+                System.out.println("\nThe Movie Report can also be found in src/main/resource/movies.csv for a file format.");
             }
 
             else if (logged == 2) {
@@ -1765,7 +1767,7 @@ public class Cinema {
 //        try {
 //            BufferedReader csvReader = new BufferedReader(new FileReader(this.giftCardFile));
 //            String row;
-            System.out.println("Current gift cards:\n");
+        System.out.println("Current gift cards:\n");
 //            while ((row = csvReader.readLine()) != null) {
 //                    System.out.println(row+"\n");
 //                }
@@ -1773,9 +1775,9 @@ public class Cinema {
 //        catch(IOException e){
 //
 //        }
-            for(GiftCard c : this.giftCards){
-                System.out.println(c.getGCInfo());
-            }
+        for(GiftCard c : this.giftCards){
+            System.out.println(c.getGCInfo());
+        }
 
     }
     public void giftCardManage(){
@@ -1796,23 +1798,23 @@ public class Cinema {
             }
             switch (logged) {
                 case 1: giftCardCreate(userInput);
-                        break;
+                    break;
                 case 2: System.out.println("Please input the gift card code to delete.");
-                        Scanner newInput = new Scanner(System.in);
-                        if (newInput.hasNextLine()) {
-                            code = newInput.nextLine();
-                        }
-                        giftCardDelete(code);
-                        break;
+                    Scanner newInput = new Scanner(System.in);
+                    if (newInput.hasNextLine()) {
+                        code = newInput.nextLine();
+                    }
+                    giftCardDelete(code);
+                    break;
                 case 3: giftCardView();
-                        break;
+                    break;
 
                 case 4: cont = false;
-                        break;
+                    break;
 
 
                 default: System.out.println("Error: Not a valid option.");
-                         userInput.nextLine();
+                    userInput.nextLine();
 
             }
 
@@ -2105,28 +2107,29 @@ public class Cinema {
             }
             switch (logged) {
                 case 1: displayMovies();
-                        break;
+                    System.out.println("\nThe Movie Report can also be found in src/main/resource/movies.csv for a file format.");
+                    break;
                 case 2: bookingSummaries();
-                        System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
-                        break;
+                    System.out.println("\nThe summary of today's bookings can be found in src/main/resources/bookings.txt");
+                    break;
                 case 3: editingMovies();
-                        break;
+                    break;
                 case 4: addNewShows();
-                        break;
+                    break;
                 case 5: giftCardManage();
-                        break;
+                    break;
                 case 6: staffManage(2);
-                        break;
+                    break;
                 case 7: transactionManagement();
-                        break;
+                    break;
                 case 8: this.loggedIn = false;
-                        System.out.println("You have logged out");
-                        break;
+                    System.out.println("You have logged out");
+                    break;
 
 
 
                 default: System.out.println("Error: Not a valid option.");
-                         userInput.nextLine();
+                    userInput.nextLine();
             }
 
         }
