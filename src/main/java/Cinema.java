@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.String;
@@ -13,6 +14,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javax.print.attribute.standard.PresentationDirection;
 
 public class Cinema {
     private List<Movie> movies;
@@ -645,7 +648,7 @@ public class Cinema {
                 insertNewMovie();
                 break;
             case 2:
-//                modifyCurrentMovie();
+                modifyCurrentMovie();
                 break;
             case 3:
                 deleteMovie();
@@ -782,6 +785,51 @@ public class Cinema {
         } catch (IOException e) {
             System.out.println("Error: couldn't update accounts.csv");
         }
+    }
+
+    /**
+     * Helper method for modifying movie attributes
+     * that are in the form of lists
+     */
+
+    public String modifyingList(int refnum, String[] line,  int line_item_code){
+        Scanner userInput = new Scanner(System.in);
+
+        System.out.println("Enter 1 to replace item or 2 to add to the item:");
+        String result = "";
+        if (userInput.hasNextInt()){
+            int answer = userInput.nextInt();
+
+            //replace
+            if (answer == 1){
+                System.out.println("Currently is: "+ line[line_item_code]);
+                System.out.println("\nEnter replacement: ");
+                if (userInput.hasNext()) {
+                    userInput.nextLine();
+                    result = userInput.nextLine();
+
+                }
+            }
+
+            //add to
+            if (answer == 2){
+                System.out.println("Currently is: "+ line[line_item_code]);
+                System.out.println("\nEnter addition: ");
+                //NOT WORKING!!!!!!
+                userInput.nextLine();
+                if (userInput.hasNext()){
+
+                    String addition = userInput.nextLine();
+                    System.out.println("Addition is: " + addition);
+                    result = line[line_item_code] + ","+ addition;
+
+                }
+            }
+
+        }
+
+        System.out.println("Result: "+result);
+        return result;
     }
 
     /**
@@ -924,6 +972,7 @@ public class Cinema {
                             }
                             break;
 
+
                         case 7:
                             System.out.println("Enter New Screen Size:");
                             if (userInput.hasNext()){
@@ -931,39 +980,21 @@ public class Cinema {
                                 if (userInput.hasNext()){
                                     userInput.nextLine();
                                     String screen_size_input = userInput.nextLine();
-                                    ls[6] = screen_size_input;
-                                    this.movies.get(refnum).setScreenSize(ls[6]);
+                                    ls[7] = screen_size_input;
+                                    this.movies.get(refnum).setScreenSize(ls[7]);
                                 }
 
                             }
                             break;
 
                         case 8:
-                            System.out.println("Enter New Upcoming Times:");
-                            if (userInput.hasNext()){
-
-                                if (userInput.hasNext()){
-                                    userInput.nextLine();
-                                    String upcoming_times_input = userInput.nextLine();
-                                    ls[7] = upcoming_times_input;
-                                    this.movies.get(refnum).setUpcomingTimes(ls[7]);
-                                }
-
-                            }
+                            ls[6] = modifyingList(refnum, ls, 6);
+                            this.movies.get(refnum).setUpcomingTimes(ls[6]);
                             break;
 
                         case 9:
-                            System.out.print("Enter New Cinema Rooms:");
-                            if (userInput.hasNext()){
-
-                                if (userInput.hasNext()){
-                                    userInput.nextLine();
-                                    String cinema_rooms_input = userInput.nextLine();
-                                    ls[8] = cinema_rooms_input;
-                                    this.movies.get(refnum).setCinemaRooms(ls[8]);
-                                }
-
-                            }
+                            ls[8] = modifyingList(refnum, ls, 8);
+                            this.movies.get(refnum).setCinemaRooms(ls[8]);
                             break;
 
                         case 10:
