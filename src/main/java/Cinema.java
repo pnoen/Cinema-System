@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.lang.String;
@@ -13,6 +14,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javax.print.attribute.standard.PresentationDirection;
 
 public class Cinema {
     private List<Movie> movies;
@@ -627,7 +630,7 @@ public class Cinema {
                 insertNewMovie();
                 break;
             case 2:
-//                modifyCurrentMovie();
+                modifyCurrentMovie();
                 break;
             case 3:
                 deleteMovie();
@@ -764,6 +767,48 @@ public class Cinema {
         } catch (IOException e) {
             System.out.println("Error: couldn't update accounts.csv");
         }
+    }
+
+    /**
+     * Helper method for modifying movie attributes
+     * that are in the form of lists
+     */
+
+    public String modifyingList(int refnum, String[] line,  int line_item_code){
+        Scanner userInput = new Scanner(System.in);
+
+        System.out.println("Enter 1 to replace item or 2 to add to the item:");
+        String result = "";
+        if (userInput.hasNext()){
+
+            //replace
+            if (userInput.nextInt() == 1){
+                System.out.println("Currently is: "+ line[line_item_code]);
+                System.out.println("\nEnter replacement: ");
+
+                if (userInput.hasNext()){
+                    result = userInput.nextLine();
+                }
+            }
+
+            //add to
+            else if (userInput.nextInt() == 2){
+                System.out.println("Currently is: "+ line[line_item_code]);
+                System.out.println("\nEnter addition: ");
+
+                if (userInput.hasNext()){
+                    String addition = userInput.nextLine();
+                    result = line[line_item_code] + ", "+ addition;
+
+                }
+            }
+
+            else{
+                System.out.println("Invalid number entered");
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -921,6 +966,10 @@ public class Cinema {
                             break;
 
                         case 8:
+                            ls[7] = modifyingList(refnum, ls, 7);
+                            this.movies.get(refnum).setUpcomingTimes(ls[7]);
+
+                            /**
                             System.out.println("Enter New Upcoming Times:");
                             if (userInput.hasNext()){
 
@@ -932,6 +981,7 @@ public class Cinema {
                                 }
 
                             }
+                             **/
                             break;
 
                         case 9:
