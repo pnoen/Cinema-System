@@ -398,6 +398,7 @@ public class Cinema {
     }
 
     /**
+     * @param testing
      * Displays a customer registration prompt
      * Allows the user to register as a customer
      * Stores the user's customer details into a local database
@@ -422,7 +423,6 @@ public class Cinema {
                 password = PasswordMasker.readPassword("Password: ");
                 againPassword = PasswordMasker.readPassword("Confirm password: ");
             }
-
 
             try {
                 BufferedReader customersReader = new BufferedReader(new FileReader(this.accountsFile));
