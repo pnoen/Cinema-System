@@ -414,19 +414,20 @@ public class TestCinema {
     }
 
     @Test
-    void testStaffLoginLogic(){
+    void testStaffLoginLogic() throws FileNotFoundException{
         cinema.setLogged(true);
 
-        String userInput = "9\n6\n";
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
-        System.setIn(inputStream);
+        Scanner userInput = new Scanner("\n9\n6\n");
+//        String userInput = "9\n6\n";
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
 
         //catching output
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
         System.setOut(printStream);
 
-        cinema.staffLoginLogic();
+        cinema.staffLoginLogic(userInput);
 
         String expected = "You have logged out";
         String[] output = outputStream.toString().split("\n");
@@ -435,7 +436,7 @@ public class TestCinema {
     }
 
     @Test
-    void testManagerLoginLogic(){
+    void testManagerLoginLogic() throws FileNotFoundException{
         cinema.setLogged(true);
 
         String userInput = "8\n7\n";
@@ -2234,5 +2235,100 @@ public class TestCinema {
         assertNull(transaction.getSeat());
         assertEquals(-1, transaction.getNumOfSeats());
         assertEquals("user timeout", transaction.getCancelReason());
+    }
+
+    @Test
+    public void testStaffBookingSummariesCorrectOutput() throws FileNotFoundException{
+        cinema_1_movie.setLogged(true);
+
+        Scanner userInput = new Scanner("\n2\n6\n");
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
+
+        //catching output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.staffLoginLogic(userInput);
+
+        String expected = "Select the page you would like to visit:\n" +
+                "  1. Movie report\n" +
+                "  2. Booking Summaries\n" +
+                "  3. Movie Management\n" +
+                "  4. Add New Shows for Next Week\n" +
+                "  5. Giftcard Management\n" +
+                "  6. Logout\n" +
+                "\nThe summary of today's bookings can be found in src/main/resources/bookings.txt\n" +
+                "Select the page you would like to visit:\n" +
+                "  1. Movie report\n" +
+                "  2. Booking Summaries\n" +
+                "  3. Movie Management\n" +
+                "  4. Add New Shows for Next Week\n" +
+                "  5. Giftcard Management\n" +
+                "  6. Logout\n" +
+                "You have logged out\n";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testManagerBookingSummariesCorrectOutput() throws FileNotFoundException{
+        cinema_1_movie.setLogged(true);
+
+        Scanner userInput = new Scanner("\n1\n");
+//        ByteArrayInputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+//        System.setIn(inputStream);
+
+        //catching output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        System.setOut(printStream);
+
+        cinema_1_movie.transactionManagement(userInput);
+
+        String expected = "Select the report option you would like\n" +
+                "  1. Bookings Summary\n" +
+                "  2. Cancelled Bookings Summary\n" +
+                "  3. Return to menu\n" +
+                "\nThe summary of today's bookings can be found in src/main/resources/bookings.txt\n";
+
+        String[] output = outputStream.toString().trim().split("\n");
+        for (int i = 0; i < output.length; i++) {
+            output[i] = output[i].trim();
+        }
+        String actual = String.join("\n", output);
+
+        String[] expectedArr = expected.trim().split("\n");
+        for (int i = 0; i < expectedArr.length; i++) {
+            expectedArr[i] = expectedArr[i].trim();
+        }
+        expected = String.join("\n", expectedArr);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testBookingSummariesFalseFileNotFound() {
+        Cinema cinema_not_found = new Cinema();
+        File bookingsfile = new File("src/test/resources/wrongbookings.txt");
+        cinema_not_found.setBookingsFile(bookingsfile);
+        boolean caught = false;
+        try {
+            cinema_not_found.bookingSummaries();
+        } catch (FileNotFoundException e) {
+            caught = true;
+        }
+        assertFalse(caught);
     }
 }
