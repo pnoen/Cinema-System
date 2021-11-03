@@ -163,7 +163,7 @@ public class Movie {
                 "%-20s" +
                 "%-15s" +
                 "%-20s" +
-                "%-15s\n",truncateString(this.name,20), this.classification, truncateString(this.synopsis, 15), truncateDate(this.releaseDate,10), truncateString(this.director,15), truncateString(this.cast,15), this.screenSize, upcomingTimes, cinemaRooms);
+                "%-15s\n",truncateString(this.name,20), this.classification, truncateString(this.synopsis, 15), truncateDate(this.releaseDate,10), truncateString(this.director,15), truncateString(this.cast,15), this.screenSize, truncateString(upcomingTimes,13), cinemaRooms);
 
 
 
