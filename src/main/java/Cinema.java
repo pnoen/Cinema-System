@@ -1272,13 +1272,13 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
                 if (System.currentTimeMillis() - currentTime > timeoutTime) {
-                    userTimeout(null, null, null, -1);
+                    userTimeout(null, null, null, 0);
                     return;
                 }
             } else {
                 userInput.nextLine();
                 if (System.currentTimeMillis() - currentTime > timeoutTime) {
-                    userTimeout(null, null, null, -1);
+                    userTimeout(null, null, null, 0);
                     return;
                 }
                 System.out.println("Error: Not a valid option.\n");
@@ -1320,13 +1320,13 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
                 if (System.currentTimeMillis() - currentTime > timeoutTime) {
-                    userTimeout(movie, null, null, -1);
+                    userTimeout(movie, null, null, 0);
                     return;
                 }
             } else {
                 userInput.nextLine();
                 if (System.currentTimeMillis() - currentTime > timeoutTime) {
-                    userTimeout(movie, null, null, -1);
+                    userTimeout(movie, null, null, 0);
                     return;
                 }
                 System.out.println("Error: Not a valid option.\n");
@@ -1365,7 +1365,7 @@ public class Cinema {
             long currentTime = System.currentTimeMillis();
             String selections = userInput.next();
             if (System.currentTimeMillis() - currentTime > timeoutTime) {
-                userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, -1);
+                userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, 0);
                 return;
             }
 
@@ -1440,13 +1440,13 @@ public class Cinema {
             if (userInput.hasNextInt()) {
                 entered = userInput.nextInt();
                 if (System.currentTimeMillis() - currentTime > timeoutTime) {
-                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, numOfBookingSeats);
+                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, 0);
                     return;
                 }
             } else {
                 userInput.nextLine();
                 if (System.currentTimeMillis() - currentTime > timeoutTime) {
-                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, numOfBookingSeats);
+                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), null, 0);
                     return;
                 }
                 System.out.println("Error: Not a valid option.\n");
@@ -1473,7 +1473,7 @@ public class Cinema {
                     cancelReason = "card payment failed";
                 }
                 else if (payment == 3) { // TIMEOUT AT PAYMENT
-                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats);
+                    userTimeout(movie, movie.getUpcomingTimes().get(timeIdx), cinemaSeats[entered - 1], 0);
                     return;
                 }
 
