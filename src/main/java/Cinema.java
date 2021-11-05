@@ -1477,7 +1477,7 @@ public class Cinema {
                     return;
                 }
 
-                Transaction transaction = createTranscation(movie, times.get(timeIdx), cinemaSeats[entered - 1], 0, cancelReason);
+                Transaction transaction = createTranscation(movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats, cancelReason);
 
 //                Transaction transaction = new Transaction(transactionId, movie, times.get(timeIdx), cinemaSeats[entered - 1], numOfBookingSeats, cancelReason);
                 transactions.add(transaction);
