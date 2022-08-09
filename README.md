@@ -19,9 +19,6 @@ Development of a Movie Ticket Booking Management System for Fancy Cinemas
 
 # Description
 
-Use Git or check-out with SVN using this URL:
-[Booking System for Fancy Cinemas](https://github.sydney.edu.au/SOFT2412-2021S2/Assignment__2.git)
-
 The code is written in Java, spread across six files:
  - Account.java
  - Cinema.java
